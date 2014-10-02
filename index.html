@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en" ng-app="collageapp">
 	<head>
+		<title>Venice Bridges</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 		
-		<link rel="stylesheet" type="text/css" href="css/transitions.css" media="all" />
-		<link rel="stylesheet" type="text/css" href="css/collageTags.css" media="all" />
-		<link rel="stylesheet" type="text/css" href="css/collageOverlay.css" media="all" />
+		<!-- Firebase -->
+		<script type='text/javascript' src='https://cdn.firebase.com/v0/firebase.js'></script>
+		
+		<!-- jquery -->
 		<!--[if lt IE 9]>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<![endif]-->
@@ -16,6 +19,36 @@
 		<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
+		
+		<!-- Leaflet -->
+		<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+		
+		<!-- bootstrap -->
+		<!--link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css"/>
+		<script type='text/javascript' src='js/bootstrap.min.js'></script-->
+		
+		<!-- angularjs -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+		
+		<!-- angular slider -->
+		<!--link rel="stylesheet" type="text/css" href="css/angular-slider.min.css"/>
+		<script type='text/javascript' src='js/angular-slider.min.js'></script>--
+		
+		<!-- spinner -->
+		<!--script type='text/javascript' src='js/spin.min.js'></script>
+		<script type='text/javascript' src='js/jquery.spin.js'></script-->
+		
+		<!-- local css -->
+		<!--link rel="stylesheet" type="text/css" href="css/main.css"/-->
+		
+		<!-- console library -->
+		<script type='text/javascript' src='javascripts/ck-console.js'></script>
+		
+		<link rel="stylesheet" type="text/css" href="css/transitions.css" media="all" />
+		<link rel="stylesheet" type="text/css" href="css/collageTags.css" media="all" />
+		<link rel="stylesheet" type="text/css" href="css/collageOverlay.css" media="all" />
 	
 		<script src="javascripts/jquery-collagePlus/jquery.collagePlus.js"></script>
 		<script src="javascripts/jquery-collagePlus/jquery.removeWhitespace.js"></script>
@@ -25,14 +58,13 @@
 	
 		<script type="text/javascript">
 			console.log("Loading Head script");
-			
 			// All images need to be loaded for this plugin to work so
 			// we end up waiting for the whole window to load in this example
 			$(window).load(function () {
 				$(document).ready(function(){
 					console.log("Document Ready");
-					collage();
-					$('.Collage').collageCaption();
+					//collage();
+					//$('.Collage').collageCaption();
 				});
 			});
 		
@@ -60,7 +92,7 @@
 
 		</script>
 	</head>
-	<body>
+	<body ng-controller="DataCtrl">
 		<section class="Collage effect-parent">
 			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it"><a>
 				<img src="https://dummyimage.com/350x150/69D2E7/ffffff"></a></div>
@@ -80,7 +112,7 @@
 			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it"><a><img src="https://dummyimage.com/450x300/53777A/ffffff"></a></div>
 		</section>
 		<script type="text/javascript">
-			//Function that truncates strings down to a specific length
+			//Function that truncates strings down to a specific length and adds '...' to the end
 			String.prototype.trunc =
 				function(n,useWordBoundary){
 					var toLong = this.length>n,
@@ -88,6 +120,14 @@
 					s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
 			 		return  toLong ? s_ + '&hellip;' : s_;
 				};
+				
+			/*
+			 * Holds the data to display for a given image in the collage
+			 * @param {String} title The title of the peice of work
+			 * @param {Number} date The date associated with this peice
+			 * @param {String} caption The caption to display on this image
+			 * @param {String} url The URL for the image to load
+			 */
 			function Image(title, date, caption, url){
 				this.title = title;
 				this.date = date;
@@ -107,6 +147,12 @@
 				};
 			}
 			
+			
+			/*
+			 * Hard coded images.
+			 * This is done becasue we don't currenly have CK-console data entries
+			 * for these peices.
+			 */
 			var images = [
 				new Image('The Adoration of the Kings',
 					1573,
@@ -135,10 +181,50 @@
 					
 			];
 			
-			var imageSection = document.getElementsByClassName('Collage effect-parent');
-			for(var i = 0; i < images.length; i++){
-				imageSection[0].appendChild(images[i].getImageDiv());
-			}
+			//'collageapp' matches the 'ng-app' tag in the html tag
+			app = angular.module('collageapp', ['ckServices']);
+			//Note: You must have the body tag with ng-controller='DataCtrl' in order for this to work.
+			app.controller('DataCtrl', ['$scope', '$compile', 'ckConsole', 'ckConsoleMap', '$http', function($scope, $compile, ckConsole, ckConsoleMap, $http){
+				console.log('Controller for app loading');
+				//Asks for a given data set from the ckConsole
+				ckConsole.getGroup('Demolished Churches merge').then(
+					/*
+					 * This is called when the data from getGroup is returned.
+					 * @param {Object} item This contains an object holding all of the individual elements from the given dataset
+					 */
+					function(item){
+					/*
+					 * XXX There has to be a better way to iterate over the elements stored
+					 * in this 'item' object
+					 */
+					for (var property in item.members) {
+						//This is the individual peice of data pulled form the list
+						var church = item.members[property];
+						console.log(church);
+						
+						//This is the id that the image url is stored behind
+						var mediaID = church['merged-media-ids'].images['Demolished Churches Media'];
+						//Create and add a new image to the image array using the church data
+						images[images.length] = new Image(church.data.name,
+							church.data.year_of_demolition,
+							church.data.description,
+							church.media.images[mediaID].original);
+					}
+					
+					//Retrives the div that is holding the images
+					var imageSection = document.getElementsByClassName('Collage effect-parent');
+					//Iterates over the list of images and adds them to the existing div
+					//TODO These images should really be lazy loaded
+					for(var i = 0; i < images.length; i++){
+						imageSection[0].appendChild(images[i].getImageDiv());
+					}
+					
+					//Redraw the collage now that these images have been added
+					//TODO Figure out a better place to do this
+					collage();
+					$('.Collage').collageCaption();
+				});
+			}]);
 			
 		</script>
 	</body>
