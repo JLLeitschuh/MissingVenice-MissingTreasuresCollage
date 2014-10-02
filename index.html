@@ -63,8 +63,8 @@
 			$(window).load(function () {
 				$(document).ready(function(){
 					console.log("Document Ready");
-					//collage();
-					//$('.Collage').collageCaption();
+					collage();
+					$('.Collage').collageCaption();
 				});
 			});
 		
@@ -93,24 +93,7 @@
 		</script>
 	</head>
 	<body ng-controller="DataCtrl">
-		<section class="Collage effect-parent">
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it"><a>
-				<img src="https://dummyimage.com/350x150/69D2E7/ffffff"></a></div>
-			<div class="Image_Wrapper"><a><img src="https://dummyimage.com/320x180/A7DBD8/ffffff"></a></div>
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it. Also a really long sentence with a <a href='http://www.bbc.co.uk'>link</a> in it"><a>
-				<img src="https://dummyimage.com/320x300/E0E4CC/ffffff"></a></div>
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it This is some data <u>with</u> html in it. Also a really long sentence with a <a href='https://www.bbc.co.uk'>link</a> in it This is some data <u>with</u>html in it. Also a really long sentence with a <a href='https://www.bbc.co.uk'>link</a> in it"><a>
-				<img src="https://dummyimage.com/472x500/F38630/ffffff"></a></div>
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it This is some data <u>with</u> html in it. Also a really long sentence with a <a href='https://www.bbc.co.uk'>link</a> in it"><a>
-				<img src="https://dummyimage.com/540x360/FA6900/ffffff"></a></div>
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it"><a><img src="https://dummyimage.com/800x600/ECD078/ffffff"></a></div>
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it This is some data <u>with</u>html in it. Also a really long sentence with a <a href='https://www.bbc.co.uk'>link</a> in it"><a>
-				<img src="https://dummyimage.com/400x120/D95B43/ffffff"></a></div>
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it This is some data <u>with</u>html in it. Also a really long sentence with a <a href='https://www.bbc.co.uk'>link</a> in it"><a>
-				<img src="https://dummyimage.com/300x300/C02942/ffffff"></a></div>
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it"><a><img src="https://dummyimage.com/320x500/542437/ffffff"></a></div>
-			<div class="Image_Wrapper" data-caption="This is some data <u>with</u> html in it"><a><img src="https://dummyimage.com/450x300/53777A/ffffff"></a></div>
-		</section>
+		<section class="Collage effect-parent"><!-- This is where the images get stored once loaded --></section>
 		<script type="text/javascript">
 			//Function that truncates strings down to a specific length and adds '...' to the end
 			String.prototype.trunc =
