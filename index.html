@@ -40,6 +40,10 @@
 		<!--script type='text/javascript' src='js/spin.min.js'></script>
 		<script type='text/javascript' src='js/jquery.spin.js'></script-->
 		
+		<!-- imagesLoaded -->
+		<script src="http://imagesloaded.desandro.com/imagesloaded.pkgd.js" type="text/javascript"></script>
+		
+		
 		<!-- local css -->
 		<!--link rel="stylesheet" type="text/css" href="css/main.css"/-->
 		
@@ -60,13 +64,13 @@
 			console.log("Loading Head script");
 			// All images need to be loaded for this plugin to work so
 			// we end up waiting for the whole window to load in this example
-			$(window).load(function () {
+			/*$(window).load(function () {
 				$(document).ready(function(){
 					console.log("Document Ready");
-					collage();
-					$('.Collage').collageCaption();
+					//collage();
+					//$('.Collage').collageCaption();
 				});
-			});
+			});*/
 		
 		
 			// Here we apply the actual CollagePlus plugin
@@ -93,7 +97,18 @@
 		</script>
 	</head>
 	<body ng-controller="DataCtrl">
-		<section class="Collage effect-parent"><!-- This is where the images get stored once loaded --></section>
+		<header class="header">
+			<nav>
+				<a href="index.html">All</a>
+				<a href="index.html?art">Art</a>
+				<a href="index.html?churches">Churches</a>
+			</nav>
+		</header>
+		
+		<!-- This is where the images get stored once loaded -->
+		<section id="image_container" class="Collage effect-parent"></section>
+		
+		
 		<script type="text/javascript">
 			//Function that truncates strings down to a specific length and adds '...' to the end
 			String.prototype.trunc =
@@ -103,7 +118,15 @@
 					s_ = useWordBoundary && toLong ? s_.substr(0,s_.lastIndexOf(' ')) : s_;
 			 		return  toLong ? s_ + '&hellip;' : s_;
 				};
-				
+			
+			function getSearchArgs(){
+				var text = self.location.search;
+				var theleft = text.lastIndexOf("?") + 1;
+				return text.substring(theleft, text.length);
+			}
+			
+			console.log('Search value: ' + getSearchArgs());
+			
 			/*
 			 * Holds the data to display for a given image in the collage
 			 * @param {String} title The title of the peice of work
@@ -136,34 +159,38 @@
 			 * This is done becasue we don't currenly have CK-console data entries
 			 * for these peices.
 			 */
-			var images = [
-				new Image('The Adoration of the Kings',
-					1573,
-					'The picture is dated 1573 in Roman numerals on the lowest step (bottom right). It was painted for the church of S. Silvestro in Venice, where it remained until the church was altered in the 19th century. It was not an altarpiece but a large painting for the wall of the nave beside the altar of the confraternity dedicated toSaint Joseph.',
-					'https://upload.wikimedia.org/wikipedia/commons/2/20/Jan_Gossaert_001.jpg'),
-				new Image('The Wedding at Cana',
-					1563,
-					'The piece was commissioned in 1562 by the Benedictine Monastery of San Giorgio Maggiore in Venice, Italy, and completed in fifteen months by the year 1563. It hung in the refectory of the monastery for 235 years, until it was plundered by Napoleonin 1797 and shipped to Paris. The painting was cut in half for the journey and stitched back together in Paris. It was not returned in the post-Napoleonic conciliation treaties which pursued some restitution of looted artworks',
-					'https://upload.wikimedia.org/wikipedia/commons/e/e0/Paolo_Veronese_008.jpg'),
-				new Image('Feast in the House of Levi',
-					1573,
-					'It was painted by Veronese for the rear wall of the refectory of the Basilica di Santi Giovanni e Paolo, a Dominican friary, as a Last Supper, to replace an earlier work by Titian destroyed in the fire of 1571.',
-					'https://upload.wikimedia.org/wikipedia/commons/f/f1/Paolo_Veronese_007.jpg'),
-				new Image('Enthroned Madonna and Child',
-					1562,
-					'Was painted for the Sacristy of the Venetian Renaissance church of San Zaccaria (restored in 1562). It is a fine example of the early works of Veronese with its harmonious richness of colour. Now in Accademia.',
-					'https://upload.wikimedia.org/wikipedia/en/7/7f/Lippi_Madonna_Tarquinia.jpg'),
-				new Image('Four Allegories of Love: Respect, Scorn, Unfaithfulness, Happy Union',
-					1575,
-					'They were probably made to decorate a ceiling and form a complete series. We do not know who commissioned them, but their presence in 1648 in the Prague Castle suggests that it may have been one of the Holy Roman Emperors, Ferdinand I (died 1564) or Maximilian II (died 1576), or a wealthy patron at the court. Alternatively, they may have been painted for a location in Venice, as two details from them are recorded in the famous sketchbook that Van Dyck kept in Italy between 1621 and 1627.',
-					'https://upload.wikimedia.org/wikipedia/commons/b/b2/Paolo_Veronese_020.jpg'),
-				new Image('The Family of Darius at the Feet of Alexander',
-					1565,
-					'In Venice at some point. Now in the National Gallery of London.',
-					'https://upload.wikimedia.org/wikipedia/commons/5/56/Paolo_Veronese_-_The_Family_of_Darius_before_Alexander_-_Google_Art_Project.jpg')
-					
-			];
-			
+			var images = [];
+			var args = getSearchArgs();
+			if( args == 'art' || args == ''){
+				console.log("Loading art");
+				images = [
+					new Image('The Adoration of the Kings',
+						1573,
+						'The picture is dated 1573 in Roman numerals on the lowest step (bottom right). It was painted for the church of S. Silvestro in Venice, where it remained until the church was altered in the 19th century. It was not an altarpiece but a large painting for the wall of the nave beside the altar of the confraternity dedicated toSaint Joseph.',
+						'https://upload.wikimedia.org/wikipedia/commons/2/20/Jan_Gossaert_001.jpg'),
+					new Image('The Wedding at Cana',
+						1563,
+						'The piece was commissioned in 1562 by the Benedictine Monastery of San Giorgio Maggiore in Venice, Italy, and completed in fifteen months by the year 1563. It hung in the refectory of the monastery for 235 years, until it was plundered by Napoleonin 1797 and shipped to Paris. The painting was cut in half for the journey and stitched back together in Paris. It was not returned in the post-Napoleonic conciliation treaties which pursued some restitution of looted artworks',
+						'https://upload.wikimedia.org/wikipedia/commons/e/e0/Paolo_Veronese_008.jpg'),
+					new Image('Feast in the House of Levi',
+						1573,
+						'It was painted by Veronese for the rear wall of the refectory of the Basilica di Santi Giovanni e Paolo, a Dominican friary, as a Last Supper, to replace an earlier work by Titian destroyed in the fire of 1571.',
+						'https://upload.wikimedia.org/wikipedia/commons/f/f1/Paolo_Veronese_007.jpg'),
+					new Image('Enthroned Madonna and Child',
+						1562,
+						'Was painted for the Sacristy of the Venetian Renaissance church of San Zaccaria (restored in 1562). It is a fine example of the early works of Veronese with its harmonious richness of colour. Now in Accademia.',
+						'https://upload.wikimedia.org/wikipedia/en/7/7f/Lippi_Madonna_Tarquinia.jpg'),
+					new Image('Four Allegories of Love: Respect, Scorn, Unfaithfulness, Happy Union',
+						1575,
+						'They were probably made to decorate a ceiling and form a complete series. We do not know who commissioned them, but their presence in 1648 in the Prague Castle suggests that it may have been one of the Holy Roman Emperors, Ferdinand I (died 1564) or Maximilian II (died 1576), or a wealthy patron at the court. Alternatively, they may have been painted for a location in Venice, as two details from them are recorded in the famous sketchbook that Van Dyck kept in Italy between 1621 and 1627.',
+						'https://upload.wikimedia.org/wikipedia/commons/b/b2/Paolo_Veronese_020.jpg'),
+					new Image('The Family of Darius at the Feet of Alexander',
+						1565,
+						'In Venice at some point. Now in the National Gallery of London.',
+						'https://upload.wikimedia.org/wikipedia/commons/5/56/Paolo_Veronese_-_The_Family_of_Darius_before_Alexander_-_Google_Art_Project.jpg')
+				];
+			}
+			console.log("Loading churches");
 			//'collageapp' matches the 'ng-app' tag in the html tag
 			app = angular.module('collageapp', ['ckServices']);
 			//Note: You must have the body tag with ng-controller='DataCtrl' in order for this to work.
@@ -176,24 +203,25 @@
 					 * @param {Object} item This contains an object holding all of the individual elements from the given dataset
 					 */
 					function(item){
-					/*
-					 * XXX There has to be a better way to iterate over the elements stored
-					 * in this 'item' object
-					 */
-					for (var property in item.members) {
-						//This is the individual peice of data pulled form the list
-						var church = item.members[property];
-						console.log(church);
-						
-						//This is the id that the image url is stored behind
-						var mediaID = church['merged-media-ids'].images['Demolished Churches Media'];
-						//Create and add a new image to the image array using the church data
-						images[images.length] = new Image(church.data.name,
-							church.data.year_of_demolition,
-							church.data.description,
-							church.media.images[mediaID].original);
+					if (args == 'churches' || args == '') {
+						/*
+						 * XXX There has to be a better way to iterate over the elements stored
+						 * in this 'item' object
+						 */
+						for (var property in item.members) {
+							//This is the individual peice of data pulled form the list
+							var church = item.members[property];
+							console.log(church);
+							
+							//This is the id that the image url is stored behind
+							var mediaID = church['merged-media-ids'].images['Demolished Churches Media'];
+							//Create and add a new image to the image array using the church data
+							images[images.length] = new Image(church.data.name,
+								church.data.year_of_demolition,
+								church.data.description,
+								church.media.images[mediaID].original);
+						}
 					}
-					
 					//Retrives the div that is holding the images
 					var imageSection = document.getElementsByClassName('Collage effect-parent');
 					//Iterates over the list of images and adds them to the existing div
@@ -202,13 +230,20 @@
 						imageSection[0].appendChild(images[i].getImageDiv());
 					}
 					
+					
 					//Redraw the collage now that these images have been added
 					//TODO Figure out a better place to do this
-					collage();
-					$('.Collage').collageCaption();
+					var wrappers = document.querySelector('#image_container');
+					var imgLoad = imagesLoaded( wrappers );
+					function onAlways( instance ) {
+						console.log("All images loaded");
+						collage();
+						$('.Collage').collageCaption();
+					}
+					imgLoad.on( 'always', onAlways );
+					
 				});
 			}]);
-			
 		</script>
 	</body>
 </html>	
