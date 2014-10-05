@@ -106,7 +106,7 @@
 		</header>
 		
 		<!-- This is where the images get stored once loaded -->
-		<section ng-controller="ImageCtrl" id="image_container" class="Collage effect-parent">
+		<section id="image_container" class="Collage effect-parent">
 			<div ng-repeat="image in allImages" class="Image_Wrapper" data-caption="{{image.caption}}">
 				<a><img ng-src="{{image.image}}"></img></a>
 			</div>
@@ -217,41 +217,36 @@
 							}
 						} //endif
 						
-						//Retrives the div that is holding the images
-						//var imageSection = document.getElementsByClassName('Collage effect-parent');
-						//Iterates over the list of images and adds them to the existing div
-						/*for(var i = 0; i < images.length; i++){
-							imageSection[0].appendChild(images[i].getImageDiv());
-						}*/
 						
-						
+						ckConsole.getGroup('Venice Churches').then(
+							function(item2){
+								console.log('Loaded Venice Churches');
+								console.log(item2);
+								console.log("ImageControl Call");
+								
+								console.log(images);
+								$scope.allImages = images;
+								
+								//Redraw the collage now that these images have been added
+								var wrappers = document.querySelector('#image_container');
+								var imgLoad = imagesLoaded( wrappers );
+								function onAlways( instance ) {
+									//This should only happen once all of the images have finished being loaded
+									console.log("All images loaded");
+									collage();
+									$('.Collage').collageCaption();
+								}
+								imgLoad.on( 'always', onAlways );
+							}
+						);
 					}
 				);
+				//console.log(proimiseA);
 				// Venice Churches
-				var proimiseA = ckConsole.getGroup('Venice Churches').then(
-					function(item){
-						console.log('Loaded Venice Churches');
-						console.log(item);
-					}
-				);
-				console.log(proimiseA);
-			}]);
-			function ImageCtrl($scope){
-				console.log("ImageControl Call");
-				console.log(images);
-				$scope.allImages = images;
 				
-				//Redraw the collage now that these images have been added
-				var wrappers = document.querySelector('#image_container');
-				var imgLoad = imagesLoaded( wrappers );
-				function onAlways( instance ) {
-					//This should only happen once all of the images have finished being loaded
-					console.log("All images loaded");
-					collage();
-					$('.Collage').collageCaption();
-				}
-				imgLoad.on( 'always', onAlways );
-			}
+			}]);
+			
+			
 		</script>
 	</body>
 </html>	
