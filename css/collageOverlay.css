@@ -51,6 +51,9 @@ a{
     box-shadow: 0 3px 1px rgba(0,0,0,0.1);
     text-shadow:0 2px 1px rgba(0,0,20,0.1);
 }
+.header nav a.selected{
+	color:#424;
+}
 .Example_Details{
     padding:20px;
     color:#272D35;

@@ -59,6 +59,9 @@
 		<script src="javascripts/jquery-collagePlus/jquery.collageCaption.js"></script>
 		<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 		<!--script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.pack.min.js"></script-->
+		
+		<!-- Data load methods -->
+		<script type="text/javascript" src='javascripts/dataLoad.js'></script>
 	
 		<script type="text/javascript">
 			console.log("Loading Head script");
@@ -98,10 +101,48 @@
 	</head>
 	<body ng-controller="DataCtrl">
 		<header class="header">
-			<nav>
+			<script type="text/javascript">
+				function getTags(){
+					var text = self.location.search;
+					if(text == "")return [];
+					var theleft = text.lastIndexOf("?") + 1;
+					return text.substring(theleft, text.length).split(',');
+				}
+				var tags = getTags();
+				
+				function toggleTag(tagName){
+					console.log("Toggle Tag");
+					var i = tags.indexOf(tagName);
+					if(i != -1) {
+						tags.splice(i, 1);
+						window.location.href = 'index.html?' + tags;
+						return;
+					}
+					tags[tags.length] = tagName;
+					window.location.href = 'index.html?' + tags;
+				}
+				
+				function NavCtrl($scope){
+					/**
+					 * Holds the data for the NavTag
+					 * @param <String> name The nav button to add
+					 */
+					function NavTag(name){
+						this.name = name;
+						this.loadedTag = (tags.indexOf(name) != -1 ? 'selected' : '');
+					}
+					//The list of nav tags to have
+					$scope.allNavs = [
+						new NavTag("Art"),
+						new NavTag("Churches")
+					];
+					$scope.toggleTagName = toggleTag;
+				}
+			</script>
+			<!-- Dynamically add more nav tags using a repeat rule -->
+			<nav ng-controller="NavCtrl">
 				<a href="index.html">All</a>
-				<a href="index.html?art">Art</a>
-				<a href="index.html?churches">Churches</a>
+				<a ng-repeat="navTag in allNavs" class="{{navTag.loadedTag}}" href="#" ng-click="toggleTagName(navTag.name);">{{navTag.name}}</a>
 			</nav>
 		</header>
 		
@@ -123,13 +164,6 @@
 			 		return  toLong ? s_ + '&hellip;' : s_;
 				};
 			
-			function getSearchArgs(){
-				var text = self.location.search;
-				var theleft = text.lastIndexOf("?") + 1;
-				return text.substring(theleft, text.length);
-			}
-			
-			console.log('Search value: ' + getSearchArgs());
 			
 			/*
 			 * Holds the data to display for a given image in the collage
@@ -152,8 +186,8 @@
 			 * for these peices.
 			 */
 			var images = [];
-			var args = getSearchArgs();
-			if( args == 'art' || args == ''){
+			var tags = getTags();
+			if( tags.indexOf('Art') != -1 || tags.length == 0){
 				console.log("Loading art images into the array");
 				images = [
 					new ImageWrapper('The Adoration of the Kings',
@@ -183,69 +217,7 @@
 				];
 			} // endif
 			
-			console.log("Loading churches");
-			//'collageapp' matches the 'ng-app' tag in the html tag
-			app = angular.module('collageapp', ['ckServices']);
-			//Note: You must have the body tag with ng-controller='DataCtrl' in order for this to work.
-			app.controller('DataCtrl', ['$scope', '$compile', 'ckConsole', 'ckConsoleMap', '$http', function($scope, $compile, ckConsole, ckConsoleMap, $http){
-				//Asks for a given data set from the ckConsole
-				ckConsole.getGroup('Demolished Churches merge').then(
-					/*
-					 * This is called when the data from getGroup is returned.
-					 * @param {Object} item This contains an object holding all of the individual elements from the given dataset
-					 */
-					function(item){
-						//Only load images associated with the given selection
-						if (args == 'churches' || args == '') {
-							/*
-							 * XXX There has to be a better way to iterate over the elements stored
-							 * in this 'item' object
-							 */
-							console.log("Adding Demolished Church data to images array");
-							for (var property in item.members) {
-								//This is the individual peice of data pulled form the list
-								var church = item.members[property];
-								//console.log(church);
-								
-								//This is the id that the image url is stored behind
-								var mediaID = church['merged-media-ids'].images['Demolished Churches Media'];
-								//Create and add a new image to the image array using the church data
-								images[images.length] = new ImageWrapper(church.data.name,
-									church.data.year_of_demolition,
-									church.data.description,
-									church.media.images[mediaID].original);
-							}
-						} //endif
-						
-						
-						ckConsole.getGroup('Venice Churches').then(
-							function(item2){
-								console.log('Loaded Venice Churches');
-								console.log(item2);
-								console.log("ImageControl Call");
-								
-								console.log(images);
-								$scope.allImages = images;
-								
-								//Redraw the collage now that these images have been added
-								var wrappers = document.querySelector('#image_container');
-								var imgLoad = imagesLoaded( wrappers );
-								function onAlways( instance ) {
-									//This should only happen once all of the images have finished being loaded
-									console.log("All images loaded");
-									collage();
-									$('.Collage').collageCaption();
-								}
-								imgLoad.on( 'always', onAlways );
-							}
-						);
-					}
-				);
-				//console.log(proimiseA);
-				// Venice Churches
-				
-			}]);
-			
+			loadData(images, getTags());
 			
 		</script>
 	</body>
