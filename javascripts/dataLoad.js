@@ -50,13 +50,14 @@ function loadData(imageArray, tagsArray){
 			imageArray[imageArray.length] = new ImageWrapper(church.data.name,
 				church.data.year_of_demolition,
 				church.data.description,
-				church.media.images[mediaID].small);
+				church.media.images[mediaID].small,
+				church.data.width,
+				church.data.height);
 		}
 	});
 	
 	var veniceChurchesCollector = new DataSetCollector('Venice Churches', ['Churches'], function(input){
-		console.log('Loading: ' + this.dataName);
-		console.log(input);
+		//console.log(input);
 		for (var property in input.members) {
 			var church = input.members[property];
 			if(church.data["Current Use"] != "Active Church"){
@@ -65,11 +66,26 @@ function loadData(imageArray, tagsArray){
 					imageArray[imageArray.length] = new ImageWrapper(church.data['Page Title'],
 						church.data['Year Founded'],
 						church.data['Intro sentence'],
-						church.media.images[mediaID].small);
+						church.media.images[mediaID].small,
+						church.data.width,
+						church.data.height);
 				} catch (e){
 					console.log("No media associated");
 				}
 			}
+		}
+	});
+	
+	var conventsCollector = new DataSetCollector('Convents Merge', ['Convents'], function (input){
+		for (var property in input.members) {
+			var convent = input.members[property];
+			var mediaID = convent['merged-media-ids'].images['convents facade images'];
+			imageArray[imageArray.length] = new ImageWrapper(convent.data['Full Name'],
+						convent.data['Year Founded'],
+						"Current Use: " + convent.data['Current Use'],
+						convent.media.images[mediaID].small,
+						convent.data.width,
+						convent.data.height);
 		}
 	});
 	
@@ -78,21 +94,29 @@ function loadData(imageArray, tagsArray){
 		
 		
 		function getDataset(aDataSetCollector, nextFunction){
-			ckConsole.getGroup(aDataSetCollector.dataName).then(function(inputData){
-				if(aDataSetCollector.doAnyArgumentsMatch(tagsArray)){
+			if(aDataSetCollector.doAnyArgumentsMatch(tagsArray)){
+				ckConsole.getGroup(aDataSetCollector.dataName).then(function(inputData){
+					console.log('Loading: ' + aDataSetCollector.dataName);
+					console.log(inputData);
 					aDataSetCollector.inputParser(inputData);
-				}
+					nextFunction();
+				});
+			} else {
 				nextFunction();
-			});
+			}
 		}
 		
 		function attachImagesToScope(){
+			console.log("Image count: " + imageArray.length);
 			$scope.allImages = imageArray;
 			lazyLoadImages();
 		}
 		
 		getDataset(demolishedChurchesCollector, function(){
-			getDataset(veniceChurchesCollector, attachImagesToScope);
+			getDataset(veniceChurchesCollector, function(){
+				//getDataset(conventsCollector, attachImagesToScope);
+				attachImagesToScope();
+			});
 		});
 		
 	}]);
