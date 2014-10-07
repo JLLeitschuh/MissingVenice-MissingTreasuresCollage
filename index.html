@@ -64,16 +64,31 @@
 		<script type="text/javascript" src='javascripts/dataLoad.js'></script>
 	
 		<script type="text/javascript">
-			console.log("Loading Head script");
-			// All images need to be loaded for this plugin to work so
-			// we end up waiting for the whole window to load in this example
-			/*$(window).load(function () {
-				$(document).ready(function(){
-					console.log("Document Ready");
-					//collage();
-					//$('.Collage').collageCaption();
-				});
-			});*/
+			//This code is only nessasary if hosting it on a page secured with https
+			function setCookie(cname, cvalue, exdays) {
+				var d = new Date();
+				d.setTime(d.getTime() + (exdays*24*60*60*1000));
+				var expires = "expires="+d.toUTCString();
+				document.cookie = cname + "=" + cvalue + "; " + expires;
+			}
+			function getCookie(cname) {
+				var name = cname + "=";
+				var ca = document.cookie.split(';');
+				for(var i=0; i<ca.length; i++) {
+					var c = ca[i];
+					while (c.charAt(0)==' ') c = c.substring(1);
+					if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
+				}
+				return "";
+			}
+			if(window.chrome){
+				if(window.location.href.indexOf("https") > -1 && getCookie("httpsAlertShow") == ""){
+					alert("Chrome users: Due to the security built into chrome you must enable unsafe scripts to see this page properly.\n" +
+					"In the URL bar click the shield and, when prompted, click 'Load unsafe script'");
+					setCookie("httpsAlertShow", true, .25);
+				}
+			}
+			//End HTTPS info code
 		
 		
 			// Here we apply the actual CollagePlus plugin
