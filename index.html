@@ -164,7 +164,7 @@
 		<!-- This is where the images get stored once loaded -->
 		<section id="image_container" class="Collage effect-parent">
 			<div ng-repeat="image in allImages" class="Image_Wrapper" data-caption="{{image.caption}}">
-				<a ng-switch on="{{image.sizeDefined}}">
+				<a ng-switch on="{{image.sizeDefined}}" href="info_page.html?name={{image.dataName}}&id={{image.dataId}}">
 					<img ng-switch-when="true" ng-src="{{image.image}}" width="{{image.width}}" height="{{image.height}}"></img>
 					<img ng-switch-default ng-src="{{image.image}}"></img>
 				</a>
@@ -190,7 +190,7 @@
 			 * @param {String} caption The caption to display on this image
 			 * @param {String} image The URL for the image to load
 			 */
-			function ImageWrapper(title, date, caption, image, width, height){
+			function ImageWrapper(title, date, caption, image, width, height, dataName, dataId){
 				this.title = title;
 				this.date = date;
 				this.caption = '<b>' + title + '</b><br>' + caption.trunc(100, true);
@@ -204,6 +204,16 @@
 					this.sizeDefined = true;
 				} else {
 					this.sizeDefined = false;
+				}
+				if(typeof(dataName)==='undefined'){
+					this.dataName = "Unsuported";
+				} else {
+					this.dataName = dataName.replace(/ /g, "_");
+				}
+				if(typeof(dataId)==='undefined'){
+					this.dataId = 0;
+				} else {
+					this.dataId = dataId;
 				}
 			}
 			
@@ -257,7 +267,7 @@
 				];
 			} // endif
 			
-			loadData(images, getTags());
+			loadImageData(images, getTags());
 			
 		</script>
 	</body>

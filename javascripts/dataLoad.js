@@ -1,5 +1,5 @@
 
-function loadData(imageArray, tagsArray){
+function loadImageData(imageArray, tagsArray){
 	/*******************************************
 	 Once the images have been fully loaded
 	 create the collage
@@ -52,7 +52,10 @@ function loadData(imageArray, tagsArray){
 				church.data.description,
 				church.media.images[mediaID].small,
 				church.data.width,
-				church.data.height);
+				church.data.height,
+				this.dataName,
+				property
+			);
 		}
 	});
 	
@@ -68,7 +71,10 @@ function loadData(imageArray, tagsArray){
 						church.data['Intro sentence'],
 						church.media.images[mediaID].small,
 						church.data.width,
-						church.data.height);
+						church.data.height,
+						this.dataName,
+						property
+					);
 				} catch (e){
 					console.log("No media associated");
 				}
@@ -85,7 +91,10 @@ function loadData(imageArray, tagsArray){
 						"Current Use: " + convent.data['Current Use'],
 						convent.media.images[mediaID].small,
 						convent.data.width,
-						convent.data.height);
+						convent.data.height,
+						this.dataName,
+						property
+						);
 		}
 	});
 	
@@ -119,5 +128,39 @@ function loadData(imageArray, tagsArray){
 			});
 		});
 		
+	}]);
+}
+
+function loadObjectData(dataSetName, id){
+	app = angular.module('collageapp', ['ckServices']);
+	app.controller('DataCtrl', ['$scope', '$compile', 'ckConsole', 'ckConsoleMap', '$http', function($scope, $compile, ckConsole, ckConsoleMap, $http){
+		if(dataSetName == ""){
+			$scope.title = "No data set requested";
+			$scope.description = "You must request a specific dataset";
+		}
+		else if(dataSetName == "Unsuported"){
+			$scope.title = "Unsuported Data Set";
+			$scope.description = "";
+		} else {
+			ckConsole.getGroup(dataSetName).then(function(inputData){
+				var theObject = inputData.members[id];
+				console.log(theObject);
+				switch(dataSetName){
+					case 'Demolished Churches merge':
+						$scope.title = theObject.data.name;
+						$scope.description = theObject.data.description;
+						break;
+					case 'Venice Churches':
+						$scope.title = theObject.data["Page Title"];
+						//Make this more descriptive. There is more data here.
+						$scope.description = theObject.data['History Blurb'];
+						break;
+					default:
+						$scope.title = "Unsuported Data Set";
+						$scope.description = "";
+						break;
+				}	
+			});
+		}
 	}]);
 }
