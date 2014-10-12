@@ -158,7 +158,14 @@ nav a:hover {
    Author's custom styles
    ========================================================================== */
 
+div.Image_Wrapper {
+    width:300px;
+    overflow:hidden;
+}
 
+div.Image_Wrapper img {
+    min-width:100%;
+}
 
 
 

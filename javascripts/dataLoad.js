@@ -1,3 +1,39 @@
+function StandardizedDataSet(object, id, parentDataName){
+	this.parentDataName = parentDataName;
+	this.id = id;
+	switch(parentDataName){
+		case 'Demolished Churches merge':
+			//This is the id that the image url is stored behind
+			var mediaID = object['merged-media-ids'].images['Demolished Churches Media'];
+			this.name = object.data.name;
+			this.shortDescription = object.data.description;
+			this.imageSmallUrl = object.media.images[mediaID].small;
+			this.imageWidth = object.data.width;
+			this.imageHeight = object.data.height;
+			break;
+		case 'Venice Churches':
+			this.name = theObject.data["Page Title"];
+			//Make this more descriptive. There is more data here.
+			this.shortDescription = theObject.data['History Blurb'];
+			break;
+		default:
+			this.name = "Unsuported Data Set";
+			this.shortDescription = "";
+			break;
+	}
+	
+	this.getImageWrapper = function(){
+		return new ImageWrapper(this.name,
+			this.year,
+			this.shortDescription,
+			this.imageSmallUrl,
+			this.imageWidth,
+			this.imageHeight,
+			this.parentDataName,
+			this.id
+		);
+	};
+}
 
 function loadImageData(imageArray, tagsArray){
 	/*******************************************
@@ -15,7 +51,6 @@ function loadImageData(imageArray, tagsArray){
 		}
 		imgLoad.on( 'always', onAlways );
 	}
-	
 	
 	/**
 	 * 
@@ -44,18 +79,9 @@ function loadImageData(imageArray, tagsArray){
 			var church = input.members[property];
 			//console.log(church);
 			
-			//This is the id that the image url is stored behind
-			var mediaID = church['merged-media-ids'].images['Demolished Churches Media'];
+			var dataSet = new StandardizedDataSet(church, property, this.dataName);
 			//Create and add a new image to the image array using the church data
-			imageArray[imageArray.length] = new ImageWrapper(church.data.name,
-				church.data.year_of_demolition,
-				church.data.description,
-				church.media.images[mediaID].small,
-				church.data.width,
-				church.data.height,
-				this.dataName,
-				property
-			);
+			imageArray[imageArray.length] = dataSet.getImageWrapper();
 		}
 	});
 	
@@ -134,32 +160,16 @@ function loadImageData(imageArray, tagsArray){
 function loadObjectData(dataSetName, id){
 	app = angular.module('collageapp', ['ckServices']);
 	app.controller('DataCtrl', ['$scope', '$compile', 'ckConsole', 'ckConsoleMap', '$http', function($scope, $compile, ckConsole, ckConsoleMap, $http){
-		if(dataSetName == ""){
-			$scope.title = "No data set requested";
-			$scope.description = "You must request a specific dataset";
-		}
-		else if(dataSetName == "Unsuported"){
-			$scope.title = "Unsuported Data Set";
-			$scope.description = "";
+		if(dataSetName == "" || dataSetName == "Unsuported"){
+			$scope.data.name = "No data set requested";
+			$scope.data.shortDescription = "You must request a specific dataset";
 		} else {
 			ckConsole.getGroup(dataSetName).then(function(inputData){
 				var theObject = inputData.members[id];
+				var collector;
 				console.log(theObject);
-				switch(dataSetName){
-					case 'Demolished Churches merge':
-						$scope.title = theObject.data.name;
-						$scope.description = theObject.data.description;
-						break;
-					case 'Venice Churches':
-						$scope.title = theObject.data["Page Title"];
-						//Make this more descriptive. There is more data here.
-						$scope.description = theObject.data['History Blurb'];
-						break;
-					default:
-						$scope.title = "Unsuported Data Set";
-						$scope.description = "";
-						break;
-				}	
+				$scope.data = new StandardizedDataSet(theObject, id, dataSetName);
+				
 			});
 		}
 	}]);

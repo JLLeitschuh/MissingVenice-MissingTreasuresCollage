@@ -15,9 +15,11 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<![endif]-->
 		<!--[if (gte IE 9) | (!IE)]><!-->
-		<!--script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js" type="text/javascript"></script>
 		<!--<![endif]-->
+		
+		<!-- Firebase -->
+		<script type='text/javascript' src='https://cdn.firebase.com/v0/firebase.js'></script>
 		
 		<!-- angularjs -->
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
@@ -25,7 +27,10 @@
 		<!-- imagesLoaded -->
 		<script src="http://imagesloaded.desandro.com/imagesloaded.pkgd.min.js" type="text/javascript"></script>
 
-		<script src="javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<!--script src="javascripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script-->
+		
+		<!-- console library -->
+		<script type='text/javascript' src='javascripts/ck-console.js'></script>
 		
 		<title>VMTC Data</title>
 		<meta name="description" content="">
@@ -62,7 +67,7 @@
 		
 		<div class="header-container">
 			<header class="wrapper clearfix">
-				<h1 class="title">{{title}}</h1>
+				<h1 class="title">{{data.name}}</h1>
 				<nav>
 					<ul>
 						<li><a href="#">nav ul li a</a></li>
@@ -79,7 +84,7 @@
 				<article>
 					<header>
 						<h1>article header h1</h1>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec.</p>
+						<p>{{data.shortDescription}}</p>
 					</header>
 					<section>
 						<h2>article section h2</h2>
@@ -96,8 +101,12 @@
 				</article>
 
 				<aside>
+					<div class="Image_Wrapper"><img ng-src="{{data.imageSmallUrl}}"/></div>
+					
+					<!--
 					<h3>aside</h3>
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices.</p>
+					-->
 				</aside>
 
 			</div> <!-- #main -->
