@@ -71,22 +71,22 @@ body {
 }
 
 /* ===================
-    ALL: Orange Theme
+    ALL: Grey Black Blue Theme
    =================== */
 
 .header-container {
-    border-bottom: 20px solid #e44d26;
+    border-bottom: 20px solid #272D35;
 }
 
 .footer-container,
 .main aside {
-    border-top: 20px solid #e44d26;
+    border-top: 20px solid #272D35;
 }
 
 .header-container,
 .footer-container,
 .main aside {
-    background: #f16529;
+    background: rgb(65, 68, 75);
 }
 
 .title {
@@ -112,7 +112,7 @@ nav a {
     font-weight: bold;
 
     color: white;
-    background: #e44d26;
+    background: #09F;
 }
 
 nav a:hover,
