@@ -89,6 +89,13 @@
 				}
 			}
 			//End HTTPS info code
+
+			function getTags(){
+				var text = self.location.search;
+				if(text == "")return [];
+				var theleft = text.lastIndexOf("?") + 1;
+				return text.substring(theleft, text.length).split(',');
+			}
 		
 		
 			// Here we apply the actual CollagePlus plugin
@@ -115,63 +122,51 @@
 		</script>
 	</head>
 	<body ng-controller="DataCtrl">
-		<header class="header">
-			<script type="text/javascript">
-				function getTags(){
-					var text = self.location.search;
-					if(text == "")return [];
-					var theleft = text.lastIndexOf("?") + 1;
-					return text.substring(theleft, text.length).split(',');
-				}
-				var tags = getTags();
-				
-				function toggleTag(tagName){
-					console.log("Toggle Tag");
-					var i = tags.indexOf(tagName);
-					if(i != -1) {
-						tags.splice(i, 1);
-						window.location.href = 'index.html?' + tags;
-						return;
-					}
-					tags[tags.length] = tagName;
-					window.location.href = 'index.html?' + tags;
-				}
-				
-				function NavCtrl($scope){
-					/**
-					 * Holds the data for the NavTag
-					 * @param <String> name The nav button to add
-					 */
-					function NavTag(name){
-						this.name = name;
-						this.loadedTag = (tags.indexOf(name) != -1 ? 'selected' : '');
-					}
-					//The list of nav tags to have
-					$scope.allNavs = [
-						new NavTag("Art"),
-						new NavTag("Churches"),
-						new NavTag("Convents"),
-						new NavTag("Rii tera'"),
-						new NavTag("Repurposed"),
-						new NavTag("Demolished")
-					];
-					$scope.toggleTagName = toggleTag;
-				}
-			</script>
-			<h1><a href="http://veniceprojectcenter.org/">Venice Project Center</a><a class="wpi_logo" href="http://www.wpi.edu/"><img align="right" src="images/WPI_Inst_Prim_FulClr_Rev.png"/></a></h1>
-			<!-- Dynamically add more nav tags using a repeat rule -->
-			<nav ng-controller="NavCtrl">
-				<a class="nav_button" href="index.html">All</a>
-				<a ng-repeat="navTag in allNavs" class="{{navTag.loadedTag}} nav_button" href="#" ng-click="toggleTagName(navTag.name);">{{navTag.name}}</a>
-				<em><a href="https://sites.google.com/site/ve14miss/">Missing Venice</a></em>
-			</nav>
+		<script type="text/javascript">
+			var tags = getTags();
 			
-		</header>
+			function toggleTag(tagName){
+				console.log("Toggle Tag");
+				var i = tags.indexOf(tagName);
+				if(i != -1) {
+					tags.splice(i, 1);
+					window.location.href = 'index.html?' + tags;
+					return;
+				}
+				tags[tags.length] = tagName;
+				window.location.href = 'index.html?' + tags;
+			}
+
+			function HeaderCtrl($scope){
+
+			}
+			function NavCtrl($scope){
+				/**
+				 * Holds the data for the NavTag
+				 * @param <String> name The nav button to add
+				 */
+				function NavTag(name){
+					this.name = name;
+					this.loadedTag = (tags.indexOf(name) != -1 ? 'selected' : '');
+				}
+				//The list of nav tags to have
+				$scope.allNavs = [
+					new NavTag("Art"),
+					new NavTag("Churches"),
+					new NavTag("Convents"),
+					new NavTag("Rii tera'"),
+					new NavTag("Repurposed"),
+					new NavTag("Demolished")
+				];
+				$scope.toggleTagName = toggleTag;
+			}
+		</script>
+		<ng-include src="'header.html'"></ng-include>
 		
 		<!-- This is where the images get stored once loaded -->
 		<section id="image_container" class="Collage effect-parent">
 			<div ng-repeat="image in allImages" class="Image_Wrapper" data-caption="{{image.caption}}">
-				<a ng-switch on="{{image.sizeDefined}}" href="info_page.html?name={{image.dataName}}&id={{image.dataId}}">
+				<a ng-switch on="{{image.sizeDefined}}" href="artifactdata/info_page.html?name={{image.dataName}}&id={{image.dataId}}">
 					<img ng-switch-when="true" ng-src="{{image.image}}" width="{{image.width}}" height="{{image.height}}"></img>
 					<img ng-switch-default ng-src="{{image.image}}"></img>
 				</a>
