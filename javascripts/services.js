@@ -9,6 +9,14 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 			addArtifact: function(artifact){
 				service.artifacts.push(artifact);
 				$rootScope.$broadcast( 'artifacts.update' );
+			},
+			getArtifactFromLinkData: function(blob){
+				if(blob.groupName === 'undefined') throw 'groupName is undefined';
+				if(blob.id === 'undefined') throw 'id is undefined';
+				//Search through the array to find the groupName
+				return $.grep(service.artifacts, function(e){
+					return (e.id == blob.id) && (e.groupNameLink == blob.groupName);
+				});
 			}
 		};
 
@@ -105,10 +113,13 @@ module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $s
 		});
 		$scope.artifacts = ArtifactService.artifacts;
 
+
+		//Only try to load the images once all of the datasets have been retrived
+		//Keep track how many groups have been loaded so far
 		var groupsLoaded = 0;
 		$scope.$on( 'artifacts.group.loaded', function (event){
 			groupsLoaded ++;
-			if( groupsLoaded == 3) {
+			if( groupsLoaded == ArtifactService.datasetCount) {
 				var wrappers = document.querySelector('#image_container');
 				var imgLoad = imagesLoaded( wrappers );
 				function onAlways( instance ) {

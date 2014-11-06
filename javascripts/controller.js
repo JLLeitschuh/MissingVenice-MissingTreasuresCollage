@@ -22,8 +22,16 @@ angular.module('ArtifactFeederApp.controllers', []).
 		// This is just for the case that the browser window is resized
 		$(window).bind('resize', collageImagesFunction);
 	}).
-	controller('artifactController', function($scope, ArtifactService){
+	controller('artifactController', function($scope, $routeParams, ArtifactService){
 		console.log("ArtifactFeederApp.controllers: artifactController");
+		$scope.artifact = null;
+		var tryLoad = function (event){
+			$scope.artifactKey = {groupName: $routeParams.group, id: $routeParams.id};
+			$scope.artifact = ArtifactService.getArtifactFromLinkData($scope.artifactKey)[0];
+			console.log($scope.artifact);
+		};
+		$scope.$on( 'artifacts.group.loaded', tryLoad);
 
+		tryLoad();
 
 	});
