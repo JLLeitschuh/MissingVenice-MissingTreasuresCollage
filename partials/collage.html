@@ -1,0 +1,8 @@
+<!-- This is where the images get stored once loaded -->
+<section ng-controller="artifacts.list" id="image_container" class="Collage effect-parent">
+	<div ng-repeat="artifact in artifacts" class="Image_Wrapper" data-caption="{{artifact.shortDescription}}">
+		<a href="#/artifact/group/{{artifact.groupNameLink}}/id/{{artifact.id}}">
+			<img ng-src="{{artifact.imageData[0].small}}" width="{{artifact.imageData[0].width}}" height="{{artifact.imageData[0].height}}"></img>
+		</a>
+	</div>
+</section>
