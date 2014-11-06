@@ -1,5 +1,7 @@
 <!-- TODO: Move this search bar somewhere else. This is here as an example-->
-<input placeholder="Search" ng-model="searchText" ng-change="searchChange()">
+<div style="text-align:right;">
+	<input placeholder="Search" ng-model="searchText" ng-change="searchChange()">
+</div>
 
 <!-- This is where the images get stored once loaded -->
 <section ng-controller="artifacts.list" id="image_container" class="Collage effect-parent">
