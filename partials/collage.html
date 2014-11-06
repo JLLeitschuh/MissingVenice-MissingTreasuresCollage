@@ -1,6 +1,9 @@
+<!-- TODO: Move this search bar somewhere else. This is here as an example-->
+<input placeholder="Search" ng-model="searchText" ng-change="searchChange()">
+
 <!-- This is where the images get stored once loaded -->
 <section ng-controller="artifacts.list" id="image_container" class="Collage effect-parent">
-	<div ng-repeat="artifact in artifacts" class="Image_Wrapper" data-caption="{{artifact.shortDescription}}">
+	<div ng-repeat="artifact in artifacts | filter:searchText" class="Image_Wrapper" data-caption="{{artifact.shortDescription}}">
 		<a href="#/artifact/group/{{artifact.groupNameLink}}/id/{{artifact.id}}">
 			<img ng-src="{{artifact.imageData[0].small}}" width="{{artifact.imageData[0].width}}" height="{{artifact.imageData[0].height}}"></img>
 		</a>
