@@ -2,7 +2,7 @@
 	<h1><a href="http://veniceprojectcenter.org/">Venice Project Center</a><a class="wpi_logo" href="http://www.wpi.edu/"><img align="right" src="images/WPI_Inst_Prim_FulClr_Rev.png"/></a></h1>
 	<!-- Dynamically add more nav tags using a repeat rule -->
 	<nav ng-controller="NavCtrl">
-		<a class="nav_button" href="/#/">Home</a>
+		<a class="nav_button" href="./#/">Home</a>
 		<a ng-repeat="navTag in allNavs" class="{{navTag.loadedTag}} nav_button" href="#" ng-click="toggleTagName(navTag.name);">{{navTag.name}}</a>
 		<em><a href="https://sites.google.com/site/ve14miss/">Missing Venice</a></em>
 	</nav>
