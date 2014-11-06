@@ -79,13 +79,6 @@
 				}
 				return "";
 			}
-			if(window.chrome){
-				if(window.location.href.indexOf("https") > -1 && getCookie("httpsAlertShow") == ""){
-					alert("Chrome users: Due to the security built into chrome you must enable unsafe scripts to see this page properly.\n" +
-					"In the URL bar click the shield and, when prompted, click 'Load unsafe script'");
-					setCookie("httpsAlertShow", true, .25);
-				}
-			}
 			//End HTTPS info code
 
 			function getTags(){
