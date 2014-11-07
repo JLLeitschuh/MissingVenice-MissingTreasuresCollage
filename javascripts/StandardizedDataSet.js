@@ -72,6 +72,11 @@ function StandardizedDataSet(object, id, parentDataName){
 		this.text = blob.text;
 	}
 
+	function HeaderTableData(blob){
+		this.header = blob.header;
+		this.tableData = blob.tableData;
+	}
+
 
 	/*
 	* HARD CODING ALERT! IF THE FORMAT FOR THESE DATA SETS CHANGE IT WILL BREAK HERE!
@@ -89,6 +94,18 @@ function StandardizedDataSet(object, id, parentDataName){
 			this.shortDescription = object.data.description;
 			this.sections = [new HeaderTextData({header:"Test Header", text:'A lot of text'})];
 			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.tableData = new HeaderTableData({
+				header: 'Demolition Info',
+				tableData: {
+					'Reason for demolition': object.data.reason_for_demolition,
+					'Government in power during demolition': object.data.government_in_power_during_demolition,
+					'Year founded': object.data.year_founded,
+					'Year of demolition': object.data.year_of_demolition,
+				}});
+			this.tableData.headers = ['Reason for demolition',
+					'Government in power during demolition',
+					'Year founded',
+					'Year of demolition'];
 			break;
 		case 'Venice Churches':
 			//This is the id that the image url is stored behind
@@ -98,6 +115,7 @@ function StandardizedDataSet(object, id, parentDataName){
 			this.shortDescription = object.data['History Blurb'];
 			this.sections = [new HeaderTextData({header:"Test Header", text:'A lot of text'})];
 			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.tableData = null;
 			break;
 		case 'Convents Merge':
 			var mediaID = object['merged-media-ids'].images['convents facade images'];
@@ -105,6 +123,7 @@ function StandardizedDataSet(object, id, parentDataName){
 			this.shortDescription = "Current Use: " + object.data['Current Use'];
 			this.sections = [new HeaderTextData({header:"Test Header", text:'A lot of text'})];
 			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.tableData = null;
 			break;
 		default:
 			console.log("Unsuported Data Set");

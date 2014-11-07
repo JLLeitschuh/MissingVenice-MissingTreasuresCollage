@@ -30,6 +30,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 			this.dataName = dataName;
 			this.categories = categories;
 			this.inputParser = function(input){
+				console.log(dataName);
 				console.log(input);
 				inputParser(input);
 				$rootScope.$broadcast( 'artifacts.group.loaded' );
@@ -94,7 +95,6 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 
 			ckConsole.getGroup(aDataSetCollector.dataName).then(function(inputData){
 				console.log('Loading: ' + aDataSetCollector.dataName);
-				console.log(inputData);
 				aDataSetCollector.inputParser(inputData);
 			});
 		}
