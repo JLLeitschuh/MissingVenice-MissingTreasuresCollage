@@ -1,14 +1,16 @@
 <section id="artifact_data">
-	<div>
+	<style>
+		table, th, td {
+			border: 1px solid black;
+		}
+		aside { float:right; }
+		.data_text {float:left; }
+	</style>
+	<div class="data_text">
 		<h1>{{artifact.name}}</h1>
 		<p>{{artifact.shortDescription}}</p>
 	</div>
 	<aside>
-		<style>
-			table, th, td {
-				border: 1px solid black;
-			}
-		</style>
 		<table>
 			<tr> <th colspan='2'>{{artifact.tableData.header}}</th> </tr>
 			<tr ng-repeat="header in artifact.tableData.headers">
