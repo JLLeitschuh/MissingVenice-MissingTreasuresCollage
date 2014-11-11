@@ -1,8 +1,13 @@
 #Missing Treasure Collage
 
-###Syntax Notes:
+Created by the 2014 Missing Venice team for the Venice IQP.
 
-#####Defining an object:
+##Live Link:
+This project is live [here](http://jlleitschuh.github.io/MissingVenice-MissingTreasuresCollage/).
+
+##Syntax Notes:
+
+###Defining an object:
 Object names should have the first letter capitalized and proceed with camel case.
 
 ```javascript
@@ -10,7 +15,7 @@ function AnObject(name){
 	this.name = name;
 }
 ```
-#####Defining a function:
+###Defining a function:
 Function names should have the first letter lower case and proceed with camel case.
 
 ```javascript
