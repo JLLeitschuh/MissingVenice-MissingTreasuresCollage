@@ -1,6 +1,19 @@
 /******************************************************************************************
 THIS FILE HAS BEEN ABSTRACTED OUT TO CONTROLLER AND SERVICES! USED FOR REFFERENCE ONLY!
+
+					YOUR CHANGES IN THIS FILE WILL HAVE NO EFFECT!
+
 *******************************************************************************************/
+
+
+
+
+
+
+
+
+
+
 function loadImageData(imageArray, tagsArray){
 	/*******************************************
 	 Once the images have been fully loaded
