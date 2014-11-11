@@ -19,6 +19,10 @@ angular.module('ArtifactFeederApp.controllers', []).
 
 		$scope.searchChange = collageImagesFunction;
 
+		$scope.random = function(){
+			return 0.5 - Math.random();
+		};
+
 		// This is just for the case that the browser window is resized
 		$(window).bind('resize', collageImagesFunction);
 		collageImagesFunction();
