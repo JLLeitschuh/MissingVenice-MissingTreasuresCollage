@@ -23,3 +23,4 @@ function aFunction(data){
 	//do something
 }
 ```
+It is clearer if your function takes a dictionary instead a list of paramaters. This makes it easier to read the code.
