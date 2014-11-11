@@ -3,8 +3,17 @@
 		table, th, td {
 			border: 1px solid black;
 		}
-		aside { float:right; }
-		.data_text {float:left; }
+		.data_text {
+			width: 75%
+			float:left;
+			}
+		aside {
+			width: 25%
+			float:right;
+		}
+		#clear {
+			clear: both;
+		}
 	</style>
 	<div class="data_text">
 		<h1>{{artifact.name}}</h1>
@@ -13,9 +22,10 @@
 	<aside>
 		<table>
 			<tr> <th colspan='2'>{{artifact.tableData.header}}</th> </tr>
-			<tr ng-repeat="header in artifact.tableData.headers">
-				<td>{{header}}</td><td>{{artifact.tableData.tableData[header]}}</td>
+			<tr ng-repeat="(header, data) in artifact.tableData.tableData">
+				<td>{{header}}</td><td>{{data}}</td>
 			</tr>
 		</table>
 	</aside>
+	<div id="clear"></div>
 </section>

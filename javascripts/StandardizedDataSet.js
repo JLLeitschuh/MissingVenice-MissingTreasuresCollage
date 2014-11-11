@@ -100,29 +100,39 @@ function StandardizedDataSet(object, id, parentDataName){
 					'Reason for demolition': object.data.reason_for_demolition,
 					'Government in power during demolition': object.data.government_in_power_during_demolition,
 					'Year founded': object.data.year_founded,
-					'Year of demolition': object.data.year_of_demolition,
+					'Year of demolition': object.data.year_of_demolition
 				}});
-			this.tableData.headers = ['Reason for demolition',
-					'Government in power during demolition',
-					'Year founded',
-					'Year of demolition'];
 			break;
 		case 'Venice Churches':
 			//This is the id that the image url is stored behind
 			var mediaID = object['merged-media-ids'].images['Church Facade Images 2012'];
 			this.name = object.data["Page Title"];
 			//Make this more descriptive. There is more data here.
-			this.shortDescription = object.data['History Blurb'];
+			this.shortDescription = object.data['Intro sentence'];
 			this.sections = [new HeaderTextData({header:"Test Header", text:'A lot of text'})];
 			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
-			this.tableData = null;
+			this.sections = [
+				new HeaderTextData({header:"Intro", text:object.data["Intro sentence"]}),
+				new HeaderTextData({header:"History", text:object.data["History Blurb"]})
+			];
+			this.tableData = new HeaderTableData({
+				header: '',
+				tableData: {
+					'Local Name': object.data["Local Name"],
+					'Denomination': object.data["Denomination"],
+					'Island': object.data["Island"],
+					'Year Founded': object.data["Year Founded"],
+					'Current Use': object.data["Current Use"],
+					'Hours of Operation': object.data["Hours of Operation"],
+				}
+			});
 			break;
 		case 'Convents Merge':
 			var mediaID = object['merged-media-ids'].images['convents facade images'];
 			this.name = object.data['Full Name'];
 			this.shortDescription = "Current Use: " + object.data['Current Use'];
 			this.sections = [new HeaderTextData({header:"Test Header", text:'A lot of text'})];
-			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.imageData= [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
 			this.tableData = null;
 			break;
 		default:
