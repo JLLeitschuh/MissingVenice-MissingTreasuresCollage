@@ -93,7 +93,9 @@ function StandardizedDataSet(object, id, parentDataName){
 			var mediaID = object['merged-media-ids'].images['Demolished Churches Media'];
 			this.name = object.data.name;
 			this.shortDescription = object.data.description;
-			this.sections = [new HeaderTextData({header:"Test Header", text:'A lot of text'})];
+			this.sections = [
+				new HeaderTextData({header:"Church Info", text: object.data['description']})
+			];
 			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
 			this.tableData = new HeaderTableData({
 				header: 'Demolition Info',
@@ -112,7 +114,6 @@ function StandardizedDataSet(object, id, parentDataName){
 			this.name = object.data["Page Title"];
 			//Make this more descriptive. There is more data here.
 			this.shortDescription = object.data['Intro sentence'];
-			this.sections = [new HeaderTextData({header:"Test Header", text:'A lot of text'})];
 			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
 			this.sections = [
 				new HeaderTextData({header:"Intro", text:object.data["Intro sentence"]}),
@@ -135,7 +136,7 @@ function StandardizedDataSet(object, id, parentDataName){
 		case 'Venice Convents':
 			var mediaID = object['merged-media-ids'].images['convents facade images'];
 			this.name = object.data['Full Name'];
-			this.shortDescription = "Current Use: " + object.data['Current Use'];
+			this.shortDescription = "Current Use: " + object.data['Historic Background'];
 			this.sections = [
 				new HeaderTextData({header:"Historic Background", text: object.data['Historic Background']}),
 			];

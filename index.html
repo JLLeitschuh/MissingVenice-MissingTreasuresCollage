@@ -46,7 +46,8 @@
 		<script type="text/javascript" src='javascripts/controller.js'></script>
 		<script type="text/javascript" src='javascripts/services.js'></script>
 		<script type="text/javascript" src='javascripts/view.js'></script>
-		<!--script type="text/javascript" src='javascripts/dataLoad.js'></script-->
+		<script type='text/javascript' src='bower_components/angular-bootstrap/ui-bootstrap.js'></script>
+		<script type='text/javascript' src='bower_components/angular-bootstrap/ui-bootstrap-tpls.js'></script>
 
 		<link rel="stylesheet" type="text/css" href="css/transitions.css" media="all" />
 		<link rel="stylesheet" type="text/css" href="css/collageTags.css" media="all" />
@@ -54,11 +55,14 @@
 		<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
 		<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap-theme.css"/>
 
-
 		<script src="javascripts/jquery-collagePlus/jquery.collagePlus.js"></script>
 		<script src="javascripts/jquery-collagePlus/jquery.removeWhitespace.js"></script>
 		<script src="javascripts/jquery-collagePlus/jquery.collageCaption.js"></script>
 		<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+		<style>
+			.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+		</style>
 
 		<script type="text/javascript">
 			function setCookie(cname, cvalue, exdays) {
@@ -95,8 +99,9 @@
 	<body>
 		<ng-include src="'header.html'"></ng-include>
 		<!-- This is where 'current view' appears. The route provider in app.js defines what appears here. -->
-		<ng-view></ng-view>
-
+		<div class="container-fluid" style="padding-left:5px; padding-right:5px;">
+			<ng-view></ng-view>
+		</div>
 		<script type="text/javascript">
 			//Function that truncates strings down to a specific length and adds '...' to the end
 			String.prototype.trunc =
