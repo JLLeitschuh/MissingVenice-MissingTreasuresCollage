@@ -115,6 +115,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 		return service;
 	}]);
 module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $scope, ArtifactService ) {
+		$scope.progressPercent = 10;
 		//This is called ever time an artifact is added to the ArtifactService
 		$scope.$on( 'artifacts.update', function( event ) {
 			$scope.artifacts = ArtifactService.artifacts;
@@ -128,10 +129,12 @@ module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $s
 		var groupsLoaded = 0;
 		$scope.$on( 'artifacts.group.loaded', function (event){
 			groupsLoaded ++;
+			$scope.progressPercent += 30;
 			if( groupsLoaded == ArtifactService.datasetCount) {
 				var wrappers = document.querySelector('#image_container');
 				var imgLoad = imagesLoaded( wrappers );
 				var onAlways = function ( instance ) {
+					$scope.$apply;
 					//This should only happen once all of the images have finished being loaded
 					console.log("All images loaded");
 					collage();
