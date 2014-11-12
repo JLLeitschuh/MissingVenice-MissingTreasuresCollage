@@ -104,6 +104,8 @@ function StandardizedDataSet(object, id, parentDataName){
 					'Year of demolition': object.data.year_of_demolition
 				}});
 			break;
+
+
 		case 'Venice Churches':
 			//This is the id that the image url is stored behind
 			var mediaID = object['merged-media-ids'].images['Church Facade Images 2012'];
@@ -117,7 +119,7 @@ function StandardizedDataSet(object, id, parentDataName){
 				new HeaderTextData({header:"History", text:object.data["History Blurb"]})
 			];
 			this.tableData = new HeaderTableData({
-				header: '',
+				header: 'Repurposed Church Info',
 				tableData: {
 					'Local Name': object.data["Local Name"],
 					'Denomination': object.data["Denomination"],
@@ -134,10 +136,23 @@ function StandardizedDataSet(object, id, parentDataName){
 			var mediaID = object['merged-media-ids'].images['convents facade images'];
 			this.name = object.data['Full Name'];
 			this.shortDescription = "Current Use: " + object.data['Current Use'];
-			this.sections = [new HeaderTextData({header:"Test Header", text:'A lot of text'})];
+			this.sections = [
+				new HeaderTextData({header:"Historic Background", text: object.data['Historic Background']}),
+			];
 			this.imageData= [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
-			this.tableData = null;
+			this.tableData = new HeaderTableData({
+				header: 'Repurposed Convent Info',
+				tableData: {
+					'Parish': object.data["Parish"],
+					'Sestiere': object.data["Sestiere"],
+					'Street Address': object.data["Street Address"],
+					'Year Founded': object.data["Year Founded"],
+					'Current Use': object.data["Current Use"],
+				}
+			});
 			break;
+
+
 		default:
 			console.log("Unsuported Data Set");
 			this.name = "Unsuported Data Set";
