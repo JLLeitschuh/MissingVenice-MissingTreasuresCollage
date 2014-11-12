@@ -69,16 +69,21 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 			}
 		});
 
-		var conventsCollector = new DataSetCollector('Convents Merge', ['Convents'],
+		var conventsCollector = new DataSetCollector('Venice Convents', ['Convents'],
 		function (input){
 			for (var property in input.members) {
 				//This is the individual peice of data pulled form the list
 				var convent = input.members[property];
-				try{
-					var dataSet = new StandardizedDataSet(convent, property, this.dataName);
-					service.addArtifact(dataSet);
-				} catch (e){
-					console.log("No media associated");
+				var currentUse = convent.data["Current Use"];
+				if(currentUse != "Convent" ||
+				   currentUse != "Closed to the Public" ||
+				   currentUse != "Active Church and Art Museum"){
+					try{
+						var dataSet = new StandardizedDataSet(convent, property, this.dataName);
+						service.addArtifact(dataSet);
+					} catch (e){
+						console.log("No media associated");
+					}
 				}
 			}
 		});

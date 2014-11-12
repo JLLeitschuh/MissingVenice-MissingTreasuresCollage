@@ -127,7 +127,9 @@ function StandardizedDataSet(object, id, parentDataName){
 				}
 			});
 			break;
-		case 'Convents Merge':
+
+
+		case 'Venice Convents':
 			var mediaID = object['merged-media-ids'].images['convents facade images'];
 			this.name = object.data['Full Name'];
 			this.shortDescription = "Current Use: " + object.data['Current Use'];
