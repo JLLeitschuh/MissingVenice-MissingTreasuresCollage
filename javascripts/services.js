@@ -1,3 +1,4 @@
+"use strict";
 var module = angular.module('ArtifactFeederApp.services', []);
 
 module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScope, ckConsole) {
@@ -32,25 +33,25 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 			this.inputParser = function(input){
 				console.log(dataName);
 				console.log(input);
-				inputParser(input);
+				inputParser(input, this);
 				$rootScope.$broadcast( 'artifacts.group.loaded' );
 			};
 		}
 
 		var demolishedChurchesCollector = new DataSetCollector('Demolished Churches merge', ['Churches'],
-		function(input){
+		function(input, _this){
 			//console.log("Adding Demolished Church data to artifactAPI.list");
 			for (var property in input.members) {
 				//This is the individual peice of data pulled form the list
 				var church = input.members[property];
 				//console.log(church);
-				var dataSet = new StandardizedDataSet(church, property, this.dataName);
+				var dataSet = new StandardizedDataSet(church, property, _this.dataName);
 				service.addArtifact(dataSet);
 			}
 		});
 
 		var veniceChurchesCollector = new DataSetCollector('Venice Churches', ['Churches'],
-		function(input){
+		function(input, _this){
 			//console.log(input);
 			for (var property in input.members) {
 				var church = input.members[property];
@@ -59,7 +60,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 						//This is the individual peice of data pulled form the list
 						var church = input.members[property];
 						//console.log(church);
-						var dataSet = new StandardizedDataSet(church, property, this.dataName);
+						var dataSet = new StandardizedDataSet(church, property, _this.dataName);
 						service.addArtifact(dataSet);
 
 					} catch (e){
@@ -70,7 +71,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 		});
 
 		var conventsCollector = new DataSetCollector('Venice Convents', ['Convents'],
-		function (input){
+		function (input, _this){
 			for (var property in input.members) {
 				//This is the individual peice of data pulled form the list
 				var convent = input.members[property];
@@ -79,7 +80,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 				   currentUse != "Closed to the Public" ||
 				   currentUse != "Active Church and Art Museum"){
 					try{
-						var dataSet = new StandardizedDataSet(convent, property, this.dataName);
+						var dataSet = new StandardizedDataSet(convent, property, _this.dataName);
 						service.addArtifact(dataSet);
 					} catch (e){
 						console.log("No media associated");
@@ -127,7 +128,7 @@ module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $s
 			if( groupsLoaded == ArtifactService.datasetCount) {
 				var wrappers = document.querySelector('#image_container');
 				var imgLoad = imagesLoaded( wrappers );
-				function onAlways( instance ) {
+				var onAlways = function ( instance ) {
 					//This should only happen once all of the images have finished being loaded
 					console.log("All images loaded");
 					collage();

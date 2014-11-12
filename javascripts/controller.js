@@ -1,3 +1,4 @@
+"use strict";
 angular.module('ArtifactFeederApp.controllers', []).
 	controller('artifactsController', function($scope, ArtifactService) {
 		console.log("ArtifactFeederApp.controllers: artifactsController");

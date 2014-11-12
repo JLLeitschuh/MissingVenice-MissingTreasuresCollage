@@ -1,3 +1,4 @@
+"use strict";
 /****************************************************************
 Missing Venice 2014
 Created by Jonathan Leitschuh
