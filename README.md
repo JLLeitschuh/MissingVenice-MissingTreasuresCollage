@@ -5,6 +5,9 @@ Created by the 2014 Missing Venice team for the Venice IQP.
 ##Live Link:
 This project is live [here](http://jlleitschuh.github.io/MissingVenice-MissingTreasuresCollage/).
 
+##Dependency Management:
+Dependency management is through bower. If you want to add external libraries please download [bower](http://bower.io/).
+
 ##Syntax Notes:
 
 ###Defining an object:
