@@ -4,6 +4,7 @@ angular.
 	module('ArtifactFeederApp', [
 		'ArtifactFeederApp.controllers',
 		'ArtifactFeederApp.services',
+		'ArtifactFeederApp.view',
 		'ckServices',
 		'ngRoute'
 	]).

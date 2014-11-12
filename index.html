@@ -49,6 +49,7 @@
 		<script type='text/javascript' src='javascripts/ck-console.js'></script>
 		<script type="text/javascript" src='javascripts/controller.js'></script>
 		<script type="text/javascript" src='javascripts/services.js'></script>
+		<script type="text/javascript" src='javascripts/view.js'></script>
 		<!--script type="text/javascript" src='javascripts/dataLoad.js'></script-->
 
 		<link rel="stylesheet" type="text/css" href="css/transitions.css" media="all" />
@@ -62,7 +63,6 @@
 		<!--script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.pack.min.js"></script-->
 
 		<script type="text/javascript">
-			//This code is only nessasary if hosting it on a page secured with https
 			function setCookie(cname, cvalue, exdays) {
 				var d = new Date();
 				d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -78,14 +78,6 @@
 					if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
 				}
 				return "";
-			}
-			//End HTTPS info code
-
-			function getTags(){
-				var text = self.location.search;
-				if(text == "")return [];
-				var theleft = text.lastIndexOf("?") + 1;
-				return text.substring(theleft, text.length).split(',');
 			}
 
 
@@ -103,45 +95,6 @@
 		</script>
 	</head>
 	<body>
-		<script type="text/javascript">
-			var tags = getTags();
-
-			function toggleTag(tagName){
-				console.log("Toggle Tag");
-				var i = tags.indexOf(tagName);
-				if(i != -1) {
-					tags.splice(i, 1);
-					window.location.href = 'index.html?' + tags;
-					return;
-				}
-				tags[tags.length] = tagName;
-				window.location.href = 'index.html?' + tags;
-			}
-
-			function HeaderCtrl($scope){
-
-			}
-			function NavCtrl($scope){
-				/**
-				 * Holds the data for the NavTag
-				 * @param <String> name The nav button to add
-				 */
-				function NavTag(name){
-					this.name = name;
-					this.loadedTag = (tags.indexOf(name) != -1 ? 'selected' : '');
-				}
-				//The list of nav tags to have
-				$scope.allNavs = [
-					new NavTag("Art"),
-					new NavTag("Churches"),
-					new NavTag("Convents"),
-					new NavTag("Rii tera'"),
-					new NavTag("Repurposed"),
-					new NavTag("Demolished")
-				];
-				$scope.toggleTagName = toggleTag;
-			}
-		</script>
 		<ng-include src="'header.html'"></ng-include>
 		<!-- This is where 'current view' appears. The route provider in app.js defines what appears here. -->
 		<ng-view></ng-view>
