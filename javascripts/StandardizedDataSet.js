@@ -161,6 +161,9 @@ function StandardizedDataSet(object, id, parentDataName){
 			break;
 	} // END: Switch Case
 
+	var textLength = (this.imageData[0].width < 300 ? 10 : 100);
+	this.veryShortDescription = this.shortDescription.trunc(textLength, true);
+
 	this.getImageWrapper = function(){
 		return new ImageWrapper(this.name,
 			this.year,
