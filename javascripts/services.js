@@ -114,8 +114,14 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 
 		return service;
 	}]);
+var loadedPercent;
 module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $scope, ArtifactService ) {
-		$scope.progressPercent = 10;
+		console.log('Loaded Percent ' + loadedPercent );
+		if(loadedPercent != 100){
+			loadedPercent = $scope.progressPercent = 10;
+		} else {
+			$scope.progressPercent = 100;
+		}
 		//This is called ever time an artifact is added to the ArtifactService
 		$scope.$on( 'artifacts.update', function( event ) {
 			$scope.artifacts = ArtifactService.artifacts;
@@ -130,6 +136,7 @@ module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $s
 		$scope.$on( 'artifacts.group.loaded', function (event){
 			groupsLoaded ++;
 			$scope.progressPercent += 30;
+			loadedPercent = $scope.progressPercent;
 			if( groupsLoaded == ArtifactService.datasetCount) {
 				var wrappers = document.querySelector('#image_container');
 				var imgLoad = imagesLoaded( wrappers );
