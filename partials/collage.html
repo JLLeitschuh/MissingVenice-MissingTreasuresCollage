@@ -5,13 +5,6 @@
 			</span><input placeholder="Search" ng-model="searchText" ng-change="searchChange()"></input>
 			<span class='glyphicon glyphicon-search'>
 		</div>
-		<div ng-show="progressPercent != 100" class="container" style="padding-top:7px;">
-			<div class ="row">
-				<progressbar class="progress-striped active" value="progressPercent" type="success">
-					Loading: <b>{{progressPercent}}%</b>
-				</progressbar>
-			</div>
-		</div>
 		<!-- This is where the images get stored once loaded -->
 		<section id="image_container" class="Collage effect-parent">
 			<div ng-repeat="artifact in artifacts | filter:searchText" class="Image_Wrapper" data-caption="<b>{{artifact.name}}</b></br>{{artifact.veryShortDescription}}">

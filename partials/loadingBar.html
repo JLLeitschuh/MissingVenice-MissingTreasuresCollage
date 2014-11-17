@@ -1,0 +1,7 @@
+<div ng-controller="loadingBarController" ng-show="percentComplete != 100" class="container" style="padding-top:7px;">
+	<div class="row">
+		<progressbar class="progress-striped active" popover-trigger="mouseenter" popover-placement="bottom" popover="{{getPopOverText()}}" value="percentComplete" type="success">
+			Loading: <b>{{percentComplete}}%</b>
+		</progressbar>
+	</div>
+</div>

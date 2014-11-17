@@ -7,6 +7,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 		var service = {
 			artifacts: [],
 			datasetCount: 0,
+			artifactGroupLoadedMessage: 'artifacts.group.loaded',
 			addArtifact: function(artifact){
 				service.artifacts.push(artifact);
 				$rootScope.$broadcast( 'artifacts.update' );
@@ -34,7 +35,8 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 				console.log(dataName);
 				console.log(input);
 				inputParser(input, this);
-				$rootScope.$broadcast( 'artifacts.group.loaded' );
+				//When a group is done being loaded broadcast a message
+				$rootScope.$broadcast( service.artifactGroupLoadedMessage, dataName);
 			};
 		}
 
@@ -114,14 +116,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 
 		return service;
 	}]);
-var loadedPercent;
 module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $scope, ArtifactService ) {
-		console.log('Loaded Percent ' + loadedPercent );
-		if(loadedPercent != 100){
-			loadedPercent = $scope.progressPercent = 10;
-		} else {
-			$scope.progressPercent = 100;
-		}
 		//This is called ever time an artifact is added to the ArtifactService
 		$scope.$on( 'artifacts.update', function( event ) {
 			$scope.artifacts = ArtifactService.artifacts;
@@ -135,8 +130,6 @@ module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $s
 		var groupsLoaded = 0;
 		$scope.$on( 'artifacts.group.loaded', function (event){
 			groupsLoaded ++;
-			$scope.progressPercent += 30;
-			loadedPercent = $scope.progressPercent;
 			if( groupsLoaded == ArtifactService.datasetCount) {
 				var wrappers = document.querySelector('#image_container');
 				var imgLoad = imagesLoaded( wrappers );

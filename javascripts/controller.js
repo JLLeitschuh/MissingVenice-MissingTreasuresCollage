@@ -13,6 +13,40 @@
 ****************************************/
 
 angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
+
+	/*
+	 * Controller for the loading bar.
+	 */
+	controller('loadingBarController', function($scope, ArtifactService){
+		$scope.percentComplete = 10;
+		var groupsLoaded = [];
+		/* Displays what groups have been been loaded */
+		$scope.getPopOverText = function(){
+			var returnString = "";
+			if(groupsLoaded.length != 0){
+				for(var i in groupsLoaded){
+					if(i == 0){
+						returnString = groupsLoaded[i];
+					} else {
+						returnString += ", " + groupsLoaded[i];
+					}
+				}
+			} else {
+				returnString = "None";
+			}
+			return "Loaded: " + returnString;
+		};
+
+		var percentPerStep = 90/ArtifactService.datasetCount;
+
+		/* When an artifact group is loaded */
+		$scope.$on( ArtifactService.artifactGroupLoadedMessage, function(event, groupName){
+			//Increase the the percent complete
+			$scope.percentComplete += percentPerStep;
+			//Also store the name for the popup text
+			groupsLoaded.push(groupName);
+		});
+	}).
 	controller('artifactsController', function($scope, ArtifactService) {
 		console.log("ArtifactFeederApp.controllers: artifactsController");
 		$scope.nameFilter = null;
