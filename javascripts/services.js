@@ -56,8 +56,8 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 			for (var property in input.members) {
 				var church = input.members[property];
 				var currentUse = church.data["Current Use"];
-				if(currentUse != "Active Church" ||
-				   currentUse != "Closed to the Public" ||
+				if(currentUse != "Active Church" &&
+				   currentUse != "Closed to the Public" &&
 				   currentUse != "Active Church and Art Museum"){
 					try{
 						//This is the individual peice of data pulled form the list
@@ -79,8 +79,8 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 				//This is the individual peice of data pulled form the list
 				var convent = input.members[property];
 				var currentUse = convent.data["Current Use"];
-				if(currentUse != "Convent" ||
-				   currentUse != "Closed to the Public" ||
+				if(currentUse != "Convent" &&
+				   currentUse != "Closed to the Public" &&
 				   currentUse != "Active Church and Art Museum"){
 					try{
 						var dataSet = new StandardizedDataSet(convent, property, _this.dataName);
