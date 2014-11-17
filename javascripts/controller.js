@@ -1,4 +1,17 @@
 "use strict";
+/****************************************
+ All of the controllers for the project.
+ These are what define what happens when
+ a page is loaded.
+ Controllers only run once ever time
+ a page is loaded
+ (EG: Pressing the home button twice would
+ reload its respective controller twice.)
+ If you want something that runs once
+ (singleton) look into using a service
+ or factory (services.js).
+****************************************/
+
 angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 	controller('artifactsController', function($scope, ArtifactService) {
 		console.log("ArtifactFeederApp.controllers: artifactsController");
@@ -56,4 +69,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			$scope.addSlide();
 		}
 
+	}).
+	controller('mapController', function($scope, $routeParams, ArtifactService){
+		//This runs every time the page loads
 	});

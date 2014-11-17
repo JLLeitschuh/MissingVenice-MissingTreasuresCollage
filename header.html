@@ -3,6 +3,7 @@
 	<!-- Dynamically add more nav tags using a repeat rule -->
 	<nav ng-controller="headerDisplay">
 		<a class="nav_button" href="./#/">Home</a>
+		<a class="nav_button" href="./#/map">Map</a>
 		<a ng-repeat="navTag in allNavs" class="nav_button" ng-href="{{navTag.link}}">{{navTag.name}}</a>
 		<em><a href="https://sites.google.com/site/ve14miss/">Missing Venice</a></em>
 	</nav>
