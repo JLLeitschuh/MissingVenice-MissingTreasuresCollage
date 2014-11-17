@@ -16,7 +16,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 				if(blob.id === 'undefined') throw 'id is undefined';
 				//Search through the array to find the groupName
 				return $.grep(service.artifacts, function(e){
-					return (e.id == blob.id) && (e.groupNameLink == blob.groupName);
+					return (e.id == blob.id) && (e.groupName == blob.groupName);
 				});
 			}
 		};

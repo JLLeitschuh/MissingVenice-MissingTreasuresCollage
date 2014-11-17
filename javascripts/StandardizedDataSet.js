@@ -16,7 +16,8 @@ that they are stored on the CK Console.
 ********************************************************************************************/
 function StandardizedDataSet(object, id, parentDataName){
 	this.groupName = object.birth_certificate.type;
-	this.groupNameLink = this.groupName.replace(/ /g, "_");
+	this.groupNameLink = encodeURI(this.groupName)
+	this.originalObject = object;
 	this.id = id;
 
 	/**
@@ -136,7 +137,7 @@ function StandardizedDataSet(object, id, parentDataName){
 		case 'Venice Convents':
 			var mediaID = object['merged-media-ids'].images['convents facade images'];
 			this.name = object.data['Full Name'];
-			this.shortDescription = "Current Use: " + object.data['Historic Background'];
+			this.shortDescription = object.data['Historic Background'];
 			this.sections = [
 				new HeaderTextData({header:"Historic Background", text: object.data['Historic Background']}),
 			];
