@@ -1,0 +1,63 @@
+<div class="container">
+	<style>
+		.header-fixed {
+				width: 100%
+		}
+
+		.header-fixed > thead,
+		.header-fixed > tbody,
+		.header-fixed > thead > tr,
+		.header-fixed > tbody > tr,
+		.header-fixed > thead > tr > th,
+		.header-fixed > tbody > tr > td {
+			display: block;
+		}
+
+		.header-fixed > tbody > tr:after,
+		.header-fixed > thead > tr:after {
+			content: ' ';
+			display: block;
+			visibility: hidden;
+			clear: both;
+		}
+
+		.header-fixed > tbody {
+			overflow-y: auto;
+			height: 600px;
+		}
+
+		.header-fixed > tbody > tr > td:nth-child(1),
+		.header-fixed > thead > tr > th:nth-child(1){
+			width: 20%;
+			float: left;
+		}
+
+		.header-fixed > tbody > tr > td:nth-child(2),
+		.header-fixed > thead > tr > th:nth-child(2){
+			width: 80%;
+			float: left;
+		}
+	</style>
+	<table class="table table-bordered table-hover header-fixed">
+		<thead>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Description
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="artifact in artifacts">
+				<td>
+					{{artifact.name}}
+				</td>
+				<td>
+					{{artifact.shortDescription}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

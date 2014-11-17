@@ -70,6 +70,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		}
 
 	}).
+	controller('listController', function($scope, $routeParams, ArtifactService){
+		$scope.artifacts = ArtifactService.artifacts;
+
+	}).
 	controller('mapController', function($scope, $routeParams, ArtifactService){
 		console.log("ArtifactFeederApp.controllers: mapController")
 		//This runs every time the page loads
