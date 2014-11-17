@@ -1,6 +1,6 @@
 "use strict";
 angular.module('ArtifactFeederApp.view', []).
-	controller('headerDisplay', function($scope) {
+	controller('headerDisplay', function($scope, $modal, $log) {
 		/**
 		* Holds the data for the NavTag
 		* @param <String> name The nav button to add
@@ -19,4 +19,26 @@ angular.module('ArtifactFeederApp.view', []).
 			new NavTag("Repurposed"),
 			new NavTag("Demolished")
 		];
+
+		$scope.open = function (size) {
+			var modalInstance = $modal.open({
+				templateUrl: 'myModalContent.html',
+				controller: 'HelpModalInstanceController',
+				size: size
+			});
+
+			modalInstance.result.then(function () {}, function () {
+				$log.info('Modal dismissed at: ' + new Date());
+			});
+		};
+	})
+	.controller('HelpModalInstanceController', function($scope, $modalInstance){
+		$scope.ok = function () {
+			$modalInstance.close();
+		};
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+
 	});
