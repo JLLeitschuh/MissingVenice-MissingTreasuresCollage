@@ -1,68 +1,69 @@
-<section id="artifact_data">
+<div class="container-fluid" style="padding-left:5px; padding-right:5px;">
+	<section id="artifact_data">
+		<div class="container"><!-- Carousel -->
+			<div style="height: 305px">
+				<carousel interval="myInterval">
+					<slide ng-repeat="slide in slides" active="slide.active">
+						<img ng-src="{{slide.image}}" style="margin:auto;">
+						<div class="carousel-caption">
+							<h4>Slide {{$index}}</h4>
+							<p>{{slide.text}}</p>
+						</div>
+					</slide>
+				</carousel>
+			</div>
+			<!--Uncomment to show dynamic adding and image change speed -->
+			<!--div class="row">
+				<div class="col-md-6">
+					<button type="button" class="btn btn-info" ng-click="addSlide()">Add Slide</button>
+				</div>
+				<div class="col-md-6">
+					Interval, in milliseconds:<input type="number" class="form-control" ng-model="myInterval">
+				</div>
+			</div-->
+		</div><!-- END Carousel-->
 
-	<div class="container"><!-- Carousel -->
-		<div style="height: 305px">
-			<carousel interval="myInterval">
-				<slide ng-repeat="slide in slides" active="slide.active">
-					<img ng-src="{{slide.image}}" style="margin:auto;">
-					<div class="carousel-caption">
-						<h4>Slide {{$index}}</h4>
-						<p>{{slide.text}}</p>
+		<div class="container">
+			<h1 class="center">{{artifact.name}}</h1>
+			<div class="row">
+				<div class="col-md-8" ng-switch="artifact.sections.length">
+					<!--Two elements should be shown -->
+					<div ng-switch-when="2" class="col-md-6">
+						<h2>{{artifact.sections[0].header}}</h2>
+						<p>{{artifact.sections[0].text}}</p>
 					</div>
-				</slide>
-			</carousel>
-		</div>
-		<!--Uncomment to show dynamic adding and image change speed -->
-		<!--div class="row">
-			<div class="col-md-6">
-				<button type="button" class="btn btn-info" ng-click="addSlide()">Add Slide</button>
-			</div>
-			<div class="col-md-6">
-				Interval, in milliseconds:<input type="number" class="form-control" ng-model="myInterval">
-			</div>
-		</div-->
-	</div><!-- END Carousel-->
+					<div ng-switch-when="2" class="col-md-6">
+							<h2>{{artifact.sections[1].header}}</h2>
+							<p>{{artifact.sections[1].text}}</p>
+					</div>
+					<!--END Two elements should be shown -->
 
-	<div class="container">
-		<h1 class="center">{{artifact.name}}</h1>
-		<div class="row">
-			<div class="col-md-8" ng-switch="artifact.sections.length">
-				<!--Two elements should be shown -->
-				<div ng-switch-when="2" class="col-md-6">
-					<h2>{{artifact.sections[0].header}}</h2>
-					<p>{{artifact.sections[0].text}}</p>
+					<div ng-switch-when="1">
+						<h2>{{artifact.sections[0].header}}</h2>
+						<p>{{artifact.sections[0].text}}</p>
+					</div>
+					<div ng-switch-default>
+						<h2>Loading...</h2>
+						<p>Please wait.</p>
+					</div>
 				</div>
-				<div ng-switch-when="2" class="col-md-6">
-						<h2>{{artifact.sections[1].header}}</h2>
-						<p>{{artifact.sections[1].text}}</p>
-				</div>
-				<!--END Two elements should be shown -->
-
-				<div ng-switch-when="1">
-					<h2>{{artifact.sections[0].header}}</h2>
-					<p>{{artifact.sections[0].text}}</p>
-				</div>
-				<div ng-switch-default>
-					<h2>Loading...</h2>
-					<p>Please wait.</p>
-				</div>
+				<div ng-show="artifact" class="col-md-4">
+					<style>
+						.center{text-align:center;}
+						table th{padding:4px 10px; border:1px solid #ccc; background:#eee; border-top:2px solid #333; border-bottom:2px solid #333;}
+						table td{padding:4px 10px; border:1px solid #ccc;}
+						table:focus{outline:none;}
+						table td:focus{background:#FFD; outline:1px solid #08F;}
+						table td:active{background:#FFD;}
+					</style>
+					<table>
+						<tr> <th class="center" colspan='2'>{{artifact.tableData.header}}</th> </tr>
+						<tr ng-repeat="(header, data) in artifact.tableData.tableData">
+							<td>{{header}}</td><td>{{data}}</td>
+						</tr>
+					</table>
+				</aside>
 			</div>
-			<div ng-show="artifact" class="col-md-4">
-				<style>
-					.center{text-align:center;}
-					table th{padding:4px 10px; border:1px solid #ccc; background:#eee; border-top:2px solid #333; border-bottom:2px solid #333;}
-					table td{padding:4px 10px; border:1px solid #ccc;}
-					table:focus{outline:none;}
-					table td:focus{background:#FFD; outline:1px solid #08F;}
-					table td:active{background:#FFD;}
-				</style>
-				<table>
-					<tr> <th class="center" colspan='2'>{{artifact.tableData.header}}</th> </tr>
-					<tr ng-repeat="(header, data) in artifact.tableData.tableData">
-						<td>{{header}}</td><td>{{data}}</td>
-					</tr>
-				</table>
-			</aside>
 		</div>
-	</div>
-</section>
+	</section>
+</div>
