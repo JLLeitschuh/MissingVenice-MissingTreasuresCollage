@@ -1,7 +1,7 @@
 "use strict";
 var module = angular.module('ArtifactFeederApp.services', []);
 
-module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScope, ckConsole) {
+module.factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', function($rootScope, $location, ckConsole) {
 		console.log('ArtifactFeederApp.services: ArtifactService');
 
 		var service = {
@@ -48,7 +48,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 				//This is the individual peice of data pulled form the list
 				var church = input.members[property];
 				//console.log(church);
-				var dataSet = new StandardizedDataSet(church, property, _this.dataName);
+				var dataSet = new StandardizedDataSet(church, property, _this.dataName, $location);
 				service.addArtifact(dataSet);
 			}
 		});
@@ -66,7 +66,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 						//This is the individual peice of data pulled form the list
 						var church = input.members[property];
 						//console.log(church);
-						var dataSet = new StandardizedDataSet(church, property, _this.dataName);
+						var dataSet = new StandardizedDataSet(church, property, _this.dataName, $location);
 						service.addArtifact(dataSet);
 
 					} catch (e){
@@ -86,7 +86,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 				   currentUse != "Closed to the Public" &&
 				   currentUse != "Active Church and Art Museum"){
 					try{
-						var dataSet = new StandardizedDataSet(convent, property, _this.dataName);
+						var dataSet = new StandardizedDataSet(convent, property, _this.dataName, $location);
 						service.addArtifact(dataSet);
 					} catch (e){
 						console.log("No media associated");

@@ -14,11 +14,21 @@ This object is designed to standardize the object data that we are retriving fro
 CK console. This allows us to treat all datasets exactly the same regardless of the way
 that they are stored on the CK Console.
 ********************************************************************************************/
-function StandardizedDataSet(object, id, parentDataName){
+function StandardizedDataSet(object, id, parentDataName, $location){
 	this.groupName = object.birth_certificate.type;
 	this.groupNameLink = encodeURI(this.groupName)
 	this.originalObject = object;
 	this.id = id;
+
+
+	/*
+	 * This changes the location that the page is pointing to.
+	 */
+	this.goToInfoPage = function(){
+		var link = "/artifact/group/" + this.groupName + "/id/" + this.id;
+		//console.log("Navigating to: " + link);
+		$location.path(link);
+	}
 
 	/**
 	* The Image URL Data object allows us to store
