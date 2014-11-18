@@ -5,6 +5,7 @@ module.factory('ArtifactService', ['$rootScope', 'ckConsole', function($rootScop
 		console.log('ArtifactFeederApp.services: ArtifactService');
 
 		var service = {
+			//A list of standardized data objects
 			artifacts: [],
 			datasetCount: 0,
 			artifactGroupLoadedMessage: 'artifacts.group.loaded',
