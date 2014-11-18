@@ -1,0 +1,43 @@
+labelrank: 0, 1, 2
+
+featurecla: Populated place, Admin-0 capital, Admin-1 capital, Admin-0 capital alt, Admin-0 region capital
+
+name, nameascii ==  same
+
+adm0name = country city is in 
+
+adm0_a3 = 3 letter abreviation for country city is in
+
+adm1name: state or province the city is in
+
+iso_a2 = 2 letter abbreviation for country city is in
+
+note? always null?
+
+changed 4.o if changed, 0.0 if not changed
+
+namediff: 1 if changed, 0 if not
+
+diffnote: null if not changed, says what was changed
+
+pop_max: highest poluation of the city
+
+pop_min: lowest population of the city
+
+pop_other: current population?
+
+rank_max:
+
+rank_min:
+
+geoonameid: id in the geoname json data sheet
+
+meganame: metro area name?
+
+ls_name: ?
+
+ls_match: always 1?
+
+checkme: 5 or 0
+
+coordinates: longitude, latitude
