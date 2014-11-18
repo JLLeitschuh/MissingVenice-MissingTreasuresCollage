@@ -52,6 +52,7 @@ a{
 	display: inline-block;
 	padding: 4px 6px;
 	margin-right:10px;
+	margin-bottom: 7px;
 	background-color:#09F;
 	color:#FFF;
 	-webkit-border-radius:4px;
@@ -68,9 +69,9 @@ a{
 .header nav em a{
 	display: inline-block;
 	position: absolute;
-	margin-top: -15px;
+	margin-top: -7px;
 	right: 0px;
-	width: 325px;
+	/*width: 325px;*/
 	font-size: 250%;
 	color:#FFF;
 	text-shadow: 1px 1px #CC9;
