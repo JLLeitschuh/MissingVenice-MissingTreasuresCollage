@@ -3,6 +3,7 @@ console.log('loading app');
 angular.
 	module('ArtifactFeederApp', [
 		'ArtifactFeederApp.controllers',
+		'ArtifactFeederApp.directives',
 		'ArtifactFeederApp.services',
 		'ArtifactFeederApp.view',
 		'ckServices',

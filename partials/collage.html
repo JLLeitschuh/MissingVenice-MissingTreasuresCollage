@@ -1,6 +1,9 @@
 <div class="container-fluid" style="padding-left:5px; padding-right:5px;">
 	<div ng-controller="artifacts.list">
 		<!-- TODO: Move this search bar somewhere else. This is here as an example-->
+		<div>
+			<artifact-search search-model="searchText"></artifactSearch>
+		</div>
 		<div style="text-align:right;">
 			</span><input placeholder="Search" ng-model="searchText" ng-change="searchChange()"></input>
 			<span class='glyphicon glyphicon-search'>
