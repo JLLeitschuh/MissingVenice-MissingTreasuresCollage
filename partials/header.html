@@ -15,11 +15,17 @@
 
 	<!-- Dynamically add more nav tags using a repeat rule -->
 	<nav ng-controller="headerDisplay">
-		<a class="nav_button" href="./#/">Home</a>
-		<a class="nav_button" href="./#/map">Map</a>
-		<a class="nav_button" href="./#/list">List</a>
-		<a ng-repeat="navTag in allNavs" class="nav_button" ng-href="{{navTag.link}}">{{navTag.name}}</a>
-		<a class="nav_button" style="cursor: pointer;" ng-click="open('lg')">Help</a>
-		<em><a href="https://sites.google.com/site/ve14miss/">Missing Venice</a></em>
+		<div class="container-fluid row" style="padding-left:0px; padding-right:0px;">
+			<div class="col-md-9">
+				<a class="nav_button" href="./#/">Home</a>
+				<a class="nav_button" href="./#/map">Map</a>
+				<a class="nav_button" href="./#/list">List</a>
+				<a ng-repeat="navTag in allNavs" class="nav_button" ng-href="{{navTag.link}}">{{navTag.name}}</a>
+				<a class="nav_button" style="cursor: pointer;" ng-click="open('lg')">Help</a>
+			</div>
+			<div class="col-md-3" style="margin-bottom: 7px">
+				<em><a href="https://sites.google.com/site/ve14miss/">Missing Venice</a></em>
+			</div>
+		</div>
 	</nav>
 </header>

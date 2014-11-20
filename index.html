@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="ArtifactFeederApp">
+<html lang="en">
 	<head>
 		<title>Venice Missing Treasures Collage</title>
-		<meta name="viewport" http-equiv="content-type" charset="UTF8" content="width=device-width, initial-scale=1, user-scalable=no">
+		<meta name="viewport" http-equiv="content-type" charset="UTF8" content="width=device-width, initial-scale=1">
+		<meta name="description" content="A interactive collection of missing or moved Venetian artwork and architecture.">
+		<meta name="keywords" content="Venice, Missing, Demolished, Churches, Artifacts, Paintings">
+		<meta name="author" content="Jonathan Leitschuh, Daniel Benson, Grant Brinning, Andrea Boxel and the WPI  Venice Project Center">
 
 
 		<!-- LIST ALL DEPENDENCIES HERE -->
@@ -30,8 +33,8 @@
 
 
 		<!-- angularjs -->
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-route.js"></script>
+		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-route/angular-route.js"></script>
 
 
 		<!-- imagesLoaded -->
@@ -106,7 +109,7 @@
 
 		</script>
 	</head>
-	<body>
+	<body ng-app="ArtifactFeederApp">
 		<ng-include src="'partials/header.html'"></ng-include>
 		<ng-include src="'partials/loadingBar.html'"></ng-include>
 		<!-- This is where 'current view' appears. The route provider in app.js defines what appears here. -->
