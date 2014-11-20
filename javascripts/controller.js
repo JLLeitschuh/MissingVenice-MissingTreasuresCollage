@@ -155,7 +155,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		var svg = d3.select("#map-area").append("svg")
 					.attr("width", width)
 					.attr("height", height)
-			//		.on("mousedown", mousedown)
+					.on("mousedown", mousedown)
 				//	.call(zoom)
 					//.on("dblclick.zoom", null);
 
