@@ -141,6 +141,8 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			.clipAngle(90)
 			.scale(300);
 
+		var graticule = d3.geo.graticule();
+
 		var path = d3.geo.path().projection(proj).pointRadius(2);
 
 		var swoosh = d3.svg.line()
@@ -213,6 +215,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					.attr("offset","100%").attr("stop-color", "#000")
 					.attr("stop-opacity","0");
 
+			// drop shadow
 			svg.append("ellipse")
 				.attr("cx", 440).attr("cy", 450)
 				.attr("rx", proj.scale()*.90)
@@ -220,15 +223,23 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				.attr("class", "noclicks")
 				.style("fill", "url(#drop_shadow)");
 
+			// globe (ocean)
 			svg.append("circle")
 				.attr("cx", width / 2).attr("cy", height / 2)
 				.attr("r", proj.scale())
 				.attr("class", "noclicks")
 				.style("fill", "url(#ocean_fill)");
 
+			// land
 			svg.append("path")
 				.datum(topojson.object(world, world.objects.land))
 				.attr("class", "land noclicks")
+				.attr("d", path)
+				.style("fill", "#19D119");
+
+			svg.append("path")
+				.datum(graticule)
+				.attr("class", "graticule noclicks")
 				.attr("d", path);
 
 			svg.append("circle")
@@ -281,8 +292,9 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			});
 
 
+
 			/*
-			while  ( i < place.features.length) {
+			while  ( i < places.features.length) {
 				var place1 = places.features[i];
 				var place2 = places.features[i+1];
 				links.push({
@@ -293,12 +305,23 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			};
 			*/
 
-			// build geoJSON features from links array
+
+			// build geoJSON features from links arrays
 			links.forEach(function(e,i,a) {
 				var feature =   { "type": "Feature", "geometry": { "type": "LineString", "coordinates": [e.source,e.target] }};
 				arcLines.push(feature);
 			})
 
+			/*
+			var feature =   { "type": "Feature", "geometry": { "type": "LineString", "coordinates": [links[0].source, links[0].target] }};
+			arcLines.push(feature);
+			var feature =   { "type": "Feature", "geometry": { "type": "LineString", "coordinates": [links[4].source, links[4].target] }};
+			arcLines.push(feature);
+			var feature =   { "type": "Feature", "geometry": { "type": "LineString", "coordinates": [links[8].source, links[8].target] }};
+			arcLines.push(feature);
+			*/
+
+			if ($scope.sliderData.currentValue >= 1455){
 			svg.append("g").attr("class","arcs")
 				.selectAll("path").data(arcLines)
 					.enter().append("path")
@@ -312,6 +335,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				.attr("d", function(d) { return swoosh(flying_arc(d)) });
 
 			refresh();
+		};
 		}
 
 		function flying_arc(pts) {
@@ -330,6 +354,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		function refresh() {
 			svg.selectAll(".land").attr("d", path);
 			svg.selectAll(".point").attr("d", path);
+			svg.selectAll(".graticule").attr("d", path);
 
 			svg.selectAll(".arc").attr("d", path)
 				.attr("opacity", function(d) {
