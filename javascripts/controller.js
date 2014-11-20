@@ -169,8 +169,8 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					.attr("id", "ocean_fill")
 					.attr("cx", "75%")
 					.attr("cy", "25%");
-				ocean_fill.append("stop").attr("offset", "5%").attr("stop-color", "#fff");
-				ocean_fill.append("stop").attr("offset", "100%").attr("stop-color", "#ababab");
+				ocean_fill.append("stop").attr("offset", "5%").attr("stop-color", "#2987ca");
+				ocean_fill.append("stop").attr("offset", "100%").attr("stop-color", "#1C6BA0");
 
 			var globe_highlight = svg.append("defs").append("radialGradient")
 					.attr("id", "globe_highlight")
