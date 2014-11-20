@@ -115,6 +115,14 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 	*************************************/
 	controller('mapController', function($scope, $routeParams, ArtifactService){
 		console.log("ArtifactFeederApp.controllers: mapController")
+
+		$scope.sliderData = {
+			minValue: 1000,
+			maxValue: 2014,
+			currentValue: 1500,
+			stepSize: 10
+		};
+
 		//This runs every time the page loads
 		d3.select(window)
 			.on("mousemove", mousemove)

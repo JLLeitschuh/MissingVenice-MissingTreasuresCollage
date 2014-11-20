@@ -568,7 +568,7 @@
 <div id="map-area"></div>
 
 <div class="well">
-	<b>1000AD</b> <input type="text" class="span2" value="" data-slider-min="1000" data-slider-max="2014" data-slider-step="10" data-slider-value="[1250,1750]" id="sl2" > <b>2014AD</b>
+	<b>{{sliderData.minValue}}</b>&nbsp;&nbsp;&nbsp;<slider ng-model="sliders.sliderValue" min="{{sliderData.minValue}}" step="{{sliderData.stepSize}}" max="{{sliderData.maxValue}}" value="{{sliderData.currentValue}}"></slider>&nbsp;&nbsp;&nbsp;<b>{{sliderData.maxValue}}</b>
 </div>
 
 </div>

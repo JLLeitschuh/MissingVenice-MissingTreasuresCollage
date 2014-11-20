@@ -5,6 +5,7 @@ angular.
 		'ArtifactFeederApp.controllers',
 		'ArtifactFeederApp.services',
 		'ArtifactFeederApp.view',
+		'ui.bootstrap-slider',
 		'ckServices',
 		'ngRoute'
 	]).
