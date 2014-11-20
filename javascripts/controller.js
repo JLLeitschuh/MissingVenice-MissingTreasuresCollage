@@ -142,16 +142,26 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			.tension(.0);
 
 		var links = [],
-			arcLines = [];
+			arcLines = [],
+			pathsGoing = [];
+
+		/* var zoom = d3.behavior.zoom(true)
+			.translate(projection.origin())
+			.scale(projection.scale())
+			.scaleExtent([100, 800])
+			.on("zoom", move);
+			*/
 
 		var svg = d3.select("#map-area").append("svg")
 					.attr("width", width)
 					.attr("height", height)
-					.on("mousedown", mousedown);
+			//		.on("mousedown", mousedown)
+				//	.call(zoom)
+					//.on("dblclick.zoom", null);
 
 		queue()
 			.defer(d3.json, "javascripts/map/world-110m.json")
-			.defer(d3.json, "javascripts/map/test2.json")
+			.defer(d3.json, "javascripts/map/places.json")
 			.await(ready);
 
 		function ready(error, world, places) {
@@ -247,10 +257,13 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 			position_labels();
 
+			var i = 0;
+
 			// spawn links between cities as source/target coord pairs
 			places.features.forEach(function(a) {
 				places.features.forEach(function(b) {
 					if (a !== b) {
+						i = i + 1;
 						links.push({
 							source: a.geometry.coordinates,
 							target: b.geometry.coordinates
@@ -258,6 +271,19 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					}
 				});
 			});
+
+
+			/*
+			while  ( i < place.features.length) {
+				var place1 = places.features[i];
+				var place2 = places.features[i+1];
+				links.push({
+					source: place1.geometry.coordinates,
+					target: place2.geometry.coordinates
+				});
+				i = i + 1;
+			};
+			*/
 
 			// build geoJSON features from links array
 			links.forEach(function(e,i,a) {
@@ -310,6 +336,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 			position_labels();
 		}
+
 
 		function fade_at_edge(d) {
 			var centerPos = proj.invert([width/2,height/2]),
