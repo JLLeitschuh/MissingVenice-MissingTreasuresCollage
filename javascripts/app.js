@@ -5,6 +5,7 @@ angular.
 		'ArtifactFeederApp.controllers',
 		'ArtifactFeederApp.directives',
 		'ArtifactFeederApp.services',
+		'ArtifactFeederApp.filters',
 		'ArtifactFeederApp.view',
 		'ckServices',
 		'ngRoute'

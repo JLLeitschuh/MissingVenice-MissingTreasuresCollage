@@ -100,6 +100,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 	*/
 	switch(this.groupName){
 		case 'Demolished Churches merge':
+			this.type = "Demolished";
 			//This is the id that the image url is stored behind
 			var mediaID = object['merged-media-ids'].images['Demolished Churches Media'];
 			this.name = object.data.name;
@@ -120,6 +121,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 
 
 		case 'Venice Churches':
+			this.type = "Repurposed";
 			//This is the id that the image url is stored behind
 			var mediaID = object['merged-media-ids'].images['Church Facade Images 2012'];
 			this.name = object.data["Page Title"];
@@ -145,6 +147,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 
 
 		case 'Venice Convents':
+			this.type = "Repurposed";
 			var mediaID = object['merged-media-ids'].images['convents facade images'];
 			this.name = object.data['Full Name'];
 			this.shortDescription = object.data['Historic Background'];

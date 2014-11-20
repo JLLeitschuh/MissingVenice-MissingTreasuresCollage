@@ -126,6 +126,7 @@ module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $s
 		$scope.artifacts = ArtifactService.artifacts;
 
 
+
 		//Only try to load the images once all of the datasets have been retrived
 		//Keep track how many groups have been loaded so far
 		var groupsLoaded = 0;
@@ -142,6 +143,33 @@ module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $s
 					$('.Collage').collageCaption();
 				}
 				imgLoad.on( 'always', onAlways );
+
+
+
+				console.log("Search test");
+				for(var i in $scope.artifacts){
+					var artifact = $scope.artifacts[i];
+
+					var resolveSearch = function(object, string){
+						var recursionCount = 0;
+						var _resolveSearch = function(reduced_object, reduced_string){
+							recursionCount ++;
+							if(typeof reduced_object == 'undefined'){
+								return reduced_object;
+							}
+							var values = reduced_string.split(".");
+							var firstValue = values[0];
+							reduced_string = reduced_string.replace(firstValue + ".", "");
+							if(values.length > 1){
+								return _resolveSearch(reduced_object[firstValue], reduced_string);
+							} else {
+								return reduced_object[firstValue];
+							}
+						}
+						return _resolveSearch(object, string);
+					}
+					console.log(resolveSearch(artifact, 'tableData.tableDat.Reason for demolition'));
+				}
 			}
 		});
 

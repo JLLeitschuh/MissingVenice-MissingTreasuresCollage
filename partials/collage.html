@@ -2,11 +2,7 @@
 	<div ng-controller="artifacts.list">
 		<!-- TODO: Move this search bar somewhere else. This is here as an example-->
 		<div>
-			<artifact-search search-model="searchText"></artifactSearch>
-		</div>
-		<div style="text-align:right;">
-			</span><input placeholder="Search" ng-model="searchText" ng-change="searchChange()"></input>
-			<span class='glyphicon glyphicon-search'>
+			<artifact-search search-model="searchText" on-change="searchChange()"></artifactSearch>
 		</div>
 		<!-- This is where the images get stored once loaded -->
 		<section id="image_container" class="Collage effect-parent">
