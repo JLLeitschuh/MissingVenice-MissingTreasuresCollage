@@ -171,7 +171,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 		var zoom = d3.behavior.zoom()
 			.center([width / 2, height / 2])
-			.scaleExtent([0,5])
+			.scaleExtent([1,5])
 			//.translate([10,10])
 			.on("zoom", zoomed);
 
