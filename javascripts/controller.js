@@ -169,12 +169,21 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				//	.call(zoom)
 					//.on("dblclick.zoom", null);
 
+		var zoom = d3.behavior.zoom()
+			.center([width / 2, height / 2])
+			.scaleExtent([0,5])
+			//.translate([10,10])
+			.on("zoom", zoomed);
+
+		svg.call(zoom);
+
 		queue()
 			.defer(d3.json, "javascripts/map/world-110m.json")
 			.defer(d3.json, "javascripts/map/places.json")
 			.await(ready);
 
 		function ready(error, world, places) {
+			// ocean
 			var ocean_fill = svg.append("defs").append("radialGradient")
 					.attr("id", "ocean_fill")
 					.attr("cx", "75%")
@@ -182,6 +191,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				ocean_fill.append("stop").attr("offset", "5%").attr("stop-color", "#2987ca");
 				ocean_fill.append("stop").attr("offset", "100%").attr("stop-color", "#1C6BA0");
 
+			// globe highlight
 			var globe_highlight = svg.append("defs").append("radialGradient")
 					.attr("id", "globe_highlight")
 					.attr("cx", "75%")
@@ -193,6 +203,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					.attr("offset", "100%").attr("stop-color", "#ba9")
 					.attr("stop-opacity","0.2");
 
+			// globe shadow
 			var globe_shading = svg.append("defs").append("radialGradient")
 					.attr("id", "globe_shading")
 					.attr("cx", "55%")
@@ -204,6 +215,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					.attr("offset","100%").attr("stop-color", "#505962")
 					.attr("stop-opacity","0.3");
 
+			// drop shadow
 			var drop_shadow = svg.append("defs").append("radialGradient")
 					.attr("id", "drop_shadow")
 					.attr("cx", "50%")
@@ -254,12 +266,14 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				.attr("class","noclicks")
 				.style("fill", "url(#globe_shading)");
 
+			// points
 			svg.append("g").attr("class","points")
 				.selectAll("text").data(places.features)
 				.enter().append("path")
 				.attr("class", "point")
 				.attr("d", path);
 
+			// labels
 			svg.append("g").attr("class","labels")
 				.selectAll("text").data(places.features)
 				.enter().append("text")
@@ -447,5 +461,15 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				mousemove();
 				m0 = null;
 			}
+		}
+
+
+		var slast = 1;
+
+		function zoomed() {
+    	if (slast != d3.event.scale) {
+        svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        slast = d3.event.scale;
+    	};
 		}
 	});
