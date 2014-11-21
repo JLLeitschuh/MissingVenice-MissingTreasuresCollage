@@ -1,0 +1,22 @@
+<div ng-controller="searchController">
+	<div class="container" ng-show="isOpen">
+		<p>
+			This is where the advanced search options are.<br>
+		</p>
+		<div class="row">
+			<select id="typeSelector" ng-options="artifact.type as artifact.type for artifact in artifacts | unique:'type'" ng-model="typeSelect" ng-change="typeSelectChange()">
+				<option value="" selected>-- Missing Reason --</option>
+			</select>
+			<select id="repurposedSelector" ng-show="typeSelect == 'Repurposed'" ng-options="artifact.tableData.tableData['Current Use'] as artifact.tableData.tableData['Current Use'] for artifact in artifacts | noBlank:'tableData.tableData.Current Use' | unique:'tableData.tableData.Current Use'" ng-model="repurposedSelect">
+				<option value="" selected>-- Repurposed To --</option>
+			</select>
+			<select id="reasonForDemolitionSelector" ng-show="typeSelect == 'Demolished'" ng-options="artifact.tableData.tableData['Reason for demolition'] as artifact.tableData.tableData['Reason for demolition'] for artifact in artifacts | noBlank:'tableData.tableData.Reason for demolition' | unique:'tableData.tableData.Reason for demolition'" ng-model="repurposedSelect">
+				<option value="" selected>-- Demolition Reason --</option>
+			</select>
+		</div>
+	</div>
+	<div class="text-right">
+		<input placeholder="Search" ng-change="onChange" ng-model="searchModel"></input>
+		<a ng-click="toggleSearchArea()"><span class='glyphicon glyphicon-search'></span></a>
+	</div>
+</div>
