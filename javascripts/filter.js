@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Extracts the value from the given item using the
  * given filterOn value.
