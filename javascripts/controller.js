@@ -47,6 +47,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			groupsLoaded.push(groupName);
 		});
 	}).
+
+	/**
+	 * Controller for displaying the collage
+	 */
 	controller('artifactsController', function($scope, ArtifactService) {
 		console.log("ArtifactFeederApp.controllers: artifactsController");
 		$scope.nameFilter = null;
@@ -75,6 +79,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		$(window).bind('resize', collageImagesFunction);
 		collageImagesFunction();
 	}).
+
+	/**
+	 * Controller for displaying one of the artifacts information
+	 */
 	controller('artifactController', function($scope, $routeParams, ArtifactService){
 		console.log("ArtifactFeederApp.controllers: artifactController");
 		$scope.artifact = null;
@@ -82,26 +90,18 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			$scope.artifactKey = {groupName: $routeParams.group, id: $routeParams.id};
 			$scope.artifact = ArtifactService.getArtifactFromLinkData($scope.artifactKey)[0];
 			console.log($scope.artifact);
+			try{
+				var slides = $scope.slides = $scope.artifact.imageData;
+			} catch (e){
+
+			}
 		};
+		//Every time a new group is loaded then the page should try to display the data
 		$scope.$on( 'artifacts.group.loaded', tryLoad);
 
 		tryLoad();
 
 		$scope.myInterval = 5000;
-
-
-		var slides = $scope.slides = [];
-		$scope.addSlide = function() {
-			var newWidth = 600 + slides.length + 1;
-			slides.push({
-				image: 'http://placekitten.com/' + newWidth + '/300',
-				text: ['More','Extra','Lots of','Surplus'][slides.length % 4] + ' ' +
-					['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
-			});
-		};
-		for (var i=0; i<4; i++) {
-			$scope.addSlide();
-		}
 
 	}).
 	controller('listController', function($scope, $routeParams, ArtifactService){
