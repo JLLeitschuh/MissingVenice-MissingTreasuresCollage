@@ -99,7 +99,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 	* (using console.log()) and manually find the fields that work with this object.
 	*/
 	switch(this.groupName){
-		case 'Demolished Churches merge':
+		case 'Demolished Churches with Current Locations MERGE':
 			//This is the id that the image url is stored behind
 			var mediaID = object['merged-media-ids'].images['Demolished Churches Media'];
 			this.name = object.data.name;

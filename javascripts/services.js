@@ -41,7 +41,7 @@ module.factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', funct
 			};
 		}
 
-		var demolishedChurchesCollector = new DataSetCollector('Demolished Churches merge', ['Churches'],
+		var demolishedChurchesCollector = new DataSetCollector('Demolished Churches with Current Locations MERGE', ['Churches'],
 		function(input, _this){
 			//console.log("Adding Demolished Church data to artifactAPI.list");
 			for (var property in input.members) {
