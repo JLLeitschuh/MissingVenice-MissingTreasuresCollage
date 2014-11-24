@@ -292,7 +292,8 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				.selectAll("text").data(places.features)
 				.enter().append("path")
 				.attr("class", "point")
-				.attr("d", path);
+				.attr("d", path)
+				.attr("r", 100);
 
 			// labels
 			svg.append("g").attr("class","labels")
@@ -309,6 +310,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				.attr("d", path)
 				.style("fill", "none")
 				.style("stroke", "#666666")
+				.style("stroke-width", "1")
 				.style("opacity", ".5");
 
 			position_labels();
@@ -494,6 +496,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
     	if (slast != d3.event.scale) {
         svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
         slast = d3.event.scale;
+				svg.selectAll(".countries path").style("stroke-width", 1 / d3.event.scale + "px");
+				svg.selectAll(".label").style("font", 16 / d3.event.scale + "px sans-serif");
+				svg.selectAll(".flyer").style("stroke-width", 3 / d3.event.scale);
+				svg.selectAll(".arc").style("stroke-width", 2 / d3.event.scale);
     	};
 		}
 	});
