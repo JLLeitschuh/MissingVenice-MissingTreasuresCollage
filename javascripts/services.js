@@ -95,6 +95,19 @@ module.factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', funct
 			}
 		});
 
+		var riiTeraCollector = new DataSetCollector('Rii Tera Complete MERGE', ['Rio Tera'],
+		function (input, __this){
+			for (var property in input.members) {
+				try {
+					var riiTera = input.members[property];
+					var dataSet = new StandardizedDataSet(church, property, _this.dataName, $location);
+					service.addArtifact(dataSet);
+				} catch (e) {
+					console.log("No Media Associated");
+				}
+			}
+		});
+
 		/**
 		 * Multi-tiered function. In order to use you pass the function a dataSetCollector
 		 * and the next funtion in the change to run.
@@ -114,6 +127,7 @@ module.factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', funct
 		getDataset(demolishedChurchesCollector);
 		getDataset(veniceChurchesCollector);
 		getDataset(conventsCollector);
+		getDataset(riiTeraCollector);
 
 		return service;
 	}]);

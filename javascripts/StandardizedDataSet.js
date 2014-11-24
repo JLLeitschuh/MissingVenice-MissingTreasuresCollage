@@ -109,7 +109,12 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.sections = [
 				new HeaderTextData({header:"Church Info", text: object.data['description']})
 			];
-			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.imageData = [
+			new ImageURLData({
+					imageData: object.media.images[mediaID],
+					width: object.data.width,
+					height: object.data.height})
+					];
 			this.tableData = new HeaderTableData({
 				header: 'Demolition Info',
 				tableData: {
@@ -128,7 +133,12 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.name = object.data["Page Title"];
 			//Make this more descriptive. There is more data here.
 			this.shortDescription = object.data['Intro sentence'];
-			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.imageData = [
+				new ImageURLData({
+						imageData: object.media.images[mediaID],
+						width: object.data.width,
+						height: object.data.height})
+						];
 			this.sections = [
 				new HeaderTextData({header:"Intro", text:object.data["Intro sentence"]}),
 				new HeaderTextData({header:"History", text:object.data["History Blurb"]})
@@ -168,7 +178,29 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 					'Sestiere': object.data["Sestiere"],
 					'Street Address': object.data["Street Address"],
 					'Year Founded': object.data["Year Founded"],
-					'Current Use': object.data["Current Use"],
+					'Current Use': object.data["Current Use"]
+				}
+			});
+			break;
+
+		case "Rii Tera Complete MERGE":
+			this.type = "Rio Tera'";
+			mediaID = object['merged-media-ids'].images['Rii Tera Complete MERGE'];
+			this.name = object.data["name"];
+			this.shortDescription = object.data["labeled"];
+			this.imageData = [
+				new ImageURLData({
+						imageData: object.media.images[mediaID],
+						width: object.data.width,
+						height: object.data.height})
+				];
+			this.tableData = new HeaderTableData({
+				header: "Rii Tera Info",
+				tableData: {
+						'Sestiere': object.data["sestiere"],
+						'Street Name': object.data["street name"],
+						'Type': object.data["type"],
+						'Year Filled': object.data["year"]
 				}
 			});
 			break;
