@@ -141,7 +141,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			.clipAngle(90)
 			.scale(300);
 
+
 		var graticule = d3.geo.graticule();
+
+		//var countries = topojson.object(world, world.objects.countries).features;
 
 		var path = d3.geo.path().projection(proj).pointRadius(2);
 
@@ -163,16 +166,15 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			*/
 
 		var svg = d3.select("#map-area").append("svg")
-					.attr("width", width)
-					.attr("height", height)
-					.on("mousedown", mousedown)
-				//	.call(zoom)
-					//.on("dblclick.zoom", null);
+			.attr("width", width)
+			.attr("height", height)
+			.on("mousedown", mousedown)
 
 		var zoom = d3.behavior.zoom()
 			.center([width / 2, height / 2])
+			.scale(1)
 			.scaleExtent([1,5])
-			//.translate([10,10])
+			//.translate([10,10)
 			.on("zoom", zoomed);
 
 		svg.call(zoom);
@@ -249,10 +251,29 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				.attr("d", path)
 				.style("fill", "#19D119");
 
+			/*
+			svg.append("path")
+				.datum(topojson.object(world, world.objects.countries).features)
+				.attr("class", "noclicks")
+				.attr("d", path)
+				.style("fill", "none")
+				.style("stroke", "#fff");
+				*/
+
 			svg.append("path")
 				.datum(graticule)
 				.attr("class", "graticule noclicks")
 				.attr("d", path);
+
+			/*
+			svg.append("path")
+      	.datum(topojson.object(world, world.objects.countries, function(a, b) { return a !== b; }))
+      	.attr("class", "boundary")
+      	//.attr("clip-path", "url(#clip)")
+      	.attr("d", path)
+				.style("fill", "none")
+				.style("stroke", "#666666");
+				*/
 
 			svg.append("circle")
 				.attr("cx", width / 2).attr("cy", height / 2)
@@ -281,12 +302,14 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				.text(function(d) { return d.properties.name });
 
 			// uncomment for hover-able country outlines
-
-			// svg.append("g").attr("class","countries")
-			// .selectAll("path")
-			//.data(topojson.object(world, world.objects.countries).geometries)
-			//.enter().append("path")
-			//.attr("d", path);
+			svg.append("g").attr("class","countries")
+				.selectAll("path")
+				.data(topojson.object(world, world.objects.countries).geometries)
+				.enter().append("path")
+				.attr("d", path)
+				.style("fill", "none")
+				.style("stroke", "#666666")
+				.style("opacity", ".5");
 
 			position_labels();
 
@@ -336,19 +359,19 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			*/
 
 			if ($scope.sliderData.currentValue >= 1455){
-			svg.append("g").attr("class","arcs")
-				.selectAll("path").data(arcLines)
+				svg.append("g").attr("class","arcs")
+					.selectAll("path").data(arcLines)
+						.enter().append("path")
+							.attr("class","arc")
+							.attr("d",path);
+
+				svg.append("g").attr("class","flyers")
+					.selectAll("path").data(links)
 					.enter().append("path")
-						.attr("class","arc")
-						.attr("d",path);
+					.attr("class","flyer")
+					.attr("d", function(d) { return swoosh(flying_arc(d)) });
 
-			svg.append("g").attr("class","flyers")
-				.selectAll("path").data(links)
-				.enter().append("path")
-				.attr("class","flyer")
-				.attr("d", function(d) { return swoosh(flying_arc(d)) });
-
-			refresh();
+				refresh();
 		};
 		}
 
@@ -369,6 +392,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			svg.selectAll(".land").attr("d", path);
 			svg.selectAll(".point").attr("d", path);
 			svg.selectAll(".graticule").attr("d", path);
+			svg.selectAll(".countries path").attr("d", path);
 
 			svg.selectAll(".arc").attr("d", path)
 				.attr("opacity", function(d) {
