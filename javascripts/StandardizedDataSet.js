@@ -184,8 +184,8 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			break;
 
 		case "Rii Tera Complete MERGE":
-			this.type = "Rio Tera'";
-			mediaID = object['merged-media-ids'].images['Rii Tera Complete MERGE'];
+			this.type = "Rio Tera\'";
+			mediaID = object['merged-media-ids'].images['Rii Tera signs MEDIA'];
 			this.name = object.data["name"];
 			this.shortDescription = object.data["labeled"];
 			this.imageData = [

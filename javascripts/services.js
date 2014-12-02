@@ -96,11 +96,11 @@ module.factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', funct
 		});
 
 		var riiTeraCollector = new DataSetCollector('Rii Tera Complete MERGE', ['Rio Tera'],
-		function (input, __this){
+		function (input, _this){
 			for (var property in input.members) {
 				try {
 					var riiTera = input.members[property];
-					var dataSet = new StandardizedDataSet(church, property, _this.dataName, $location);
+					var dataSet = new StandardizedDataSet(riiTera, property, _this.dataName, $location);
 					service.addArtifact(dataSet);
 				} catch (e) {
 					console.log("No Media Associated");
@@ -182,7 +182,7 @@ module.controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $s
 						}
 						return _resolveSearch(object, string);
 					}
-					console.log(resolveSearch(artifact, 'tableData.tableDat.Reason for demolition'));
+					console.log(resolveSearch(artifact, 'tableData.tableData.Reason for demolition'));
 				}
 			}
 		});
