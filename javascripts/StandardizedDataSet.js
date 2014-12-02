@@ -188,6 +188,9 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			mediaID = object['merged-media-ids'].images['Rii Tera signs MEDIA'];
 			this.name = object.data["name"];
 			this.shortDescription = object.data["labeled"];
+			this.sections = [
+				new HeaderTextData({header:"Historic Background", text: "There\'s nothing here yet."}),
+			];
 			this.imageData = [
 				new ImageURLData({
 						imageData: object.media.images[mediaID],
