@@ -108,6 +108,15 @@ module.factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', funct
 			}
 		});
 
+		// var artCollector = new DataSetCollector('Missing Art Final MERGE', ['Art'],
+		// function(input, _this){
+		// 	for(var property in input.members){
+		// 		var painting = input.members[property];
+		// 		var dataSet = new StandardizedDataSet(painting, property, _this.dataName, $location);
+		// 		service.addArtifact(dataSet);
+		// 	}
+		// });
+
 		/**
 		 * Multi-tiered function. In order to use you pass the function a dataSetCollector
 		 * and the next funtion in the change to run.
@@ -128,6 +137,7 @@ module.factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', funct
 		getDataset(veniceChurchesCollector);
 		getDataset(conventsCollector);
 		getDataset(riiTeraCollector);
+		// getDataset(artCollector);
 
 		return service;
 	}]);

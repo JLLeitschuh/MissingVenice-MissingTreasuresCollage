@@ -89,6 +89,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 		this.tableData = blob.tableData;
 	}
 
+	this.imageData = [];
 	var mediaID;
 
 	/*
@@ -165,7 +166,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.sections = [
 				new HeaderTextData({header:"Historic Background", text: object.data['Historic Background']}),
 			];
-			this.imageData= [
+			this.imageData = [
 				new ImageURLData({
 						imageData: object.media.images[mediaID],
 						width: object.data.width,
@@ -184,7 +185,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			break;
 
 		case "Rii Tera Complete MERGE":
-			this.type = "Rio Tera\'";
+			this.type = "Filled In";
 			mediaID = object['merged-media-ids'].images['Rii Tera signs MEDIA'];
 			this.name = object.data["name"];
 			this.shortDescription = object.data["labeled"];
@@ -209,6 +210,25 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			break;
 
 
+		case 'Missing Art Final MERGE':
+			this.type = "Moved";
+			//mediaID = object['merged-media-ids'].images['Art Current Locations MEDIA'];
+
+			try{
+				var imageURLData = new ImageURLData({
+										imageData: object.media.images[mediaID],
+										width: object.data.width,
+										height: object.data.height});
+				this.imageData.push(imageURLData);
+			} catch(e){
+				console.log("No imaage Data")
+			}
+
+			this.shortDescription = "";
+			console.log(object);
+			break;
+
+
 		default:
 			console.log("Unsuported Data Set");
 			this.name = "Unsuported Data Set";
@@ -226,16 +246,4 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 
 	var textLength = (this.imageData[0].width < 300 ? 10 : 100);
 	this.veryShortDescription = this.shortDescription.trunc(textLength, true);
-
-	this.getImageWrapper = function(){
-		return new ImageWrapper(this.name,
-			this.year,
-			this.shortDescription,
-			this.imageData[0].small,
-			this.imageData[0].width,
-			this.imageData[0].height,
-			this.parentDataName,
-			this.id
-		);
-	};
 } // END: StandardizedDataSet
