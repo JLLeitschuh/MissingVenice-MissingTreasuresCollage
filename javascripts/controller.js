@@ -501,5 +501,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				svg.selectAll(".flyer").style("stroke-width", 3 / d3.event.scale);
 				svg.selectAll(".arc").style("stroke-width", 2 / d3.event.scale);
     	};
+
+
 		}
-	});
+});
