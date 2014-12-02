@@ -66,7 +66,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 				*/
 				var img = new Image();
 				//Get the size of the smallest image for short load times
-				img.src = imageDataSet.thumb;
+				img.src = blob.imageData.thumb;
 				img.onload = function() {
 					getImageMeta(this.width, this.height);
 				}
@@ -89,6 +89,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 		this.tableData = blob.tableData;
 	}
 
+	var mediaID;
 
 	/*
 	* HARD CODING ALERT! IF THE FORMAT FOR THESE DATA SETS CHANGE IT WILL BREAK HERE!
@@ -102,13 +103,18 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 		case 'Demolished Churches with Current Locations MERGE':
 			this.type = "Demolished";
 			//This is the id that the image url is stored behind
-			var mediaID = object['merged-media-ids'].images['Demolished Churches Media'];
+			mediaID = object['merged-media-ids'].images['Demolished Churches Media'];
 			this.name = object.data.name;
 			this.shortDescription = object.data.description;
 			this.sections = [
 				new HeaderTextData({header:"Church Info", text: object.data['description']})
 			];
-			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.imageData = [
+			new ImageURLData({
+					imageData: object.media.images[mediaID],
+					width: object.data.width,
+					height: object.data.height})
+					];
 			this.tableData = new HeaderTableData({
 				header: 'Demolition Info',
 				tableData: {
@@ -123,11 +129,16 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 		case 'Venice Churches':
 			this.type = "Repurposed";
 			//This is the id that the image url is stored behind
-			var mediaID = object['merged-media-ids'].images['Church Facade Images 2012'];
+			mediaID = object['merged-media-ids'].images['Church Facade Images 2012'];
 			this.name = object.data["Page Title"];
 			//Make this more descriptive. There is more data here.
 			this.shortDescription = object.data['Intro sentence'];
-			this.imageData = [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.imageData = [
+				new ImageURLData({
+						imageData: object.media.images[mediaID],
+						width: object.data.width,
+						height: object.data.height})
+						];
 			this.sections = [
 				new HeaderTextData({header:"Intro", text:object.data["Intro sentence"]}),
 				new HeaderTextData({header:"History", text:object.data["History Blurb"]})
@@ -148,13 +159,18 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 
 		case 'Venice Convents':
 			this.type = "Repurposed";
-			var mediaID = object['merged-media-ids'].images['convents facade images'];
+			mediaID = object['merged-media-ids'].images['convents facade images'];
 			this.name = object.data['Full Name'];
 			this.shortDescription = object.data['Historic Background'];
 			this.sections = [
 				new HeaderTextData({header:"Historic Background", text: object.data['Historic Background']}),
 			];
-			this.imageData= [new ImageURLData({imageData: object.media.images[mediaID], width: object.data.width, height: object.data.height})];
+			this.imageData= [
+				new ImageURLData({
+						imageData: object.media.images[mediaID],
+						width: object.data.width,
+						height: object.data.height})
+				];
 			this.tableData = new HeaderTableData({
 				header: 'Repurposed Convent Info',
 				tableData: {
@@ -162,7 +178,29 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 					'Sestiere': object.data["Sestiere"],
 					'Street Address': object.data["Street Address"],
 					'Year Founded': object.data["Year Founded"],
-					'Current Use': object.data["Current Use"],
+					'Current Use': object.data["Current Use"]
+				}
+			});
+			break;
+
+		case "Rii Tera Complete MERGE":
+			this.type = "Rio Tera\'";
+			mediaID = object['merged-media-ids'].images['Rii Tera signs MEDIA'];
+			this.name = object.data["name"];
+			this.shortDescription = object.data["labeled"];
+			this.imageData = [
+				new ImageURLData({
+						imageData: object.media.images[mediaID],
+						width: object.data.width,
+						height: object.data.height})
+				];
+			this.tableData = new HeaderTableData({
+				header: "Rii Tera Info",
+				tableData: {
+						'Sestiere': object.data["sestiere"],
+						'Street Name': object.data["street name"],
+						'Type': object.data["type"],
+						'Year Filled': object.data["year"]
 				}
 			});
 			break;
@@ -174,6 +212,14 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.shortDescription = "";
 			break;
 	} // END: Switch Case
+
+	for(var i in object.media.images){
+		if(i != mediaID){
+			this.imageData.push(new ImageURLData({
+				imageData: object.media.images[i]
+			}));
+		}
+	}
 
 	var textLength = (this.imageData[0].width < 300 ? 10 : 100);
 	this.veryShortDescription = this.shortDescription.trunc(textLength, true);
