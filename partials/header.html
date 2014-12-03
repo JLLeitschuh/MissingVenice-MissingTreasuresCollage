@@ -27,7 +27,7 @@
 	<!-- Dynamically add more nav tags using a repeat rule -->
 	<nav ng-controller="headerDisplay">
 		<div class="container-fluid row" style="padding-left:0px; padding-right:0px;">
-			<div class="col-md-9">
+			<div class="col-md-2">
 				<a class="nav_button" href="./#/">
 					<span class="glyphicon glyphicon-home" popover-trigger="mouseenter" popover-placement="bottom" popover="Home"></span>
 				</a>
@@ -41,6 +41,14 @@
 				<a class="nav_button" style="cursor: pointer;" ng-click="open('lg')">
 					<span class="glyphicon glyphicon-question-sign" popover-trigger="mouseenter" popover-placement="bottom" popover="Help"></span>
 				</a>
+			</div>
+			<div class="col-md-7">
+				<div class="input-group">
+					<input type="text" class="form-control" style="background: rgb(230, 230, 230);" placeholder="Search" ng-change="onChange" ng-model="searchModel"></input>
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-search"></span>
+					</span>
+				</div>
 			</div>
 			<div class="col-md-3" style="margin-bottom: 7px">
 				<em><a href="https://sites.google.com/site/ve14miss/">Missing Venice</a></em>
