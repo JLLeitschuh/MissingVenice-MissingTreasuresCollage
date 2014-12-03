@@ -11,14 +11,15 @@ angular.module('ArtifactFeederApp.view', []).
 			this.link = "./#/artifacts/group/" + this.linkName;
 		}
 		//The list of nav tags to have
-		$scope.allNavs = [
-			new NavTag("Art"),
-			new NavTag("Churches"),
-			new NavTag("Convents"),
-			new NavTag("Rio Tera'"),
-			new NavTag("Repurposed"),
-			new NavTag("Demolished")
-		];
+		$scope.allNavs =[];
+		// $scope.allNavs = [
+		// 	new NavTag("Art"),
+		// 	new NavTag("Churches"),
+		// 	new NavTag("Convents"),
+		// 	new NavTag("Rio Tera'"),
+		// 	new NavTag("Repurposed"),
+		// 	new NavTag("Demolished")
+		// ];
 
 		$scope.open = function (size) {
 			var modalInstance = $modal.open({
