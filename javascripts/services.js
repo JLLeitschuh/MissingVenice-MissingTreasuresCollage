@@ -1,13 +1,21 @@
 "use strict";
-var module = angular.module('ArtifactFeederApp.services', []);
-
-module.factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', function($rootScope, $location, ckConsole) {
+angular.module('ArtifactFeederApp.services', []).
+	/*
+	 * Singelton that controls getting the artifact data from the CK-Console
+	 * Collects all of the artifacts into one list.
+	 *
+	 */
+	factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', function($rootScope, $location, ckConsole) {
 		console.log('ArtifactFeederApp.services: ArtifactService');
 
 		var service = {
 			//A list of standardized data objects
 			artifacts: [],
 			datasetCount: 0,
+			/*
+			 * This is the message that gets broadcast after every dataste is
+			 * loaded into service.
+			 */
 			artifactGroupLoadedMessage: 'artifacts.group.loaded',
 			addArtifact: function(artifact){
 				service.artifacts.push(artifact);
