@@ -39,17 +39,17 @@
 		<div class="container-fluid row" style="padding-left:0px; padding-right:0px;">
 			<div class="col-md-2">
 				<ul class="nav nav-pills">
-					<li role="presentation" class="active">
+					<li role="presentation" ng-class="{active: path() == '/home'}">
 						<a class="nav_button" href="./#/" popover-trigger="mouseenter" popover-placement="bottom" popover="Home">
 							<span class="glyphicon glyphicon-home"></span>
 						</a>
 					</li>
-					<li role="presentation" class="">
+					<li role="presentation" ng-class="{active: path() == '/map'}">
 						<a class="nav_button" href="./#/map" popover-trigger="mouseenter" popover-placement="bottom" popover="Map">
 							<span class="glyphicon glyphicon-globe"></span>
 						</a>
 					</li>
-					<li role="presentation" class="">
+					<li role="presentation" ng-class="{active: path() == '/list'}">
 						<a class="nav_button" href="./#/list" popover-trigger="mouseenter" popover-placement="bottom" popover="List">
 							<span class="glyphicon glyphicon-list"></span>
 						</a>

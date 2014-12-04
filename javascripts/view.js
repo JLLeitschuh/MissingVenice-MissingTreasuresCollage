@@ -1,25 +1,10 @@
 "use strict";
 angular.module('ArtifactFeederApp.view', []).
-	controller('headerDisplay', function($scope, $modal, $log) {
-		/**
-		* Holds the data for the NavTag
-		* @param <String> name The nav button to add
-		*/
-		function NavTag(name){
-			this.name = name;
-			this.linkName = name.replace(/ /g, "_");
-			this.link = "./#/artifacts/group/" + this.linkName;
+	controller('headerDisplay', function($scope, $modal, $location, $log) {
+
+		$scope.path = function(){
+			return $location.path();
 		}
-		//The list of nav tags to have
-		$scope.allNavs =[];
-		// $scope.allNavs = [
-		// 	new NavTag("Art"),
-		// 	new NavTag("Churches"),
-		// 	new NavTag("Convents"),
-		// 	new NavTag("Rio Tera'"),
-		// 	new NavTag("Repurposed"),
-		// 	new NavTag("Demolished")
-		// ];
 
 		$scope.open = function (size) {
 			var modalInstance = $modal.open({
