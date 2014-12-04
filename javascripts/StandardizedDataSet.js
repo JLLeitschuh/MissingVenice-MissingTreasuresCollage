@@ -23,6 +23,8 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 	this.distance;
 
 	this.calculateDistance = function(position) {
+		// This code was found here: http://www.movable-type.co.uk/scripts/latlong.html
+
 		var lat1 = this.latitude;
 		var lon1 = this.longitude;
 
