@@ -51,21 +51,26 @@
 		.flyer:hover { }
 
 	</style>
-<h2>Timeline Map</h2>
-<p>This is the beginning of our 3D timeline map visualization.</p>
-<br>
-<br>
-<!--
-<button id="zoom_in">+</button>
-<button id="zoom_out">-</button>
--->
+	<h2>Timeline Map</h2>
+	<p>This is the beginning of our 3D timeline map visualization.</p>
+	<br>
+	<br>
+	<!--
+	<button id="zoom_in">+</button>
+	<button id="zoom_out">-</button>
+	-->
 
-<div id="map-area"></div>
+	<d3-map></d3-map>
 
-<p> Please select a year using the slider below. All the pieces that have moved before this date will be shown.</p>
+	<p>
+		Please select a year using the slider below. All the pieces that have moved before this date will be shown.
+	</p>
 
-<div class="well">
-	<b>{{sliderData.minValue}}AD</b>&nbsp;&nbsp;&nbsp;<slider ng-model="sliders.sliderValue" min="{{sliderData.minValue}}" step="{{sliderData.stepSize}}" max="{{sliderData.maxValue}}" value="{{sliderData.currentValue}}"></slider>&nbsp;&nbsp;&nbsp;<b>{{sliderData.maxValue}}AD</b>
-</div>
+	<div class="well">
+		<b>{{sliderData.minValue}}AD</b>&nbsp;&nbsp;&nbsp;
+		<slider ng-model="sliders.sliderValue" min="{{sliderData.minValue}}" step="{{sliderData.stepSize}}" max="{{sliderData.maxValue}}" value="{{sliderData.currentValue}}">
+		</slider>&nbsp;&nbsp;&nbsp;
+		<b>{{sliderData.maxValue}}AD</b>
+	</div>
 
 </div>
