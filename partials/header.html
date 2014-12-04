@@ -13,34 +13,53 @@
 		</div>
 	</script>
 
-	<style>
-		.popover-title {
-			color: blue;
-			font-size: 15px;
-		}
-		.popover-content {
-			color: black;
-			/*font-size: 10px;*/
-		}
-	</style>
-
-	<!-- Dynamically add more nav tags using a repeat rule -->
 	<nav ng-controller="headerDisplay">
+		<style type="text/css">
+			.popover-title {
+				color: blue;
+				font-size: 15px;
+			}
+			.popover-content {
+				color: black;
+				/*font-size: 10px;*/
+			}
+
+
+			.nav-pills > li > a {
+				background-color:#09F;
+				color: #fff;
+			}
+
+
+			.nav-pills>li>a:hover {
+				color: #428bca;
+			}
+
+		</style>
 		<div class="container-fluid row" style="padding-left:0px; padding-right:0px;">
 			<div class="col-md-2">
-				<a class="nav_button" href="./#/">
-					<span class="glyphicon glyphicon-home" popover-trigger="mouseenter" popover-placement="bottom" popover="Home"></span>
-				</a>
-				<a class="nav_button" href="./#/map">
-					<span class="glyphicon glyphicon-globe" popover-trigger="mouseenter" popover-placement="bottom" popover="Map"></span>
-				</a>
-				<a class="nav_button" href="./#/list">
-					<span class="glyphicon glyphicon-list" popover-trigger="mouseenter" popover-placement="bottom" popover="List"></span>
-				</a>
-				<a ng-repeat="navTag in allNavs" class="nav_button" ng-href="{{navTag.link}}">{{navTag.name}}</a>
-				<a class="nav_button" style="cursor: pointer;" ng-click="open('lg')">
-					<span class="glyphicon glyphicon-question-sign" popover-trigger="mouseenter" popover-placement="bottom" popover="Help"></span>
-				</a>
+				<ul class="nav nav-pills">
+					<li role="presentation" class="active">
+						<a class="nav_button" href="./#/" popover-trigger="mouseenter" popover-placement="bottom" popover="Home">
+							<span class="glyphicon glyphicon-home"></span>
+						</a>
+					</li>
+					<li role="presentation" class="">
+						<a class="nav_button" href="./#/map" popover-trigger="mouseenter" popover-placement="bottom" popover="Map">
+							<span class="glyphicon glyphicon-globe"></span>
+						</a>
+					</li>
+					<li role="presentation" class="">
+						<a class="nav_button" href="./#/list" popover-trigger="mouseenter" popover-placement="bottom" popover="List">
+							<span class="glyphicon glyphicon-list"></span>
+						</a>
+					</li>
+					<li role="presentation" class="">
+						<a class="nav_button" style="cursor: pointer;" ng-click="open('lg')" popover-trigger="mouseenter" popover-placement="bottom" popover="Help">
+							<span class="glyphicon glyphicon-question-sign"></span>
+						</a>
+					</li>
+				</ul>
 			</div>
 			<div class="col-md-7">
 				<div class="input-group">
