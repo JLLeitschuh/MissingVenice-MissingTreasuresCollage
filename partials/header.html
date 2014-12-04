@@ -55,9 +55,23 @@
 			<div class="col-md-7">
 				<div class="input-group">
 					<input type="text" class="form-control" style="background: rgb(230, 230, 230);" placeholder="Search" ng-change="onChange" ng-model="searchModel"></input>
-					<span class="input-group-addon">
-						<span class="glyphicon glyphicon-search"></span>
-					</span>
+					<div class="input-group-btn">
+
+							<button class="btn btn-default" type="button" ng-model="advancedSearchToggle"
+							  btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
+							  popover-trigger="mouseenter" popover-placement="bottom" popover="Advanced Search">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+
+							<button ng-class="{disabled: searchBar.distanceFilterButton.isDisabled()}" ng-model="distanceFilterToggle"
+							  type="button" class="btn btn-default"
+							  btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"
+							  popover-trigger="mouseenter" popover-placement="bottom" popover="Sort by distance"
+							  ng-click="searchBar.distanceFilterButton.clicked()">
+								<span class="glyphicon glyphicon-map-marker"></span>
+							</button>
+
+					</div>
 				</div>
 			</div>
 			<div class="col-md-3" style="margin-bottom: 7px">

@@ -15,10 +15,30 @@ CK console. This allows us to treat all datasets exactly the same regardless of 
 that they are stored on the CK Console.
 ********************************************************************************************/
 function StandardizedDataSet(object, id, parentDataName, $location){
+	var __this = this;
 	this.groupName = object.birth_certificate.type;
 	this.groupNameLink = encodeURI(this.groupName)
 	this.originalObject = object;
 	this.id = id;
+	this.distance;
+
+	this.calculateDistance = function(position) {
+		var lat1 = this.latitude;
+		var lon1 = this.longitude;
+
+		var lat2 = position.coords.latitude;
+		var lon2 = position.coords.longitude;
+
+		var R = 6371; // km
+		var φ1 = lat1.toRadians();
+		var φ2 = lat2.toRadians();
+		var Δφ = (lat2-lat1).toRadians();
+		var Δλ = (lon2-lon1).toRadians();
+		var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		this.distance = R * c;
+		this.tableData.tableData["Distance"] = this.distance + " KM";
+	}
 
 
 	/*
@@ -107,6 +127,8 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			mediaID = object['merged-media-ids'].images['Demolished Churches Media'];
 			this.name = object.data.name;
 			this.shortDescription = object.data.description;
+			this.latitude = object.data.latitude;
+			this.longitude = object.data.longitude;
 			this.sections = [
 				new HeaderTextData({header:"Church Info", text: object.data['description']})
 			];
@@ -134,6 +156,8 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.name = object.data["Page Title"];
 			//Make this more descriptive. There is more data here.
 			this.shortDescription = object.data['Intro sentence'];
+			this.latitude = object.data.latitude;
+			this.longitude = object.data.longitude;
 			this.imageData = [
 				new ImageURLData({
 						imageData: object.media.images[mediaID],
@@ -163,6 +187,8 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			mediaID = object['merged-media-ids'].images['convents facade images'];
 			this.name = object.data['Full Name'];
 			this.shortDescription = object.data['Historic Background'];
+			this.latitude = object.data["Latitude Coordinate"];
+			this.longitude = object.data["Longitude Coordinate"];
 			this.sections = [
 				new HeaderTextData({header:"Historic Background", text: object.data['Historic Background']}),
 			];
@@ -189,6 +215,8 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			mediaID = object['merged-media-ids'].images['Rii Tera signs MEDIA'];
 			this.name = object.data["name"];
 			this.shortDescription = object.data["labeled"];
+			this.latitude = object.data.latitude;
+			this.longitude = object.data.longitude;
 			this.sections = [
 				new HeaderTextData({header:"Historic Background", text: "There\'s nothing here yet."}),
 			];
@@ -235,6 +263,9 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.shortDescription = "";
 			break;
 	} // END: Switch Case
+
+	this.latitude = parseFloat(this.latitude);
+	this.longitude = parseFloat(this.longitude);
 
 	for(var i in object.media.images){
 		if(i != mediaID){

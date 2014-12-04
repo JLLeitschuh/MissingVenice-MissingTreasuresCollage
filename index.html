@@ -101,6 +101,13 @@
 				}
 				return "";
 			}
+			
+			/** Converts numeric degrees to radians */
+			if (typeof(Number.prototype.toRadians) === "undefined") {
+				Number.prototype.toRadians = function() {
+					return this * Math.PI / 180;
+				}
+			}
 
 
 			// Here we apply the actual CollagePlus plugin

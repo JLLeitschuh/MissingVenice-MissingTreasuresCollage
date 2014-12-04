@@ -5,13 +5,14 @@ angular.module('ArtifactFeederApp.services', []).
 	 * Collects all of the artifacts into one list.
 	 *
 	 */
-	factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', function($rootScope, $location, ckConsole) {
+	factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', 'LocationService', function($rootScope, $location, ckConsole, LocationService) {
 		console.log('ArtifactFeederApp.services: ArtifactService');
 
 		var service = {
 			//A list of standardized data objects
 			artifacts: [],
 			datasetCount: 0,
+			totalDatasetLoaded: 0,
 			/*
 			 * This is the message that gets broadcast after every dataste is
 			 * loaded into service.
@@ -28,6 +29,18 @@ angular.module('ArtifactFeederApp.services', []).
 				return $.grep(service.artifacts, function(e){
 					return (e.id == blob.id) && (e.groupName == blob.groupName);
 				});
+			},
+			calculateArtifactDistances: function(onError){
+				if (service.datasetCount != service.totalDatasetLoaded) throw "Attempted to calculate artifact distances before all of the artifacts were loaded."
+				LocationService.getLocation(function(position){
+					for(var a in service.artifacts){
+						var artifact = service.artifacts[a];
+						artifact.calculateDistance(position);
+					}
+					console.log("calculateArtifactDistances: complete");
+					console.log(service.artifacts);
+				}, onError);
+
 			}
 		};
 
@@ -137,7 +150,11 @@ angular.module('ArtifactFeederApp.services', []).
 
 			ckConsole.getGroup(aDataSetCollector.dataName).then(function(inputData){
 				console.log('Loading: ' + aDataSetCollector.dataName);
-				aDataSetCollector.inputParser(inputData);
+				try{
+					aDataSetCollector.inputParser(inputData);
+				} finally {
+					service.totalDatasetLoaded ++;
+				}
 			});
 		}
 
@@ -148,4 +165,43 @@ angular.module('ArtifactFeederApp.services', []).
 		// getDataset(artCollector);
 
 		return service;
-	}]);
+	}]).
+
+	factory('LocationService', function(){
+		var service = {
+			position: null,
+			locationSupported: (navigator.geolocation ? true : false ),
+			getLocation: function(onSucsess, onError){
+				if (service.locationSupported) {
+					if(service.position != null){
+						onSucsess(service.position);
+					} else {
+						navigator.geolocation.getCurrentPosition(
+							function(position) {
+								service.position = position;
+								onSucsess(position);
+							}, function(error) {
+								switch(error.code) {
+									case error.PERMISSION_DENIED:
+										onError("User denied the request for Geolocation.");
+										break;
+									case error.POSITION_UNAVAILABLE:
+										onError("Location information is unavailable.");
+										break;
+									case error.TIMEOUT:
+										onError("The request to get user location timed out.");
+										break;
+									case error.UNKNOWN_ERROR:
+										onError("An unknown error occurred.");
+										break;
+								}
+							}
+						);
+					}
+				} else {
+					onError("Location not supported by your browser");
+				}
+			},
+		};
+		return service;
+	});
