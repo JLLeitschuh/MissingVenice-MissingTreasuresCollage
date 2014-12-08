@@ -81,11 +81,6 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 	}).
 
 	controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $scope, ArtifactService ) {
-		//This is called ever time an artifact is added to the ArtifactService
-		$scope.$on( 'artifacts.update', function( event ) {
-			$scope.artifacts = ArtifactService.artifacts;
-
-		});
 		$scope.artifacts = ArtifactService.artifacts;
 
 
@@ -153,5 +148,5 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			currentValue: 1500,
 			stepSize: 10
 		};
-		
+
 });
