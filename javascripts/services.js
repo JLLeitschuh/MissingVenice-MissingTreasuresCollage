@@ -8,20 +8,43 @@ angular.module('ArtifactFeederApp.services', []).
 	factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', 'LocationService', function($rootScope, $location, ckConsole, LocationService) {
 		console.log('ArtifactFeederApp.services: ArtifactService');
 
+		/*******************************************
+		 'ArtifactService' Deffinition:
+		 This defines the elements and methods that
+		 this service provides.
+		*******************************************/
 		var service = {
 			//A list of standardized data objects
 			artifacts: [],
+			/*
+			 * This is this is the number of datasets that the service will eventually contain.
+			 * This value is set before the service is returned.
+			 */
 			datasetCount: 0,
+			/*
+			 * A running total of all of the datasets that are loaded.
+			 * This value increments once a datasets elements have all been added
+			 * to the service.
+			 */
 			totalDatasetLoaded: 0,
 			/*
 			 * This is the message that gets broadcast after every dataste is
 			 * loaded into service.
 			 */
 			artifactGroupLoadedMessage: 'artifacts.group.loaded',
+			/*
+			 * Adds an artifact to the service.
+			 * Also broadcasts an artifact update message.
+			 */
 			addArtifact: function(artifact){
 				service.artifacts.push(artifact);
 				$rootScope.$broadcast( 'artifacts.update' );
 			},
+
+			/*
+			 * Finds the object with the given group name and id and returns objects that match.
+			 * @param {Object} blob Object with the groupName and the id.
+			 */
 			getArtifactFromLinkData: function(blob){
 				if(blob.groupName === 'undefined') throw 'groupName is undefined';
 				if(blob.id === 'undefined') throw 'id is undefined';
@@ -30,6 +53,11 @@ angular.module('ArtifactFeederApp.services', []).
 					return (e.id == blob.id) && (e.groupName == blob.groupName);
 				});
 			},
+			/*
+			 * Requests that the distance for all data sets be calculated.
+			 * This triggers a request for the user to allow the web page to access their location.
+			 * This calculation completes when the location is determined and the calculation is complete.
+			 */
 			calculateArtifactDistances: function(onError){
 				if (service.datasetCount != service.totalDatasetLoaded) throw "Attempted to calculate artifact distances before all of the artifacts were loaded."
 				LocationService.getLocation(function(position){
@@ -55,7 +83,6 @@ angular.module('ArtifactFeederApp.services', []).
 		* @param Pass a object containing: simpleDataName, dataName, categories, inputParser
 		*/
 		function DataSetCollector(blob){
-			//simpleDataName, dataName, categories, inputParser
 			this.simpleDataName = blob.simpleDataName;
 			this.dataName = blob.dataName;
 			this.categories = blob.categories;
