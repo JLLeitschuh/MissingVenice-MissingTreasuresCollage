@@ -191,13 +191,46 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 					break;
 				}
 			}
-			//mediaID = object['merged-media-ids'].images['Art Current Locations MEDIA'];
+
+			this.locations = [];
+
+			var locationTagNames = ['Original', 'Second Location', 'Third Location', 'Current'];
+			for(var n in locationTagNames){
+				var tagName = locationTagNames[n];
+				//If we don't have the latitude then don't include it it in the list
+				if(object.data[tagName + "Latitude"] != ""){
+					//The object where the location data will be stored
+					var newLocation = {};
+					//We parse apart our field names pragmatically
+					switch (tagName){
+						case locationTagNames[1]:
+						case locationTagNames[2]:
+							newLocation.name = object.data['Name of ' + tagName];
+							break;
+						case locationTagNames[0]:
+							//YES THIS SPELLING MISTAKE IS INTENDED! Grant Screwed up...
+							newLocation.latitude = object.data[tagName + ' Latatitude'];
+							newLocation.longitude = object.data[tagName + ' Longitude'];
+						case locationTagNames[3]:
+							newLocation.name = object.data[tagName + ' Location'];
+							break;
+					}
+
+					// Don't overwrite the data for the spelling mistake
+					if(tagName != locationTagNames[0]){
+						newLocation.latitude = object.data[tagName + ' Latitude'];
+						newLocation.longitude = object.data[tagName + ' Longitude'];
+					}
+					newLocation.latitude = parseFloat(newLocation.latitude);
+					newLocation.longitude = parseFloat(newLocation.longitude);
+
+					this.locations.push(newLocation);
+				}
+			}
 
 			this.shortDescription = "";
-			console.log(object);
+			//console.log(object);
 			break;
-
-
 		default:
 			console.log("Unsuported Data Set");
 			this.name = "Unsuported Data Set";
