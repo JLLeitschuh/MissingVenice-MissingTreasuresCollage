@@ -14,19 +14,26 @@ angular.module('ArtifactFeederApp.services', []).
 		 this service provides.
 		*******************************************/
 		var service = {
-			//A list of standardized data objects
-			artifacts: [],
 			/*
-			 * This is this is the number of datasets that the service will eventually contain.
-			 * This value is set before the service is returned.
+			 * All of the standardized data objects.
+			 * This list should never be added to directly. Instead the
+			 * service.addArtifact method should be used.
 			 */
-			datasetCount: 0,
+			artifacts: [],
 			/*
 			 * A running total of all of the datasets that are loaded.
 			 * This value increments once a datasets elements have all been added
 			 * to the service.
+			 * This is important because the datasets are loaded asynchronysly
+			 */
+			datasetCount: 0,
+
+			/*
+			 * This is this is the number of datasets that the service will eventually contain.
+			 * This value is set before the service is returned.
 			 */
 			totalDatasetLoaded: 0,
+
 			/*
 			 * This is the message that gets broadcast after every dataste is
 			 * loaded into service.
