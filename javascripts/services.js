@@ -49,120 +49,158 @@ angular.module('ArtifactFeederApp.services', []).
 		*******************************************/
 		/**
 		* Collects the data for a single dataset.
+		* When a dataset is fully loaded from the server the inputParser method is run.
+		* The inputParser method should be used to build the serice list and
+		* should also be used to filter out unwanted datasets.
+		* @param Pass a object containing: simpleDataName, dataName, categories, inputParser
 		*/
-		function DataSetCollector(dataName, categories, inputParser){
-			this.dataName = dataName;
-			this.categories = categories;
+		function DataSetCollector(blob){
+			//simpleDataName, dataName, categories, inputParser
+			this.simpleDataName = blob.simpleDataName;
+			this.dataName = blob.dataName;
+			this.categories = blob.categories;
+			/*
+			 * This is what is run for each dataset that is collected
+			 */
 			this.inputParser = function(input){
-				console.log(dataName);
+				console.log(blob.dataName);
 				console.log(input);
-				inputParser(input, this);
+				blob.inputParser(input, this);
 				//When a group is done being loaded broadcast a message
-				$rootScope.$broadcast( service.artifactGroupLoadedMessage, dataName);
+				$rootScope.$broadcast( service.artifactGroupLoadedMessage, this.simpleDataName);
 			};
 		}
 
-		var demolishedChurchesCollector = new DataSetCollector('Demolished Churches with Current Locations MERGE', ['Churches'],
-		function(input, _this){
-			//console.log("Adding Demolished Church data to artifactAPI.list");
-			for (var property in input.members) {
-				//This is the individual peice of data pulled form the list
-				var church = input.members[property];
-				//console.log(church);
-				var dataSet = new StandardizedDataSet(church, property, _this.dataName, $location);
-				service.addArtifact(dataSet);
-			}
-		});
+		/************************************************
+		 Logic:
+		 These are defined seperately because some datasets
+		 may need to filter out specific elements.
+		*************************************************/
 
-		var veniceChurchesCollector = new DataSetCollector('Venice Churches', ['Churches'],
-		function(input, _this){
-			//console.log(input);
-			for (var property in input.members) {
-				var church = input.members[property];
-				var currentUse = church.data["Current Use"];
-				if(currentUse != "Active Church" &&
-				   currentUse != "Closed to the Public" &&
-				   currentUse != "Active Church and Art Museum"){
-					try{
-						//This is the individual peice of data pulled form the list
-						var church = input.members[property];
-						//console.log(church);
-						var dataSet = new StandardizedDataSet(church, property, _this.dataName, $location);
-						service.addArtifact(dataSet);
-
-					} catch (e){
-						console.log("No media associated");
-					}
-				}
-			}
-		});
-
-		var conventsCollector = new DataSetCollector('Venice Convents', ['Convents'],
-		function (input, _this){
-			for (var property in input.members) {
-				//This is the individual peice of data pulled form the list
-				var convent = input.members[property];
-				var currentUse = convent.data["Current Use"];
-				if(currentUse != "Convent" &&
-				   currentUse != "Closed to the Public" &&
-				   currentUse != "Active Church and Art Museum"){
-					try{
-						var dataSet = new StandardizedDataSet(convent, property, _this.dataName, $location);
-						service.addArtifact(dataSet);
-					} catch (e){
-						console.log("No media associated");
-					}
-				}
-			}
-		});
-
-		var riiTeraCollector = new DataSetCollector('Rii Tera Complete MERGE', ['Rio Tera'],
-		function (input, _this){
-			for (var property in input.members) {
-				try {
-					var riiTera = input.members[property];
-					var dataSet = new StandardizedDataSet(riiTera, property, _this.dataName, $location);
+		var demolishedChurchesCollector = new DataSetCollector({
+			simpleDataName:'Demolished Churches',
+			dataName:'Demolished Churches with Current Locations MERGE',
+			categories:['Churches'],
+			inputParser:function(input, _this){
+				//console.log("Adding Demolished Church data to artifactAPI.list");
+				for (var property in input.members) {
+					//This is the individual peice of data pulled form the list
+					var church = input.members[property];
+					//console.log(church);
+					var dataSet = new StandardizedDataSet(_this.simpleDataName, church, property, _this.dataName, $location);
 					service.addArtifact(dataSet);
-				} catch (e) {
-					console.log("No Media Associated");
 				}
 			}
 		});
 
-		// var artCollector = new DataSetCollector('Missing Art Final MERGE', ['Art'],
-		// function(input, _this){
-		// 	for(var property in input.members){
-		// 		var painting = input.members[property];
-		// 		var dataSet = new StandardizedDataSet(painting, property, _this.dataName, $location);
-		// 		service.addArtifact(dataSet);
-		// 	}
-		// });
+		var veniceChurchesCollector = new DataSetCollector({
+			simpleDataName:'Venice Churches',
+			dataName:'Venice Churches',
+			categories:['Churches'],
+			inputParser: function(input, _this){
+				//console.log(input);
+				for (var property in input.members) {
+					var church = input.members[property];
+					var currentUse = church.data["Current Use"];
+					if(currentUse != "Active Church" &&
+					   currentUse != "Closed to the Public" &&
+					   currentUse != "Active Church and Art Museum"){
+						try{
+							//This is the individual peice of data pulled form the list
+							var church = input.members[property];
+							//console.log(church);
+							var dataSet = new StandardizedDataSet(_this.simpleDataName, church, property, _this.dataName, $location);
+							service.addArtifact(dataSet);
+
+						} catch (e){
+							console.log("A data element for " + _this.simpleDataName + " was improperly formatted");
+						}
+					}
+				}
+			}
+		});
+
+		var conventsCollector = new DataSetCollector({
+			simpleDataName:'Venice Convents',
+			dataName:'Venice Convents',
+			categories: ['Convents'],
+			inputParser: function (input, _this){
+				for (var property in input.members) {
+					//This is the individual peice of data pulled form the list
+					var convent = input.members[property];
+					var currentUse = convent.data["Current Use"];
+					if(currentUse != "Convent" &&
+					   currentUse != "Closed to the Public" &&
+					   currentUse != "Active Church and Art Museum"){
+						try{
+							var dataSet = new StandardizedDataSet(_this.simpleDataName, convent, property, _this.dataName, $location);
+							service.addArtifact(dataSet);
+						} catch (e){
+							console.log("A data element for " + _this.simpleDataName + " was improperly formatted");
+						}
+					}
+				}
+			}
+		});
+
+		var riiTeraCollector = new DataSetCollector({
+			simpleDataName:'Rii Tera',
+			dataName:'Rii Tera Complete MERGE',
+			categories:['Rio Tera'],
+			inputParser: function (input, _this){
+				for (var property in input.members) {
+					try {
+						var riiTera = input.members[property];
+						var dataSet = new StandardizedDataSet(_this.simpleDataName, riiTera, property, _this.dataName, $location);
+						service.addArtifact(dataSet);
+					} catch (e) {
+						console.log("A data element for " + _this.simpleDataName + " was improperly formatted");
+					}
+				}
+			}
+		});
+
+		var artCollector = new DataSetCollector({
+			simpleDataName:'Missing Art',
+			dataName:'Missing Art FINAL',
+			categories:['Art'],
+			inputParser:function(input, _this){
+				for(var property in input.members){
+					var painting = input.members[property];
+					var dataSet = new StandardizedDataSet(_this.simpleDataName, painting, property, _this.dataName, $location);
+					service.addArtifact(dataSet);
+				}
+			}
+		});
 
 		/**
-		 * Multi-tiered function. In order to use you pass the function a dataSetCollector
-		 * and the next funtion in the change to run.
-		 * The function will make a request for the given data set if it is valid for the current search tags.
+		 * This is where the actuall request to get the data from the server is
+		 * made. This asks for the ck console data and returns asychronysly.
 		 */
 		function getDataset(aDataSetCollector){
 			//The increase the number of datasets that we are retriving
 			//This is used to only render the collage when all groups have been loaded
 			service.datasetCount ++;
 
-			ckConsole.getGroup(aDataSetCollector.dataName).then(function(inputData){
-				console.log('Loading: ' + aDataSetCollector.dataName);
-				try{
-					aDataSetCollector.inputParser(inputData);
-				} finally {
-					service.totalDatasetLoaded ++;
-				}
-			});
+
+			ckConsole.getGroup(aDataSetCollector.dataName).then(
+				//Asynchronys method
+				//This method doesn't run until the data has loaded (this can take quite a while)
+				function(inputData){
+					console.log('Loading: ' + aDataSetCollector.dataName);
+					try{
+						aDataSetCollector.inputParser(inputData);
+					} finally {
+						service.totalDatasetLoaded ++;
+					}
+				});
 		}
 
 		getDataset(demolishedChurchesCollector);
 		getDataset(veniceChurchesCollector);
 		getDataset(conventsCollector);
 		getDataset(riiTeraCollector);
-		// getDataset(artCollector);
+		getDataset(artCollector);
 
 		return service;
 	}]).

@@ -14,14 +14,20 @@ This object is designed to standardize the object data that we are retriving fro
 CK console. This allows us to treat all datasets exactly the same regardless of the way
 that they are stored on the CK Console.
 ********************************************************************************************/
-function StandardizedDataSet(object, id, parentDataName, $location){
+function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $location){
 	var __this = this;
+	this.simpleGroupName = simpleGroupName;
 	this.groupName = object.birth_certificate.type;
 	this.groupNameLink = encodeURI(this.groupName)
 	this.originalObject = object;
 	this.id = id;
 	this.distance;
 
+	/**
+	 * This is run once we have the user's GPS location.
+	 * Using the current posisiton the distance between the user and this artifact
+	 * is calculated.
+	 */
 	this.calculateDistance = function(position) {
 		// This code was found here: http://www.movable-type.co.uk/scripts/latlong.html
 
@@ -53,51 +59,6 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 	}
 
 	/**
-	* The Image URL Data object allows us to store
-	* the various sized versions of given images.
-	* Since there may be more than one image per
-	* per data element we must collect each into
-	* its own specific object.
-	* @param blob {imageData, width, height}
-	*        A dictionary containing the image data from the CK console.
-	*/
-	function ImageURLData(blob){
-		//Store a version of 'this' that can be used by internally defined objects
-		var _this = this;
-		this.thumb = blob.imageData.thumb;
-		this.small = blob.imageData.small;
-		this.medium = blob.imageData.medium;
-		this.original = blob.imageData.original;
-
-		/**
-		* Recursive function to get the Image Meta data
-		* if we don't already have it.
-		* If we already have it the data is automatically
-		* stored in the height and width variables
-		*/
-		function getImageMeta(var_width, var_height) {
-			//If the height is defined
-			if (typeof var_height !== 'undefined') {
-				//Then we know the size and can store it.
-				_this.width = var_width;
-				_this.height = var_height;
-			} else {
-				/*
-				* Otherwise we need to wait on the image to load
-				* to retrive this meta info.
-				*/
-				var img = new Image();
-				//Get the size of the smallest image for short load times
-				img.src = blob.imageData.thumb;
-				img.onload = function() {
-					getImageMeta(this.width, this.height);
-				}
-			}
-		} // END: function
-		getImageMeta(blob.width, blob.height);
-	} // END: ImageURLData
-
-	/**
 	* Stores each header's data for display on the site.
 	* @param blob {header, text}
 	*/
@@ -122,8 +83,8 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 	* NOTE: The best way to do this is to print the object to the console
 	* (using console.log()) and manually find the fields that work with this object.
 	*/
-	switch(this.groupName){
-		case 'Demolished Churches with Current Locations MERGE':
+	switch(this.simpleGroupName){
+		case 'Demolished Churches':
 			this.type = "Demolished";
 			//This is the id that the image url is stored behind
 			mediaID = object['merged-media-ids'].images['Demolished Churches Media'];
@@ -134,12 +95,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.sections = [
 				new HeaderTextData({header:"Church Info", text: object.data['description']})
 			];
-			this.imageData = [
-			new ImageURLData({
-					imageData: object.media.images[mediaID],
-					width: object.data.width,
-					height: object.data.height})
-					];
+
 			this.tableData = new HeaderTableData({
 				header: 'Demolition Info',
 				tableData: {
@@ -160,12 +116,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.shortDescription = object.data['Intro sentence'];
 			this.latitude = object.data.latitude;
 			this.longitude = object.data.longitude;
-			this.imageData = [
-				new ImageURLData({
-						imageData: object.media.images[mediaID],
-						width: object.data.width,
-						height: object.data.height})
-						];
+
 			this.sections = [
 				new HeaderTextData({header:"Intro", text:object.data["Intro sentence"]}),
 				new HeaderTextData({header:"History", text:object.data["History Blurb"]})
@@ -194,12 +145,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.sections = [
 				new HeaderTextData({header:"Historic Background", text: object.data['Historic Background']}),
 			];
-			this.imageData = [
-				new ImageURLData({
-						imageData: object.media.images[mediaID],
-						width: object.data.width,
-						height: object.data.height})
-				];
+
 			this.tableData = new HeaderTableData({
 				header: 'Repurposed Convent Info',
 				tableData: {
@@ -212,7 +158,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			});
 			break;
 
-		case "Rii Tera Complete MERGE":
+		case "Rii Tera":
 			this.type = "Filled In";
 			mediaID = object['merged-media-ids'].images['Rii Tera signs MEDIA'];
 			this.name = object.data["name"];
@@ -222,12 +168,7 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			this.sections = [
 				new HeaderTextData({header:"Historic Background", text: "There\'s nothing here yet."}),
 			];
-			this.imageData = [
-				new ImageURLData({
-						imageData: object.media.images[mediaID],
-						width: object.data.width,
-						height: object.data.height})
-				];
+
 			this.tableData = new HeaderTableData({
 				header: "Rii Tera Info",
 				tableData: {
@@ -240,19 +181,17 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			break;
 
 
-		case 'Missing Art Final MERGE':
+		case 'Missing Art':
 			this.type = "Moved";
-			//mediaID = object['merged-media-ids'].images['Art Current Locations MEDIA'];
-
-			try{
-				var imageURLData = new ImageURLData({
-										imageData: object.media.images[mediaID],
-										width: object.data.width,
-										height: object.data.height});
-				this.imageData.push(imageURLData);
-			} catch(e){
-				console.log("No imaage Data")
+			var mediaName;
+			for(var i = 1; i < 7; i++){
+				mediaName = "Art " + i + " MEDIA";
+				mediaID = object['merged-media-ids'].images[mediaName];
+				if(object.media.images[mediaID]){
+					break;
+				}
 			}
+			//mediaID = object['merged-media-ids'].images['Art Current Locations MEDIA'];
 
 			this.shortDescription = "";
 			console.log(object);
@@ -266,9 +205,73 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			break;
 	} // END: Switch Case
 
-	this.latitude = parseFloat(this.latitude);
-	this.longitude = parseFloat(this.longitude);
 
+	// IMAGE MANIPULATION
+
+	/**
+	* The Image URL Data object allows us to store
+	* the various sized versions of given images.
+	* Since there may be more than one image per
+	* per data element we must collect each into
+	* its own specific object.
+	* @param blob {imageData, width, height}
+	*        A dictionary containing the image data from the CK console.
+	*/
+	function ImageURLData(image_blob){
+		//Store a version of 'this' that can be used by internally defined objects
+		var _this = this;
+		this.thumb = image_blob.imageData.thumb;
+		this.small = image_blob.imageData.small;
+		this.medium = image_blob.imageData.medium;
+		this.original = image_blob.imageData.original;
+
+		/**
+		* Recursive function to get the Image Meta data
+		* if we don't already have it.
+		* If we already have it the data is automatically
+		* stored in the height and width variables
+		*/
+		function getImageMeta(var_width, var_height) {
+			//If the height is defined
+			if (typeof var_height !== 'undefined') {
+				//Then we know the size and can store it.
+				_this.width = var_width;
+				_this.height = var_height;
+			} else {
+				/*
+				* Otherwise we need to wait on the image to load
+				* to retrive this meta info.
+				*/
+				var img = new Image();
+				//Get the size of the smallest image for short load times
+				img.src = image_blob.imageData.thumb;
+				img.onload = function() {
+					getImageMeta(this.width, this.height);
+				}
+			}
+		} // END: function
+		getImageMeta(image_blob.width, image_blob.height);
+	} // END: ImageURLData
+
+	//By default this object is not valid for the collage
+	this.validForCollage = false;
+	if(mediaID){
+		//If we have a media id then we have the dimention info (assumption)
+		//This is nessasary because the collage code requires an image to have a known dimention
+		this.validForCollage = true;
+		this.imageData.push(
+			new ImageURLData({
+				imageData: object.media.images[mediaID],
+				width: object.data.width,
+				height: object.data.height})
+			);
+	}
+
+	/*
+	 * Grab all of the other images associated with this dataset
+	 * This is a catchall for media before this ck console bug was fixed:
+	 * https://github.com/cityknowledge/console/issues/15
+	 */
 	for(var i in object.media.images){
 		if(i != mediaID){
 			this.imageData.push(new ImageURLData({
@@ -276,6 +279,11 @@ function StandardizedDataSet(object, id, parentDataName, $location){
 			}));
 		}
 	}
+
+	// END IMAGE MANIPULATION
+
+	this.latitude = parseFloat(this.latitude);
+	this.longitude = parseFloat(this.longitude);
 
 	var textLength = (this.imageData[0].width < 300 ? 10 : 100);
 	this.veryShortDescription = this.shortDescription.trunc(textLength, true);
