@@ -137,8 +137,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		$scope.myInterval = 5000;
 
 	}).
-	controller('listController', function($scope, $routeParams, ArtifactService){
+	controller('listController', function($scope, $rootScope, $routeParams, ArtifactService){
 		$scope.artifacts = ArtifactService.artifacts;
+
+		$scope.searchBar = $rootScope.searchBar;
 
 	}).
 

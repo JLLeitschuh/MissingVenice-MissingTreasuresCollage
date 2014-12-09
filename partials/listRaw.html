@@ -50,7 +50,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<tr ng-repeat="artifact in artifacts" ng-click="artifact.goToInfoPage()">
+		<tr ng-repeat="artifact in artifacts | filter:searchBar.searchText" ng-click="artifact.goToInfoPage()">
 				<td>
 					{{artifact.name}}
 				</td>
