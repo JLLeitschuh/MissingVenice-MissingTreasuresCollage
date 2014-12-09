@@ -192,15 +192,18 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 				}
 			}
 
-			this.locations = [];
 
+			//Location data
+
+			this.locations = [];
 			var locationTagNames = ['Original', 'Second Location', 'Third Location', 'Current'];
 			for(var n in locationTagNames){
 				var tagName = locationTagNames[n];
 				//If we don't have the latitude then don't include it it in the list
-				if(object.data[tagName + "Latitude"] != ""){
+				if(object.data[tagName + " Longitude"]){
 					//The object where the location data will be stored
 					var newLocation = {};
+
 					//We parse apart our field names pragmatically
 					switch (tagName){
 						case locationTagNames[1]:
@@ -221,12 +224,32 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 						newLocation.latitude = object.data[tagName + ' Latitude'];
 						newLocation.longitude = object.data[tagName + ' Longitude'];
 					}
+
+					switch (tagName){
+						case locationTagNames[0]:
+							newLocation.place = "Original";
+							//Put this here first
+							this.latitude = newLocation.latitude;
+							this.longitude = newLocation.longitude;
+							break;
+						case locationTagNames[1]: newLocation.place = "Second"; break;
+						case locationTagNames[2]: newLocation.place = "Third"; break;
+						case locationTagNames[3]:
+							newLocation.place = "Current";
+							//Howerver if we have the current location then use that instead
+							this.latitude = newLocation.latitude;
+							this.longitude = newLocation.longitude;
+							break;
+					}
+
+
 					newLocation.latitude = parseFloat(newLocation.latitude);
 					newLocation.longitude = parseFloat(newLocation.longitude);
 
 					this.locations.push(newLocation);
 				}
 			}
+			//END Location data
 
 			this.shortDescription = "";
 			//console.log(object);
