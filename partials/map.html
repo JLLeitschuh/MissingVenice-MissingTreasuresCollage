@@ -1,56 +1,4 @@
 <div class="container center-block"><!-- Set the width of the page -->
-	<style>
-		.center-block {
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-		}
-		.land {
-			fill: #999;
-			stroke-opacity: 1;
-		}
-
-		.graticule {
-			fill: none;
-			stroke: black;
-			stroke-width:.5;
-			opacity:.2;
-		}
-
-		.labels {
-			font: 16px sans-serif;
-			fill: red;
-			opacity: .75;
-		}
-
-		.country-border{
-			fill: none;
-			stroke: #fff;
-		}
-
-		.noclicks { pointer-events:none; }
-
-		.point {  opacity:.6; }
-
-		.arcs {
-			opacity:.1;
-			stroke: gray;
-			stroke-width: 3;
-		}
-		.flyers {
-			stroke-width:2;
-			opacity: .6;
-			stroke: darkred;
-		}
-		.arc, .flyer {
-			stroke-linejoin: round;
-			fill:none;
-		}
-		.arc { }
-		.flyer { }
-		.flyer:hover { }
-
-	</style>
 	<h2>Timeline Map</h2>
 	<p>This is the beginning of our 3D timeline map visualization.</p>
 	<br>
@@ -60,7 +8,7 @@
 	<button id="zoom_out">-</button>
 	-->
 
-	<d3-map></d3-map>
+	<mapbox map-id="missingvenice.ke9kdd63" lat="47.603569" lng="-122.329453"></mapbox>
 
 	<p>
 		Please select a year using the slider below. All the pieces that have moved before this date will be shown.

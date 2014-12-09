@@ -9,6 +9,7 @@ angular.
 		'ArtifactFeederApp.view',
 		'ui.bootstrap-slider',
 		'ckServices',
+		'angularMapbox',
 		'ngRoute'
 	]).
 	/** Defines page navigation */
