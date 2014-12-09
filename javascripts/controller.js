@@ -142,11 +142,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 	controller('mapController', function($scope, $routeParams, ArtifactService){
 		console.log("ArtifactFeederApp.controllers: mapController")
 		//Example code:
-		var locations = ArtifactService.artifacts[1].locations;
-		for(var i in locations){
-			var location = locations[i];
-
-		}
+		
 		$scope.sliderData = {
 			minValue: 1000,
 			maxValue: 2014,
