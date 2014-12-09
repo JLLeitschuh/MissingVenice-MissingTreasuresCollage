@@ -183,7 +183,22 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 
 		case 'Missing Art':
 			this.type = "Moved";
+			this.name = object.data["Item Name"];
 			var mediaName;
+
+			this.sections = [
+				new HeaderTextData({header:"Description", text: object.data["Item Description"]}),
+			];
+
+			this.tableData = new HeaderTableData({
+				header: "Rii Tera Info",
+				tableData: {
+						'Date Created': object.data["Date Created"],
+						'Medium': object.data["Medium"],
+						'Type': object.data["Type"],
+				}
+			});
+
 			for(var i = 1; i < 7; i++){
 				mediaName = "Art " + i + " MEDIA";
 				mediaID = object['merged-media-ids'].images[mediaName];
