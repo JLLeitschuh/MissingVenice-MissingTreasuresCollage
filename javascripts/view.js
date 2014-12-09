@@ -1,12 +1,17 @@
 "use strict";
 angular.module('ArtifactFeederApp.view', []).
-	controller('headerDisplay', function($scope, $modal, $location, $log, ArtifactService, LocationService) {
+	controller('headerDisplay', function($scope, $rootScope, $modal, $location, $log, ArtifactService, LocationService) {
 
 		$scope.path = function(){
 			return $location.path();
 		}
 
 		$scope.searchBar= {
+			searchText:"",
+			onChangeNotifier:'searchBar.change',
+			onChange: function(){
+				$rootScope.$broadcast($scope.searchBar.onChangeNotifier);
+			},
 			distanceFilterButton: {
 				isDisabled: function(){
 					var a = ArtifactService;
@@ -20,6 +25,8 @@ angular.module('ArtifactFeederApp.view', []).
 				}
 			},
 		};
+
+		$rootScope.searchBar = $scope.searchBar;
 
 		$scope.open = function (size) {
 			var modalInstance = $modal.open({

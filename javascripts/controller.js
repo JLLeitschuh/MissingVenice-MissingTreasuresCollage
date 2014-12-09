@@ -51,9 +51,11 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 	/**
 	 * Controller for displaying the collage
 	 */
-	controller('artifactsController', function($scope, ArtifactService) {
+	controller('artifactsController', function($scope, $rootScope, ArtifactService) {
 		console.log("ArtifactFeederApp.controllers: artifactsController");
 		$scope.nameFilter = null;
+
+		$scope.searchBar = $rootScope.searchBar;
 
 		var resizeTimer = null;
 		var collageImagesFunction = function() {
@@ -79,6 +81,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		$(window).bind('resize', collageImagesFunction);
 		collageImagesFunction();
 
+		$scope.$on($scope.searchBar.onChangeNotifier, function(event){
+			collageImagesFunction();
+		});
+
 
 
 		$scope.artifacts = ArtifactService.artifacts;
@@ -97,6 +103,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					$scope.$apply;
 					//This should only happen once all of the images have finished being loaded
 					console.log("All images loaded");
+					$("div.Caption").remove();
 					collage();
 					$('.Collage').collageCaption();
 				}
