@@ -78,9 +78,9 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		// This is just for the case that the browser window is resized
 		$(window).bind('resize', collageImagesFunction);
 		collageImagesFunction();
-	}).
 
-	controller( "artifacts.list", [ '$scope', 'ArtifactService', function( $scope, ArtifactService ) {
+
+
 		$scope.artifacts = ArtifactService.artifacts;
 
 
@@ -104,7 +104,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			}
 		});
 
-	}]).
+	}).
 
 	/**
 	 * Controller for displaying one of the artifacts information
@@ -142,7 +142,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 	controller('mapController', function($scope, $routeParams, ArtifactService){
 		console.log("ArtifactFeederApp.controllers: mapController")
 		//Example code:
-		
+
 		$scope.sliderData = {
 			minValue: 1000,
 			maxValue: 2014,
