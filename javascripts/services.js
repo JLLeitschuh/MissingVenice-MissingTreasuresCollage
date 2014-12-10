@@ -283,7 +283,12 @@ angular.module('ArtifactFeederApp.services', []).
 	factory('MapLocationService', function($rootScope){
 		var service = {
 			markers: {},
-			lines: {},
+			paths: {
+				// test:{
+				// 	type: "polyline",
+				// 	latlngs: [ {lat: 40.4,lng: -3.6833333}, {lat: 41.9,lng: 12.4833333}, {lat: 51.5, lng: -0.116667} ]
+				// }
+			},
 			geoJson: {
 				type: "FeatureCollection",
 				features: []

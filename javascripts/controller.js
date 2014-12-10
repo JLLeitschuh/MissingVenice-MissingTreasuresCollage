@@ -175,7 +175,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 							.addTo(map);
 			});
 
-			var myLayer = L.mapbox.featureLayer().addTo(map);
+			//var myLayer = L.mapbox.featureLayer().addTo(map);
 
 			// Start and end points, in x = longitude, y = latitude values
 			//var start = { x: -122, y: 48 };
@@ -183,69 +183,19 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			//var generator = new arc.GreatCircle(start, end, { name: 'Seattle to DC' });
 			//var line = generator.Arc(1, { offset: 200 });
 
-			// Add custom popups to each using our custom feature properties
-			myLayer.on('layeradd', function(e) {
-					var marker = e.layer, feature = marker.feature;
-					// Create custom popup content
-					var popupContent = "";
-					var divTag = '<div style="width: 305px; height: 150px; overflow: auto;"> '
-					if(feature.geometry.type == "Point"){
-						popupContent =
-							divTag +
-								'<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
-									'<img src="' + feature.properties.image + '" />' +
-								'</a>' +
-								"<b>" + feature.properties["Location Name"] + "</b></br>" +
-								"Pieces At Location (" + feature.properties["item count"] + "): </br>"
-								+ feature.properties["Pieces At Location"] +
-							'</div>';
-					} else {
-						popupContent =
-							divTag +
-								'<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
-									'<img src="' + feature.properties.image + '" />' +
-								'</a>' +
-								"<b>" + feature.properties["title"] + "</b></br>" +
-							'</div>';
-					}
-
-					// http://leafletjs.com/reference.html#popup
-					marker.bindPopup(popupContent,{
-							closeButton: false,
-							minWidth: 320
-					});
-			});
-
 			L.control.fullscreen().addTo(map);
 
 			L.control.locate().addTo(map);
-
-			$scope.$on(MapLocationService.addedMessage, function(event){
-				console.log(MapLocationService.geoJson);
-				//myLayer.setGeoJSON(MapLocationService.geoJson);
-				$scope.geojson = MapLocationService.geoJson;
-			});
-
-			function style(feature) {
-				return {
-					"stroke":getRandomColor(),
-					"stroke-opacity": 1,
-					"stroke-width": 4,
-					title: standardizedDataObject.name,
-					weight: 1,
-					opacity: 1,
-				};
-			}
-
-			angular.extend($scope, {
-				markers: MapLocationService.markers
-			}); //end extend
 
 			//L.geoJson(line.json()).addTo(map);
 
 			// Add features to the map
 		});
 
+		angular.extend($scope, {
+			markers: MapLocationService.markers,
+			paths: MapLocationService.paths
+		}); //end extend
 
 
 		$scope.showLeaflet = function() {
