@@ -202,7 +202,14 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			console.log("Leaflet Popup Open");
 			for(var m in $scope.markers){
 				if(!angular.equals(m, args.markerName)){
-					$scope.markers[m].opacity = .2;
+					$scope.markers[m].dullMarker();
+				}
+			}
+			for(var p in $scope.paths){
+				if(! $scope.markers[args.markerName].hasPath(p)){
+					$scope.paths[p].dullPath();
+				} else {
+					$scope.paths[p].highlightPath();
 				}
 			}
 		});
@@ -210,9 +217,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			// Args will contain the marker name and other relevant information
 			console.log("Leaflet Popup Close");
 			for(var m in $scope.markers){
-				if(!angular.equals(m, args.markerName)){
-					$scope.markers[m].opacity = 1;
-				}
+				$scope.markers[m].resetMarker();
+			}
+			for(var p in $scope.paths){
+				$scope.paths[p].resetPath();
 			}
 		});
 
@@ -222,18 +230,24 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			$scope.paths[args.pathName].weight = 7;
 			for(var p in $scope.paths){
 				if(!angular.equals(p, args.pathName)){
-					$scope.paths[p].opacity = .2;
+					$scope.paths[p].dullPath();
+				}
+			}
+			for(var m in $scope.markers){
+				if(! $scope.paths[args.pathName].hasMarker(m)){
+					$scope.markers[m].dullMarker();
 				}
 			}
 		});
 		$scope.$on('leafletDirectivePath.popupclose', function(e, args) {
 			// Args will contain the marker name and other relevant information
 			console.log("Leaflet Popup Close");
-			$scope.paths[args.pathName].weight = 2;
+			$scope.paths[args.pathName].weight = 3;
 			for(var p in $scope.paths){
-				if(!angular.equals(p, args.pathName)){
-					$scope.paths[p].opacity = 1;
-				}
+				$scope.paths[p].resetPath();
+			}
+			for(var m in $scope.markers){
+				$scope.markers[m].resetMarker();
 			}
 		});
 

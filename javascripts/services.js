@@ -282,6 +282,9 @@ angular.module('ArtifactFeederApp.services', []).
 
 	factory('MapLocationService', function($rootScope){
 		var service = {
+			latLongFloatToPositiveString:function(value){
+				return (value > 0 ? value.toString() : "neg"+ (-1*value));
+			},
 			markers: {},
 			paths: {
 				// test:{
@@ -298,6 +301,7 @@ angular.module('ArtifactFeederApp.services', []).
 			addLocationList: function(standardizedDataObject){
 				var locations = standardizedDataObject.locations;
 				var cordinates = [];
+				var markerNames = [];
 				for(var l in locations){
 					var location = locations[l];
 					if(isNaN(location.latitude) || isNaN(location.longitude)){
@@ -307,22 +311,38 @@ angular.module('ArtifactFeederApp.services', []).
 					}
 					cordinates.push({lat:location.latitude, lng:location.longitude});
 
-					var latString = (location.latitude > 0 ? location.latitude.toString() : "neg"+ (-1*location.latitude));
-					var lngString = (location.longitude > 0 ? location.longitude.toString() : "neg"+ (-1*location.longitude));
-					if(!service.markers[latString + "," + lngString]){
+					var latString = service.latLongFloatToPositiveString(location.latitude);
+					var lngString = service.latLongFloatToPositiveString(location.longitude);
+					var markerName = latString + "," + lngString;
+					markerNames.push(markerName);
+					if(!service.markers[markerName]){
 						var Marker = function(){
 							this.lat = location.latitude;
 							this.lng = location.longitude;
 							this.draggable = false;
-							this.opacity = 1;
 							this.data = {
 								name: location.name,
 								pieces: [standardizedDataObject]
 							};
+							this.hasPath = function(aPathName){
+								for(var p in this.data.pieces){
+									if(angular.equals("id" + this.data.pieces[p].pvid, aPathName)){
+										return true;
+									}
+								}
+								return false;
+							};
+							this.dullMarker = function(){
+								this.opacity = .2;
+							};
+							this.resetMarker = function(){
+								this.opacity = 1;
+							};
+							this.resetMarker();
 							this.addPiece = function(_standardizedDataObject){
 								this.data.pieces.push(_standardizedDataObject);
 								this.generateMessage();
-							}
+							};
 							this.generateMessage = function(){
 								var string = '<b>' + this.data.name + '</b> </br>' +
 								"Pieces At Location (" + this.data.pieces.length + "): </br>" +
@@ -338,20 +358,44 @@ angular.module('ArtifactFeederApp.services', []).
 							this.message = "";
 							this.generateMessage();
 						}
-						//var marker =
-						service.markers[latString + "," + lngString] = new Marker();
+
+						service.markers[markerName] = new Marker();
 					} else {
-						service.markers[latString + "," + lngString].addPiece(standardizedDataObject);
+						service.markers[markerName].addPiece(standardizedDataObject);
 					}
 				}
-				service.paths["id" + standardizedDataObject.pvid] = {
-					color: getRandomColor(),
-					weight: 3,
-					//opacity: .5,
-					latlngs: cordinates,
-					type: 'polyline',
-					message: '<b>' + standardizedDataObject.name + '</b>'
+				var Path = function(){
+					this.color = getRandomColor();
+					this.latlngs = cordinates;
+					this.type = 'polyline';
+					this.data = {
+						piece: standardizedDataObject,
+						markerNames: markerNames,
+					};
+					this.hasMarker = function(aMarkerName){
+						for(var m in this.data.markerNames){
+							if(angular.equals(this.data.markerNames[m], aMarkerName)){
+								return true;
+							}
+						}
+						return false;
+					};
+					this.highlightPath = function(){
+						this.weight = 7;
+						this.opacity = 1;
+					};
+					this.dullPath = function(){
+						this.weight = 2;
+						this.opacity = .1;
+					}
+					this.resetPath = function(){
+						this.weight = 3;
+						this.opacity = 1;
+					}
+					this.resetPath();
+					this.message = '<b>' + standardizedDataObject.name + '</b>';
 				};
+				service.paths["id" + standardizedDataObject.pvid] = new Path();
 				service.count ++;
 			}
 
