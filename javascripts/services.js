@@ -298,7 +298,7 @@ angular.module('ArtifactFeederApp.services', []).
 					}
 					cordinates.push([location.longitude, location.latitude]);
 					var existingLocation = $.grep(service.geoJson.features, function(e){
-						return (e.properties["Location Name"] == location.name);
+						return (angular.equals(e.geometry["coordinates"][0], location.longitude) && angular.equals(e.geometry["coordinates"][1], location.latitude));
 					});
 					if(existingLocation.length == 0){
 						service.geoJson.features.push({
