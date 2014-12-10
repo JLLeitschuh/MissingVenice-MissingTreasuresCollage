@@ -217,21 +217,25 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 
 					//We parse apart our field names pragmatically
 					switch (tagName){
-						case locationTagNames[1]:
 						case locationTagNames[2]:
+							newLocation.latitude = object.data['Thrid Location Latitude'];
+							newLocation.longitude = object.data[tagName + ' Longitude'];
+							//Intentioanlly no break
+						case locationTagNames[1]:
 							newLocation.name = object.data['Name of ' + tagName];
 							break;
 						case locationTagNames[0]:
 							//YES THIS SPELLING MISTAKE IS INTENDED! Grant Screwed up...
 							newLocation.latitude = object.data[tagName + ' Latatitude'];
 							newLocation.longitude = object.data[tagName + ' Longitude'];
+							//Intentioanlly no break
 						case locationTagNames[3]:
 							newLocation.name = object.data[tagName + ' Location'];
 							break;
 					}
 
 					// Don't overwrite the data for the spelling mistake
-					if(tagName != locationTagNames[0]){
+					if(tagName != locationTagNames[0] && tagName != locationTagNames[2] ){
 						newLocation.latitude = object.data[tagName + ' Latitude'];
 						newLocation.longitude = object.data[tagName + ' Longitude'];
 					}
@@ -245,12 +249,14 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 							this.longitude = newLocation.longitude;
 							break;
 						case locationTagNames[1]:
-							newLocation.place = "Second"; break;
+							newLocation.place = "Second";
 							newLocation.date = object.data["Date Moved to Second Location"];
+							break;
 						case locationTagNames[2]:
-							newLocation.place = "Third"; break;
+							newLocation.place = "Third";
 							//Again this spelling mistake is intentional
 							newLocation.date = object.data['"Date Moved to Thrid Location "'];
+							break;
 						case locationTagNames[3]:
 							newLocation.place = "Current";
 							newLocation.date = object.data["Date to Current"];
