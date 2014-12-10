@@ -184,6 +184,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 		case 'Missing Art':
 			this.type = "Moved";
 			this.name = object.data["Item Name"];
+			this.pvid = object.data.PVID;
 			var mediaName;
 
 			this.tableData = new HeaderTableData({
