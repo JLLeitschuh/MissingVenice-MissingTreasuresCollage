@@ -282,6 +282,8 @@ angular.module('ArtifactFeederApp.services', []).
 
 	factory('MapLocationService', function($rootScope){
 		var service = {
+			markers: {},
+			lines: {},
 			geoJson: {
 				type: "FeatureCollection",
 				features: []
@@ -294,30 +296,46 @@ angular.module('ArtifactFeederApp.services', []).
 				for(var l in locations){
 					var location = locations[l];
 					if(isNaN(location.latitude) || isNaN(location.longitude)){
+						console.log(standardizedDataObject);
+						throw "Issue with Standardized data object: " + standardizedDataObject.name;
 						continue;
 					}
 					cordinates.push([location.longitude, location.latitude]);
-					var existingLocation = $.grep(service.geoJson.features, function(e){
-						return (angular.equals(e.geometry["coordinates"][0], location.longitude) && angular.equals(e.geometry["coordinates"][1], location.latitude));
-					});
-					if(existingLocation.length == 0){
-						service.geoJson.features.push({
-							type: "Feature",
-							geometry: { "type": "Point", "coordinates": [location.longitude, location.latitude]},
-							properties: {
-								"marker-color": "#ff8888",
-								"marker-symbol": service.count,
-								"item count":1,
-								"Location Name": location.name,
-								"Pieces At Location": standardizedDataObject.name,
+
+					var latString = (location.latitude > 0 ? location.latitude.toString() : "neg"+ (-1*location.latitude));
+					var lngString = (location.longitude > 0 ? location.longitude.toString() : "neg"+ (-1*location.longitude));
+					if(!service.markers[latString + "," + lngString]){
+						var Marker = function(){
+							this.lat = location.latitude;
+							this.lng = location.longitude;
+							this.draggable = false;
+							this.data = {
+								name: location.name,
+								pieces: [standardizedDataObject]
+							};
+							this.addPiece = function(_standardizedDataObject){
+								this.data.pieces.push(_standardizedDataObject);
+								this.generateMessage();
 							}
-						});
+							this.generateMessage = function(){
+								var string = '<b>' + this.data.name + '</b> </br>' +
+								"Pieces At Location (" + this.data.pieces.length + "): </br>" +
+								'<div style="width: 290px; height: 150px; overflow: auto;">';
+								for(var p in this.data.pieces){
+									var piece = this.data.pieces[p];
+									string += piece.name + "</br>";
+								}
+								string += '</div>';
+								this.message = string;
+								return string;
+							};
+							this.message = "";
+							this.generateMessage();
+						}
+						//var marker =
+						service.markers[latString + "," + lngString] = new Marker();
 					} else {
-						//console.log("Multiple found");
-						//console.log(existingLocation[0].properties["Location Name"]);
-						existingLocation[0].properties["item count"] ++;
-						existingLocation[0].properties["Pieces At Location"] = existingLocation[0].properties["Pieces At Location"] + " </br> " + standardizedDataObject.name;
-						//console.log(existingLocation[0].properties["Location Name"]);
+						service.markers[latString + "," + lngString].addPiece(standardizedDataObject);
 					}
 				}
 				service.geoJson.features.push({
@@ -335,66 +353,6 @@ angular.module('ArtifactFeederApp.services', []).
 			}
 
 		};
-		/*
-		var geoJson = {
-			"type": "FeatureCollection",
-			features: [{
-				type: "Feature",
-				geometry: { "type": "Point", "coordinates": [ 12.3350504, 45.4308256]},
-				properties: {
-					image: "./images/bernardoNani.JPG.jpg",
-					url: "http://it.wikipedia.org/wiki/Palazzo_Bernardo_Nani",
-					"marker-color": "#ff8888",
-					"marker-symbol": "1",
-					city: "Palazzo Bernardo Nani"
-				}
-			},
-			{
-				"type": "Feature",
-				"geometry": { "type": "Point", "coordinates": [2.34027, 48.872766]},
-				"properties": {
-					"image": "./images/druout.JPG.jpg",
-					"url": "http://en.wikipedia.org/wiki/H%C3%B4tel_Drouot",
-					"marker-color": "#ff8888",
-					"marker-symbol": "2",
-					"city": "Hotel Drouot"
-				}
-			},
-			{
-				"type": "Feature",
-				"geometry": { "type": "Point", "coordinates": [-73.9537099, 40.7662584]},
-				"properties": {
-					"image": "./images/sothebys.JPG.jpg",
-					"url": "http://en.wikipedia.org/wiki/Sotheby%27s",
-					"marker-color": "#ff8888",
-					"marker-symbol": "3",
-					"city": "Sotheby's"
-				}
-			},
-			{
-				"type": "Feature",
-				"geometry": { "type": "Point", "coordinates": [-97.365136, 32.748612]},
-				"properties": {
-					"image": "./images/Kimbell.JPG.jpg",
-					"url": "http://en.wikipedia.org/wiki/Kimbell_Art_Museum",
-					"marker-color": "#ff8888",
-					"marker-symbol": "4",
-					"city": "Kimbell Art Museum"}
-				},
-				{
-					"type": "Feature",
-					"geometry": {"type": "LineString", "coordinates": [[ 12.3350504, 45.4308256], [2.34027, 48.872766], [-73.9537099, 40.7662584], [-97.365136, 32.748612]]},
-					"properties": {
-						"description":"Made by Lysippos",
-						"stroke":"#1087bf",
-						"stroke-opacity": 1,
-						"stroke-width": 4,
-						"title": "Head of an Athlete(Apoxyomenos)"
-					}
-				}
-			]
-		};
-		*/
 
 		return service;
 	});

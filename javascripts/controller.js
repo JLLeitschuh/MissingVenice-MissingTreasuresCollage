@@ -161,7 +161,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 
 		angular.extend($scope, {
-		center: {
+			center: {
 				lat: 45.4375,
 				lng: 12.3358,
 				zoom: 13
@@ -222,9 +222,24 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 			$scope.$on(MapLocationService.addedMessage, function(event){
 				console.log(MapLocationService.geoJson);
-				myLayer.setGeoJSON(MapLocationService.geoJson);
+				//myLayer.setGeoJSON(MapLocationService.geoJson);
+				$scope.geojson = MapLocationService.geoJson;
 			});
-			myLayer.setGeoJSON(MapLocationService.geoJson);
+
+			function style(feature) {
+				return {
+					"stroke":getRandomColor(),
+					"stroke-opacity": 1,
+					"stroke-width": 4,
+					title: standardizedDataObject.name,
+					weight: 1,
+					opacity: 1,
+				};
+			}
+
+			angular.extend($scope, {
+				markers: MapLocationService.markers
+			}); //end extend
 
 			//L.geoJson(line.json()).addTo(map);
 
