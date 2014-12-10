@@ -290,11 +290,13 @@ angular.module('ArtifactFeederApp.services', []).
 			count: 1,
 			addLocationList: function(standardizedDataObject){
 				var locations = standardizedDataObject.locations;
+				var cordinates = [];
 				for(var l in locations){
 					var location = locations[l];
 					if(isNaN(location.latitude) || isNaN(location.longitude)){
 						continue;
 					}
+					cordinates.push([location.longitude, location.latitude]);
 					var existingLocation = $.grep(service.geoJson.features, function(e){
 						return (e.properties["Location Name"] == location.name);
 					});
@@ -316,6 +318,17 @@ angular.module('ArtifactFeederApp.services', []).
 						console.log(existingLocation[0].properties["Location Name"]);
 					}
 				}
+				service.geoJson.features.push({
+					"type": "Feature",
+					"geometry": {"type": "LineString", "coordinates": cordinates},
+					"properties": {
+						//"description":"Made by Lysippos",
+						"stroke":getRandomColor(),
+						"stroke-opacity": 1,
+						"stroke-width": 4,
+						"title": standardizedDataObject.name
+					}
+				});
 				service.count ++;
 			}
 
