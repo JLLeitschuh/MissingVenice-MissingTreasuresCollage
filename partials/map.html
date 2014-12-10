@@ -1,14 +1,34 @@
 <div class="container center-block"><!-- Set the width of the page -->
+	<style>
+	.leaflet-control-locate {
+		border:1px solid rgba(0,0,0,0.4);
+		}
+	.leaflet-control-locate a {
+		background-color:#fff;
+		background-position:-3px, -2px;
+		}
+	.leaflet-control-locate.active a {
+		background-position:-33px -2px;
+		}
+
+	.leaflet-popup-content img {
+		max-width:100%;
+		}
+	</style>
+
+
+
 	<h2>Timeline Map</h2>
-	<p>This is the beginning of our 3D timeline map visualization.</p>
+	<p>This is our timeline map visualization.</p>
 	<br>
 	<br>
 	<!--
 	<button id="zoom_in">+</button>
 	<button id="zoom_out">-</button>
 	-->
-
-	<mapbox map-id="missingvenice.ke9kdd63" lat="47.603569" lng="-122.329453"></mapbox>
+	<div class="container">
+	<mapbox-map style="position:relative; width:75%;"></mapbox-map>
+	</div>
 
 	<p>
 		Please select a year using the slider below. All the pieces that have moved before this date will be shown.

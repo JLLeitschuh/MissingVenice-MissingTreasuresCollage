@@ -139,10 +139,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 	/************************************
 	 Map Controller
 	*************************************/
-	controller('mapController', function($scope, $routeParams, ArtifactService){
+	controller('mapController', [ "$scope", function($scope, $routeParams, ArtifactService){
 		console.log("ArtifactFeederApp.controllers: mapController")
 		//Example code:
-		
+
 		$scope.sliderData = {
 			minValue: 1000,
 			maxValue: 2014,
@@ -150,4 +150,23 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			stepSize: 10
 		};
 
-});
+		/*
+		angluar.extend($scope, {
+			venice: {
+				lat: 45.4375,
+				lng: 12.3358,
+				zoom: 4
+			}
+		});
+
+
+
+		$scope.showLeaflet = function() {
+			leafletData.getMap().then(function(map) {
+				map.fitBounds([[40.712, -74.227], [40.774, -74.125] ]);
+			});
+		};
+		*/
+
+
+}]);
