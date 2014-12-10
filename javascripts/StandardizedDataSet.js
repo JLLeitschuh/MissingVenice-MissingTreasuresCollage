@@ -186,10 +186,6 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 			this.name = object.data["Item Name"];
 			var mediaName;
 
-			this.sections = [
-				new HeaderTextData({header:"Description", text: object.data["Item Description"]}),
-			];
-
 			this.tableData = new HeaderTableData({
 				header: "Rii Tera Info",
 				tableData: {
@@ -243,14 +239,21 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 					switch (tagName){
 						case locationTagNames[0]:
 							newLocation.place = "Original";
+							newLocation.date = object.data["Date Created"];
 							//Put this here first
 							this.latitude = newLocation.latitude;
 							this.longitude = newLocation.longitude;
 							break;
-						case locationTagNames[1]: newLocation.place = "Second"; break;
-						case locationTagNames[2]: newLocation.place = "Third"; break;
+						case locationTagNames[1]:
+							newLocation.place = "Second"; break;
+							newLocation.date = object.data["Date Moved to Second Location"];
+						case locationTagNames[2]:
+							newLocation.place = "Third"; break;
+							//Again this spelling mistake is intentional
+							newLocation.date = object.data['"Date Moved to Thrid Location "'];
 						case locationTagNames[3]:
 							newLocation.place = "Current";
+							newLocation.date = object.data["Date to Current"];
 							//Howerver if we have the current location then use that instead
 							this.latitude = newLocation.latitude;
 							this.longitude = newLocation.longitude;
@@ -265,6 +268,49 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 				}
 			}
 			//END Location data
+
+
+			//Generate Provinance
+			var generateProvenanceText = function (){
+				var returnString = "";
+				if(object.data["Date Created"]){
+					returnString = __this.name + " was created in " + object.data["Date Created"] + ". ";
+				} else {
+					returnString = "It is unknown when " + __this.name + " was created.";
+				}
+
+				for(var l in __this.locations){
+					var location = __this.locations[l];
+					switch(location.place){
+						case "Current":
+							returnString += "It was originally located in " + location.name + ". ";
+							break;
+						case "Second":
+						case "Third":
+							if(location.date){
+								returnString += "In " + location.date + " it moved to " + location.name + ". ";
+							} else {
+								returnString += "It moved to " + location.name + " at an unknown date. ";
+							}
+							break;
+						case "Current":
+							if(location.date){
+								returnString += "It is currently located at " + location.name + " and arrived there in " + location.date + ". ";
+							} else {
+								returnString += "It is currently located at " + location.name + ". ";
+							}
+							break;
+					}
+				}
+				return returnString;
+
+			}
+			this.sections = [
+				new HeaderTextData({header:"Description", text: object.data["Item Description"]}),
+				new HeaderTextData({header:"Provenance", text: generateProvenanceText()})
+			];
+
+
 
 			this.shortDescription = "";
 			//console.log(object);

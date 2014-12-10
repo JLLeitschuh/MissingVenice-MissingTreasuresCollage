@@ -1,14 +1,12 @@
 <div class="container-fluid" style="padding-left:5px; padding-right:5px;">
-	<div ng-controller="artifacts.list">
-		<!-- This is where the images get stored once loaded -->
-		<section id="image_container" class="Collage effect-parent">
-			<div ng-repeat="artifact in artifacts | filter:searchText | orderBy:'distance':false"
-			   ng-if="artifact.validForCollage"
-			   class="Image_Wrapper notranslate" data-caption="<b>{{artifact.name}}</b>">
-				<a href="#/artifact/group/{{artifact.groupNameLink}}/id/{{artifact.id}}">
-					<img ng-src="{{artifact.imageData[0].medium}}" width="{{artifact.imageData[0].width}}" height="{{artifact.imageData[0].height}}"></img>
-				</a>
-			</div>
-		</section>
-	</div>
+	<!-- This is where the images get stored once loaded -->
+	<section id="image_container" class="Collage effect-parent">
+		<div ng-repeat="artifact in artifacts | filter:searchBar.searchText | orderBy:'distance':false"
+		   ng-if="artifact.validForCollage"
+		   class="Image_Wrapper notranslate" data-caption="<b>{{artifact.name}}</b>">
+			<a href="#/artifact/group/{{artifact.groupNameLink}}/id/{{artifact.id}}">
+				<img ng-src="{{artifact.imageData[0].medium}}" width="{{artifact.imageData[0].width}}" height="{{artifact.imageData[0].height}}"></img>
+			</a>
+		</div>
+	</section>
 </div>
