@@ -305,7 +305,7 @@ angular.module('ArtifactFeederApp.services', []).
 						throw "Issue with Standardized data object: " + standardizedDataObject.name;
 						continue;
 					}
-					cordinates.push([location.longitude, location.latitude]);
+					cordinates.push({lat:location.latitude, lng:location.longitude});
 
 					var latString = (location.latitude > 0 ? location.latitude.toString() : "neg"+ (-1*location.latitude));
 					var lngString = (location.longitude > 0 ? location.longitude.toString() : "neg"+ (-1*location.longitude));
@@ -314,6 +314,7 @@ angular.module('ArtifactFeederApp.services', []).
 							this.lat = location.latitude;
 							this.lng = location.longitude;
 							this.draggable = false;
+							this.opacity = 1;
 							this.data = {
 								name: location.name,
 								pieces: [standardizedDataObject]
@@ -343,17 +344,14 @@ angular.module('ArtifactFeederApp.services', []).
 						service.markers[latString + "," + lngString].addPiece(standardizedDataObject);
 					}
 				}
-				service.geoJson.features.push({
-					"type": "Feature",
-					"geometry": {"type": "LineString", "coordinates": cordinates},
-					"properties": {
-						//"description":"Made by Lysippos",
-						"stroke":getRandomColor(),
-						"stroke-opacity": 1,
-						"stroke-width": 4,
-						"title": standardizedDataObject.name
-					}
-				});
+				service.paths["id" + standardizedDataObject.pvid] = {
+					color: getRandomColor(),
+					weight: 3,
+					//opacity: .5,
+					latlngs: cordinates,
+					type: 'polyline',
+					message: '<b>' + standardizedDataObject.name + '</b>'
+				};
 				service.count ++;
 			}
 

@@ -197,6 +197,46 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			paths: MapLocationService.paths
 		}); //end extend
 
+		$scope.$on('leafletDirectiveMarker.popupopen', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Popup Open");
+			for(var m in $scope.markers){
+				if(!angular.equals(m, args.markerName)){
+					$scope.markers[m].opacity = .2;
+				}
+			}
+		});
+		$scope.$on('leafletDirectiveMarker.popupclose', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Popup Close");
+			for(var m in $scope.markers){
+				if(!angular.equals(m, args.markerName)){
+					$scope.markers[m].opacity = 1;
+				}
+			}
+		});
+
+		$scope.$on('leafletDirectivePath.popupopen', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Popup Open");
+			$scope.paths[args.pathName].weight = 7;
+			for(var p in $scope.paths){
+				if(!angular.equals(p, args.pathName)){
+					$scope.paths[p].opacity = .2;
+				}
+			}
+		});
+		$scope.$on('leafletDirectivePath.popupclose', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Popup Close");
+			$scope.paths[args.pathName].weight = 2;
+			for(var p in $scope.paths){
+				if(!angular.equals(p, args.pathName)){
+					$scope.paths[p].opacity = 1;
+				}
+			}
+		});
+
 
 		$scope.showLeaflet = function() {
 			leafletData.getMap().then(function(map) {
