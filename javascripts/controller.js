@@ -243,7 +243,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 					// Create custom popup content
 					var popupContent =
-						'<div style="width: 305px; height: 150px; overflow: scroll;"> ' +
+						'<div style="width: 305px; height: 150px; overflow: auto;"> ' +
 							'<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
 								'<img src="' + feature.properties.image + '" />' +
 							'</a>' +
