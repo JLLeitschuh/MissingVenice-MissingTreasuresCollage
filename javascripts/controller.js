@@ -177,65 +177,11 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 			var myLayer = L.mapbox.featureLayer().addTo(map);
 
-
-			var geoJson = { "type": "FeatureCollection",
-					features: [
-					{ type: "Feature",
-						geometry: { "type": "Point", "coordinates": [ 12.3350504, 45.4308256]},
-						properties: {
-							image: "./images/bernardoNani.JPG.jpg",
-							url: "http://it.wikipedia.org/wiki/Palazzo_Bernardo_Nani",
-							"marker-color": "#ff8888",
-							"marker-symbol": "1",
-							"Location Name": "Palazzo Bernardo Nani"}
-			},
-				{ "type": "Feature",
-					"geometry": { "type": "Point", "coordinates": [2.34027, 48.872766]},
-					"properties": {
-							"image": "./images/druout.JPG.jpg",
-							"url": "http://en.wikipedia.org/wiki/H%C3%B4tel_Drouot",
-							"marker-color": "#ff8888",
-							"marker-symbol": "2",
-							"Location Name": "Hotel Drouot"}
-			},
-				{ "type": "Feature",
-					"geometry": { "type": "Point", "coordinates": [-73.9537099, 40.7662584]},
-					"properties": {
-							"image": "./images/sothebys.JPG.jpg",
-							"url": "http://en.wikipedia.org/wiki/Sotheby%27s",
-							"marker-color": "#ff8888",
-							"marker-symbol": "3",
-							"Location Name": "Sotheby's"}
-			},
-				{ "type": "Feature",
-					"geometry": { "type": "Point", "coordinates": [-97.365136, 32.748612]},
-					"properties": {
-							"image": "./images/Kimbell.JPG.jpg",
-							"url": "http://en.wikipedia.org/wiki/Kimbell_Art_Museum",
-							"marker-color": "#ff8888",
-							"marker-symbol": "4",
-							"Location Name": "Kimbell Art Museum"}
-			},
-				{ "type": "Feature",
-					"geometry": {"type": "LineString", "coordinates": [[ 12.3350504, 45.4308256], [2.34027, 48.872766], [-73.9537099, 40.7662584], [-97.365136, 32.748612]]},
-					"properties": {"description":"Made by Lysippos",
-							"stroke":"#1087bf",
-							"stroke-opacity": 1,
-							"stroke-width": 4,
-							"title": "Head of an Athlete(Apoxyomenos)"}
-					}
-				]
-			};
-			//console.log(geoJson);
-
-
 			// Start and end points, in x = longitude, y = latitude values
 			//var start = { x: -122, y: 48 };
 			//var end = { x: -77, y: 39 };
 			//var generator = new arc.GreatCircle(start, end, { name: 'Seattle to DC' });
 			//var line = generator.Arc(1, { offset: 200 });
-
-
 
 			// Add custom popups to each using our custom feature properties
 			myLayer.on('layeradd', function(e) {
