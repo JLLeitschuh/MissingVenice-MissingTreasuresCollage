@@ -187,7 +187,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 			var mediaName;
 
 			this.tableData = new HeaderTableData({
-				header: "Rii Tera Info",
+				header: "Art Info",
 				tableData: {
 						'Date Created': object.data["Date Created"],
 						'Medium': object.data["Medium"],
