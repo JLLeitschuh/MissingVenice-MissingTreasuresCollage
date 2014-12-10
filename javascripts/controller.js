@@ -150,12 +150,12 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			stepSize: 10
 		};
 
-		/*
-		angluar.extend($scope, {
-			venice: {
+
+		angular.extend($scope, {
+		center: {
 				lat: 45.4375,
 				lng: 12.3358,
-				zoom: 4
+				zoom: 13
 			}
 		});
 
@@ -166,7 +166,6 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				map.fitBounds([[40.712, -74.227], [40.774, -74.125] ]);
 			});
 		};
-		*/
 
 
 }]);

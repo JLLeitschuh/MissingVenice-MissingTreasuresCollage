@@ -8,8 +8,8 @@ angular.
 		'ArtifactFeederApp.filters',
 		'ArtifactFeederApp.view',
 		'ui.bootstrap-slider',
+		'leaflet-directive',
 		'ckServices',
-		'angularMapbox',
 		'ngRoute'
 	]).
 	/** Defines page navigation */
