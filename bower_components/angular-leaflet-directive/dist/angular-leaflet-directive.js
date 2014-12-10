@@ -3289,6 +3289,11 @@ angular.module("leaflet-directive").factory('leafletMarkersHelpers', ["$rootScop
                     }
                 }
 
+                if (isNumber(markerData.opacity) && isNumber(oldMarkerData.opacity) && markerData.opacity !== oldMarkerData.opacity) {
+                    // There was a different opacity so we update it
+                    marker.setOpacity(markerData.opacity);
+                }
+
                 if (isString(markerData.message) && isString(oldMarkerData.message) && markerData.message !== oldMarkerData.message) {
                     // There was a different previous message so we update it
                     marker.setPopupContent(markerData.message);
