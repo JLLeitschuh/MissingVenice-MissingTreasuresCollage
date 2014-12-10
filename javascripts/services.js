@@ -307,15 +307,17 @@ angular.module('ArtifactFeederApp.services', []).
 							properties: {
 								"marker-color": "#ff8888",
 								"marker-symbol": service.count,
+								"item count":1,
 								"Location Name": location.name,
 								"Pieces At Location": standardizedDataObject.name,
 							}
 						});
 					} else {
 						//console.log("Multiple found");
-						console.log(existingLocation[0].properties["Location Name"]);
+						//console.log(existingLocation[0].properties["Location Name"]);
+						existingLocation[0].properties["item count"] ++;
 						existingLocation[0].properties["Pieces At Location"] = existingLocation[0].properties["Pieces At Location"] + " </br> " + standardizedDataObject.name;
-						console.log(existingLocation[0].properties["Location Name"]);
+						//console.log(existingLocation[0].properties["Location Name"]);
 					}
 				}
 				service.geoJson.features.push({

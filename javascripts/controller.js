@@ -239,15 +239,18 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 			// Add custom popups to each using our custom feature properties
 			myLayer.on('layeradd', function(e) {
-					var marker = e.layer,
-							feature = marker.feature;
+					var marker = e.layer, feature = marker.feature;
 
 					// Create custom popup content
-					var popupContent =  '<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
-																	'<img src="' + feature.properties.image + '" /> </a>' +
-																	feature.properties["Location Name"] + "</br> Pieces At Location: </br>" + feature.properties["Pieces At Location"]
-
-															;
+					var popupContent =
+						'<div style="width: 305px; height: 150px; overflow: scroll;"> ' +
+							'<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
+								'<img src="' + feature.properties.image + '" />' +
+							'</a>' +
+							"<b>" + feature.properties["Location Name"] + "</b></br>" +
+							"Pieces At Location (" + feature.properties["item count"] + "): </br>"
+							+ feature.properties["Pieces At Location"] +
+						'</div>';
 
 					// http://leafletjs.com/reference.html#popup
 					marker.bindPopup(popupContent,{
