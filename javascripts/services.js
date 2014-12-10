@@ -5,7 +5,7 @@ angular.module('ArtifactFeederApp.services', []).
 	 * Collects all of the artifacts into one list.
 	 *
 	 */
-	factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', 'LocationService', function($rootScope, $location, ckConsole, LocationService) {
+	factory('ArtifactService', ['$rootScope', '$location', 'ckConsole', 'LocationService', 'MapLocationService', function($rootScope, $location, ckConsole, LocationService, MapLocationService) {
 		console.log('ArtifactFeederApp.services: ArtifactService');
 
 		/*******************************************
@@ -203,7 +203,9 @@ angular.module('ArtifactFeederApp.services', []).
 					var painting = input.members[property];
 					var dataSet = new StandardizedDataSet(_this.simpleDataName, painting, property, _this.dataName, $location);
 					service.addArtifact(dataSet);
+					MapLocationService.addLocationList(dataSet);
 				}
+				$rootScope.$broadcast( MapLocationService.addedMessage );
 			}
 		});
 
@@ -230,10 +232,10 @@ angular.module('ArtifactFeederApp.services', []).
 				});
 		}
 
-		getDataset(demolishedChurchesCollector);
-		getDataset(veniceChurchesCollector);
-		getDataset(conventsCollector);
-		getDataset(riiTeraCollector);
+		// getDataset(demolishedChurchesCollector);
+		// getDataset(veniceChurchesCollector);
+		// getDataset(conventsCollector);
+		// getDataset(riiTeraCollector);
 		getDataset(artCollector);
 
 		return service;
@@ -275,5 +277,109 @@ angular.module('ArtifactFeederApp.services', []).
 				}
 			},
 		};
+		return service;
+	}).
+
+	factory('MapLocationService', function($rootScope){
+		var service = {
+			geoJson: {
+				type: "FeatureCollection",
+				features: []
+			},
+			addedMessage: "map.added.update",
+			count: 1,
+			addLocationList: function(standardizedDataObject){
+				var locations = standardizedDataObject.locations;
+				for(var l in locations){
+					var location = locations[l];
+					if(isNaN(location.latitude) || isNaN(location.longitude)){
+						continue;
+					}
+					var existingLocation = $.grep(service.geoJson.features, function(e){
+						return (e.properties["Location Name"] == location.name);
+					});
+					if(existingLocation.length == 0){
+						service.geoJson.features.push({
+							type: "Feature",
+							geometry: { "type": "Point", "coordinates": [location.longitude, location.latitude]},
+							properties: {
+								"marker-color": "#ff8888",
+								"marker-symbol": service.count,
+								"Location Name": location.name,
+								"Pieces At Location": standardizedDataObject.name,
+							}
+						});
+					} else {
+						//console.log("Multiple found");
+						console.log(existingLocation[0].properties["Location Name"]);
+						existingLocation[0].properties["Pieces At Location"] = existingLocation[0].properties["Pieces At Location"] + " </br> " + standardizedDataObject.name;
+						console.log(existingLocation[0].properties["Location Name"]);
+					}
+				}
+				service.count ++;
+			}
+
+		};
+		/*
+		var geoJson = {
+			"type": "FeatureCollection",
+			features: [{
+				type: "Feature",
+				geometry: { "type": "Point", "coordinates": [ 12.3350504, 45.4308256]},
+				properties: {
+					image: "./images/bernardoNani.JPG.jpg",
+					url: "http://it.wikipedia.org/wiki/Palazzo_Bernardo_Nani",
+					"marker-color": "#ff8888",
+					"marker-symbol": "1",
+					city: "Palazzo Bernardo Nani"
+				}
+			},
+			{
+				"type": "Feature",
+				"geometry": { "type": "Point", "coordinates": [2.34027, 48.872766]},
+				"properties": {
+					"image": "./images/druout.JPG.jpg",
+					"url": "http://en.wikipedia.org/wiki/H%C3%B4tel_Drouot",
+					"marker-color": "#ff8888",
+					"marker-symbol": "2",
+					"city": "Hotel Drouot"
+				}
+			},
+			{
+				"type": "Feature",
+				"geometry": { "type": "Point", "coordinates": [-73.9537099, 40.7662584]},
+				"properties": {
+					"image": "./images/sothebys.JPG.jpg",
+					"url": "http://en.wikipedia.org/wiki/Sotheby%27s",
+					"marker-color": "#ff8888",
+					"marker-symbol": "3",
+					"city": "Sotheby's"
+				}
+			},
+			{
+				"type": "Feature",
+				"geometry": { "type": "Point", "coordinates": [-97.365136, 32.748612]},
+				"properties": {
+					"image": "./images/Kimbell.JPG.jpg",
+					"url": "http://en.wikipedia.org/wiki/Kimbell_Art_Museum",
+					"marker-color": "#ff8888",
+					"marker-symbol": "4",
+					"city": "Kimbell Art Museum"}
+				},
+				{
+					"type": "Feature",
+					"geometry": {"type": "LineString", "coordinates": [[ 12.3350504, 45.4308256], [2.34027, 48.872766], [-73.9537099, 40.7662584], [-97.365136, 32.748612]]},
+					"properties": {
+						"description":"Made by Lysippos",
+						"stroke":"#1087bf",
+						"stroke-opacity": 1,
+						"stroke-width": 4,
+						"title": "Head of an Athlete(Apoxyomenos)"
+					}
+				}
+			]
+		};
+		*/
+
 		return service;
 	});

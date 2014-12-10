@@ -139,7 +139,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 	/************************************
 	 Map Controller
 	*************************************/
-	controller('mapController', function($scope, leafletData, $routeParams, ArtifactService){
+	controller('mapController', function($scope, leafletData, $routeParams, ArtifactService, MapLocationService){
 		console.log("ArtifactFeederApp.controllers: mapController");
 		//Example code:
 
@@ -178,7 +178,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 							url: "http://it.wikipedia.org/wiki/Palazzo_Bernardo_Nani",
 							"marker-color": "#ff8888",
 							"marker-symbol": "1",
-							city: "Palazzo Bernardo Nani"}
+							"Location Name": "Palazzo Bernardo Nani"}
 			},
 				{ "type": "Feature",
 					"geometry": { "type": "Point", "coordinates": [2.34027, 48.872766]},
@@ -187,7 +187,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 							"url": "http://en.wikipedia.org/wiki/H%C3%B4tel_Drouot",
 							"marker-color": "#ff8888",
 							"marker-symbol": "2",
-							"city": "Hotel Drouot"}
+							"Location Name": "Hotel Drouot"}
 			},
 				{ "type": "Feature",
 					"geometry": { "type": "Point", "coordinates": [-73.9537099, 40.7662584]},
@@ -196,7 +196,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 							"url": "http://en.wikipedia.org/wiki/Sotheby%27s",
 							"marker-color": "#ff8888",
 							"marker-symbol": "3",
-							"city": "Sotheby's"}
+							"Location Name": "Sotheby's"}
 			},
 				{ "type": "Feature",
 					"geometry": { "type": "Point", "coordinates": [-97.365136, 32.748612]},
@@ -205,7 +205,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 							"url": "http://en.wikipedia.org/wiki/Kimbell_Art_Museum",
 							"marker-color": "#ff8888",
 							"marker-symbol": "4",
-							"city": "Kimbell Art Museum"}
+							"Location Name": "Kimbell Art Museum"}
 			},
 				{ "type": "Feature",
 					"geometry": {"type": "LineString", "coordinates": [[ 12.3350504, 45.4308256], [2.34027, 48.872766], [-73.9537099, 40.7662584], [-97.365136, 32.748612]]},
@@ -217,7 +217,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					}
 				]
 			};
-			console.log(geoJson);
+			//console.log(geoJson);
 
 
 			// Start and end points, in x = longitude, y = latitude values
@@ -235,9 +235,10 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 					// Create custom popup content
 					var popupContent =  '<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
-																	'<img src="' + feature.properties.image + '" />' +
-																	feature.properties.city +
-															'</a>';
+																	'<img src="' + feature.properties.image + '" /> </a>' +
+																	feature.properties["Location Name"] + "</br> Pieces At Location: </br>" + feature.properties["Pieces At Location"]
+
+															;
 
 					// http://leafletjs.com/reference.html#popup
 					marker.bindPopup(popupContent,{
@@ -250,7 +251,11 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 			L.control.locate().addTo(map);
 
-			myLayer.setGeoJSON(geoJson);
+			$scope.$on(MapLocationService.addedMessage, function(event){
+				console.log(MapLocationService.geoJson);
+				myLayer.setGeoJSON(MapLocationService.geoJson);
+			});
+			myLayer.setGeoJSON(MapLocationService.geoJson);
 
 			//L.geoJson(line.json()).addTo(map);
 
