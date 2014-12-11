@@ -193,6 +193,13 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 						'Date Created': object.data["Date Created"],
 						'Medium': object.data["Medium"],
 						'Type': object.data["Type"],
+						'Description Source': object.data["Description Source"],
+						'Image Source': object.data["Picture Source"],
+						'Current Location Picture Source': object.data["Current Location Picture Source"],
+						'Original Location Picture Source': object.data["Orginial Location Picture Source"],
+						'Second Location Picture Source': object.data["Second Location Picture Source"],
+						'Third Location Picture Source': object.data["Third Location Picture Source"],
+						'Artist': object.data["Artist"]
 				}
 			});
 
