@@ -198,36 +198,6 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			}
 		}); //end extend
 
-		$scope.$on('leafletDirectiveMarker.popupopen', function(e, args) {
-			// Args will contain the marker name and other relevant information
-			console.log("Leaflet Popup Open");
-			for(var m in $scope.markers){
-				if(!angular.equals(m, args.markerName)){
-					$scope.markers[m].dullMarker();
-				}
-			}
-			for(var p in $scope.paths){
-				if(! $scope.markers[args.markerName].hasPath(p)){
-					$scope.paths[p].dullPath();
-				} else {
-					$scope.paths[p].highlightPath();
-				}
-			}
-		});
-
-		$scope.$on('leafletDirectiveMarker.popupclose', function(e, args) {
-			// Args will contain the marker name and other relevant information
-			console.log("Leaflet Popup Close");
-			for(var m in $scope.markers){
-				$scope.markers[m].resetMarker();
-			}
-			for(var p in $scope.paths){
-				$scope.paths[p].resetPath();
-			}
-		});
-<<<<<<< HEAD
-		
-=======
 
 		$scope.$on('leafletDirectivePath.popupopen', function(e, args) {
 			// Args will contain the marker name and other relevant information
@@ -244,6 +214,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				}
 			}
 		});
+
 		$scope.$on('leafletDirectivePath.popupclose', function(e, args) {
 			// Args will contain the marker name and other relevant information
 			console.log("Leaflet Popup Close");
@@ -280,7 +251,6 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			})
 		});
 
->>>>>>> b918fb7817f36a5269b37fce4b784fe701f05530
 		$scope.showLeaflet = function() {
 			leafletData.getMap().then(function(map) {
 				map.fitBounds([[40.712, -74.227], [40.774, -74.125] ]);
