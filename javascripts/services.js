@@ -245,15 +245,15 @@ angular.module('ArtifactFeederApp.services', []).
 		var service = {
 			position: null,
 			locationSupported: (navigator.geolocation ? true : false ),
-			getLocation: function(onSucsess, onError){
+			getLocation: function(onSuccess, onError){
 				if (service.locationSupported) {
 					if(service.position != null){
-						onSucsess(service.position);
+						onSuccess(service.position);
 					} else {
 						navigator.geolocation.getCurrentPosition(
 							function(position) {
 								service.position = position;
-								onSucsess(position);
+								onSuccess(position);
 							}, function(error) {
 								switch(error.code) {
 									case error.PERMISSION_DENIED:

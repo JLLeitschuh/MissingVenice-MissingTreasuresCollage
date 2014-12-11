@@ -170,10 +170,6 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 
 		leafletData.getMap().then(function(map) {
-			map.on('ready', function() {
-					new L.Control.MiniMap(L.mapbox.tileLayer('missingvenice.ke9kdd63'))
-							.addTo(map);
-			});
 
 			//var myLayer = L.mapbox.featureLayer().addTo(map);
 
