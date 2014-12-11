@@ -95,3 +95,10 @@ h1.instance-header{
 	background-color:rgb(65, 68, 75);
 	color: white;
 }
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}

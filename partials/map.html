@@ -24,8 +24,33 @@
 	<button id="zoom_in">+</button>
 	<button id="zoom_out">-</button>
 	-->
-	<div class="container">
-		<leaflet defaults="defaults" center="center" height="480px" width="100%"></leaflet>
+	<div class="container row row-eq-height">
+		<div class="col-md-9">
+			<leaflet height="480px" width="100%" defaults="defaults" center="center" controls="controls"
+			   paths="paths" markers="markers" ng-model-options="{ debounce: 150 }"></leaflet>
+		</div>
+		<div class="col-md-3 well" style="max-height: 480px; overflow-y: auto;">
+			<div ng-if="infoBox.type == 'Marker'">
+				<b>{{infoBox.title}}</b></br>
+				<p>Pieces at location ({{infoBox.data.length}}):</br>
+					<ul class="list-group">
+						<li class="list-group-item" ng-repeat="element in infoBox.data">
+							<a ng-click="element.goToInfoPage()">{{element.name}}</a>
+						</li>
+					</ul>
+				</p>
+			</div>
+			<div ng-if="infoBox.type == 'Path'">
+				<b>{{infoBox.title}}</b></br>
+				<p>Locations ({{infoBox.data.locations.length}}):</br>
+					<ul class="list-group">
+						<li class="list-group-item" ng-repeat="location in infoBox.data.locations">
+							{{location.name}}
+						</li>
+					</ul>
+				</p>
+			</div>
+		</div>
 	</div>
 
 	<p>

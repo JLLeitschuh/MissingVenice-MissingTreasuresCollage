@@ -161,7 +161,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 
 		angular.extend($scope, {
-		center: {
+			center: {
 				lat: 45.4375,
 				lng: 12.3358,
 				zoom: 13
@@ -169,75 +169,118 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		});
 
 
-		leafletData.getMap().then(function(map) {
-			map.on('ready', function() {
-					new L.Control.MiniMap(L.mapbox.tileLayer('missingvenice.ke9kdd63'))
-							.addTo(map);
+		var highlightMarkerEvent = function(e, args){
+			$scope.elementSelected = true;
+			for(var m in $scope.markers){
+				if(!angular.equals(m, args.markerName)){
+					$scope.markers[m].dullMarker();
+				} else {
+					$scope.markers[m].resetMarker();
+				}
+			}
+			for(var p in $scope.paths){
+				if(! $scope.markers[args.markerName].hasPath(p)){
+					$scope.paths[p].dullPath();
+				} else {
+					$scope.paths[p].highlightPath();
+				}
+			}
+		};
+
+		var highlightPathEvent = function(e, args){
+			$scope.elementSelected = true;
+			for(var p in $scope.paths){
+				if(!angular.equals(p, args.pathName)){
+					$scope.paths[p].dullPath();
+				} else {
+					$scope.paths[p].highlightPath();
+				}
+			}
+			for(var m in $scope.markers){
+				if(! $scope.paths[args.pathName].hasMarker(m)){
+					$scope.markers[m].dullMarker();
+				}
+			}
+		};
+
+		var resetAllElements = function( override ){
+			if($scope.elementSelected || override){
+				$scope.elementSelected = false;
+				for(var m in $scope.markers){
+					$scope.markers[m].resetMarker();
+				}
+				for(var p in $scope.paths){
+					$scope.paths[p].resetPath();
+				}
+			}
+		};
+
+		$scope.$on('leafletDirectiveMarker.click', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Marker Click");
+			//console.log(args);
+			var data = args.leafletEvent.target.options.data;
+			angular.extend($scope.infoBox, {
+				title: data.name,
+				type: "Marker",
+				data: data.pieces
 			});
+			highlightMarkerEvent(e, args);
+		});
 
-			var myLayer = L.mapbox.featureLayer().addTo(map);
-
-			// Start and end points, in x = longitude, y = latitude values
-			//var start = { x: -122, y: 48 };
-			//var end = { x: -77, y: 39 };
-			//var generator = new arc.GreatCircle(start, end, { name: 'Seattle to DC' });
-			//var line = generator.Arc(1, { offset: 200 });
-
-			// Add custom popups to each using our custom feature properties
-			myLayer.on('layeradd', function(e) {
-					var marker = e.layer, feature = marker.feature;
-					// Create custom popup content
-					var popupContent = "";
-					var divTag = '<div style="width: 305px; height: 150px; overflow: auto;"> '
-					if(feature.geometry.type == "Point"){
-						popupContent =
-							divTag +
-								'<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
-									'<img src="' + feature.properties.image + '" />' +
-								'</a>' +
-								"<b>" + feature.properties["Location Name"] + "</b></br>" +
-								"Pieces At Location (" + feature.properties["item count"] + "): </br>"
-								+ feature.properties["Pieces At Location"] +
-							'</div>';
-					} else {
-						popupContent =
-							divTag +
-								'<a target="_blank" class="popup" href="' + feature.properties.url + '">' +
-									'<img src="' + feature.properties.image + '" />' +
-								'</a>' +
-								"<b>" + feature.properties["title"] + "</b></br>" +
-							'</div>';
-					}
-
-					// http://leafletjs.com/reference.html#popup
-					marker.bindPopup(popupContent,{
-							closeButton: false,
-							minWidth: 320
-					});
+		$scope.$on('leafletDirectivePath.click', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Path Click");
+			//console.log(args);
+			var data = args.leafletEvent.target.options.data;
+			angular.extend($scope.infoBox, {
+				title: data.piece.name,
+				type: "Path",
+				data: data.piece
 			});
-
-			L.control.fullscreen().addTo(map);
-
-			L.control.locate().addTo(map);
-
-			$scope.$on(MapLocationService.addedMessage, function(event){
-				console.log(MapLocationService.geoJson);
-				myLayer.setGeoJSON(MapLocationService.geoJson);
-			});
-			myLayer.setGeoJSON(MapLocationService.geoJson);
-
-			//L.geoJson(line.json()).addTo(map);
-
-			// Add features to the map
+			highlightPathEvent(e, args);
 		});
 
 
+		var btn = document.createElement("BUTTON");        // Create a <button> element
+		var t = document.createTextNode("Clear Selecton");       // Create a text node
+		btn.appendChild(t);                                // Append the text to <button>
+		btn.className = "btn btn-default btn-sm";
+		btn['arial-label'] = "Left Align";
+		btn.type = "button";
+
+		var button = new L.Control.Button(btn);
+		button.on('click', function () {
+			//alert('you clicked the button!');
+			resetAllElements();
+		});
+
+
+		angular.extend($scope, {
+			elementSelected: false,
+			controls: {
+				custom: [
+					L.control.locate(),
+					L.control.fullscreen(),
+					button
+				]
+			},
+			markers: MapLocationService.markers,
+			paths: MapLocationService.paths,
+			infoBox: {
+				title:"",
+				type:"",
+				data:[]
+			}
+		}); //end extend
 
 		$scope.showLeaflet = function() {
 			leafletData.getMap().then(function(map) {
 				map.fitBounds([[40.712, -74.227], [40.774, -74.125] ]);
 			});
 		};
+
+		resetAllElements(true);
 
 
 });

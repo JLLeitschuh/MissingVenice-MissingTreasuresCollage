@@ -245,15 +245,15 @@ angular.module('ArtifactFeederApp.services', []).
 		var service = {
 			position: null,
 			locationSupported: (navigator.geolocation ? true : false ),
-			getLocation: function(onSucsess, onError){
+			getLocation: function(onSuccess, onError){
 				if (service.locationSupported) {
 					if(service.position != null){
-						onSucsess(service.position);
+						onSuccess(service.position);
 					} else {
 						navigator.geolocation.getCurrentPosition(
 							function(position) {
 								service.position = position;
-								onSucsess(position);
+								onSuccess(position);
 							}, function(error) {
 								switch(error.code) {
 									case error.PERMISSION_DENIED:
@@ -282,6 +282,16 @@ angular.module('ArtifactFeederApp.services', []).
 
 	factory('MapLocationService', function($rootScope){
 		var service = {
+			latLongFloatToPositiveString:function(value){
+				return (value > 0 ? value.toString() : "neg"+ (-1*value));
+			},
+			markers: {},
+			paths: {
+				// test:{
+				// 	type: "polyline",
+				// 	latlngs: [ {lat: 40.4,lng: -3.6833333}, {lat: 41.9,lng: 12.4833333}, {lat: 51.5, lng: -0.116667} ]
+				// }
+			},
 			geoJson: {
 				type: "FeatureCollection",
 				features: []
@@ -291,110 +301,106 @@ angular.module('ArtifactFeederApp.services', []).
 			addLocationList: function(standardizedDataObject){
 				var locations = standardizedDataObject.locations;
 				var cordinates = [];
+				var markerNames = [];
 				for(var l in locations){
 					var location = locations[l];
 					if(isNaN(location.latitude) || isNaN(location.longitude)){
+						console.log(standardizedDataObject);
+						throw "Issue with Standardized data object: " + standardizedDataObject.name;
 						continue;
 					}
-					cordinates.push([location.longitude, location.latitude]);
-					var existingLocation = $.grep(service.geoJson.features, function(e){
-						return (angular.equals(e.geometry["coordinates"][0], location.longitude) && angular.equals(e.geometry["coordinates"][1], location.latitude));
-					});
-					if(existingLocation.length == 0){
-						service.geoJson.features.push({
-							type: "Feature",
-							geometry: { "type": "Point", "coordinates": [location.longitude, location.latitude]},
-							properties: {
-								"marker-color": "#ff8888",
-								"marker-symbol": service.count,
-								"item count":1,
-								"Location Name": location.name,
-								"Pieces At Location": standardizedDataObject.name,
-							}
-						});
+					cordinates.push({lat:location.latitude, lng:location.longitude});
+
+					var latString = service.latLongFloatToPositiveString(location.latitude);
+					var lngString = service.latLongFloatToPositiveString(location.longitude);
+					var markerName = latString + "," + lngString;
+					markerNames.push(markerName);
+					if(!service.markers[markerName]){
+						var Marker = function(){
+							this.lat = location.latitude;
+							this.lng = location.longitude;
+							this.draggable = false;
+							this.data = {
+								name: location.name,
+								pieces: [standardizedDataObject]
+							};
+							this.hasPath = function(aPathName){
+								for(var p in this.data.pieces){
+									if(angular.equals("id" + this.data.pieces[p].pvid, aPathName)){
+										return true;
+									}
+								}
+								return false;
+							};
+							this.dullMarker = function(){
+								this.opacity = .2;
+							};
+							this.resetMarker = function(){
+								this.opacity = 1;
+							};
+							this.resetMarker();
+							this.addPiece = function(_standardizedDataObject){
+								if(this.data.pieces.indexOf(_standardizedDataObject) == -1){
+								this.data.pieces.push(_standardizedDataObject);
+								this.generateMessage();
+								}
+							};
+							this.generateMessage = function(){
+								var string = '<b>' + this.data.name + '</b> </br>' +
+								"Pieces At Location (" + this.data.pieces.length + "): </br>" +
+								'<div style="overflow: auto;">';
+								for(var p in this.data.pieces){
+									var piece = this.data.pieces[p];
+									string += piece.name + "</br>";
+								}
+								string += '</div>';
+								this.text = string;
+								return string;
+							};
+							this.generateMessage();
+						}
+
+						service.markers[markerName] = new Marker();
 					} else {
-						//console.log("Multiple found");
-						//console.log(existingLocation[0].properties["Location Name"]);
-						existingLocation[0].properties["item count"] ++;
-						existingLocation[0].properties["Pieces At Location"] = existingLocation[0].properties["Pieces At Location"] + " </br> " + standardizedDataObject.name;
-						//console.log(existingLocation[0].properties["Location Name"]);
+						service.markers[markerName].addPiece(standardizedDataObject);
 					}
 				}
-				service.geoJson.features.push({
-					"type": "Feature",
-					"geometry": {"type": "LineString", "coordinates": cordinates},
-					"properties": {
-						//"description":"Made by Lysippos",
-						"stroke":getRandomColor(),
-						"stroke-opacity": 1,
-						"stroke-width": 4,
-						"title": standardizedDataObject.name
+				var Path = function(){
+					this.color = getRandomColor();
+					this.latlngs = cordinates;
+					this.type = 'polyline';
+					this.data = {
+						piece: standardizedDataObject,
+						markerNames: markerNames,
+					};
+					this.hasMarker = function(aMarkerName){
+						for(var m in this.data.markerNames){
+							if(angular.equals(this.data.markerNames[m], aMarkerName)){
+								return true;
+							}
+						}
+						return false;
+					};
+					this.highlightPath = function(){
+						this.weight = 7;
+						this.opacity = 1;
+					};
+					this.dullPath = function(){
+						this.weight = 2;
+						this.opacity = .1;
 					}
-				});
+					this.resetPath = function(){
+						this.weight = 3;
+						this.opacity = 1;
+					}
+					this.resetPath();
+					this.text = '<b>' + standardizedDataObject.name + '</b>';
+				};
+				service.paths["id" + standardizedDataObject.pvid] = new Path();
 				service.count ++;
 			}
 
 		};
-		/*
-		var geoJson = {
-			"type": "FeatureCollection",
-			features: [{
-				type: "Feature",
-				geometry: { "type": "Point", "coordinates": [ 12.3350504, 45.4308256]},
-				properties: {
-					image: "./images/bernardoNani.JPG.jpg",
-					url: "http://it.wikipedia.org/wiki/Palazzo_Bernardo_Nani",
-					"marker-color": "#ff8888",
-					"marker-symbol": "1",
-					city: "Palazzo Bernardo Nani"
-				}
-			},
-			{
-				"type": "Feature",
-				"geometry": { "type": "Point", "coordinates": [2.34027, 48.872766]},
-				"properties": {
-					"image": "./images/druout.JPG.jpg",
-					"url": "http://en.wikipedia.org/wiki/H%C3%B4tel_Drouot",
-					"marker-color": "#ff8888",
-					"marker-symbol": "2",
-					"city": "Hotel Drouot"
-				}
-			},
-			{
-				"type": "Feature",
-				"geometry": { "type": "Point", "coordinates": [-73.9537099, 40.7662584]},
-				"properties": {
-					"image": "./images/sothebys.JPG.jpg",
-					"url": "http://en.wikipedia.org/wiki/Sotheby%27s",
-					"marker-color": "#ff8888",
-					"marker-symbol": "3",
-					"city": "Sotheby's"
-				}
-			},
-			{
-				"type": "Feature",
-				"geometry": { "type": "Point", "coordinates": [-97.365136, 32.748612]},
-				"properties": {
-					"image": "./images/Kimbell.JPG.jpg",
-					"url": "http://en.wikipedia.org/wiki/Kimbell_Art_Museum",
-					"marker-color": "#ff8888",
-					"marker-symbol": "4",
-					"city": "Kimbell Art Museum"}
-				},
-				{
-					"type": "Feature",
-					"geometry": {"type": "LineString", "coordinates": [[ 12.3350504, 45.4308256], [2.34027, 48.872766], [-73.9537099, 40.7662584], [-97.365136, 32.748612]]},
-					"properties": {
-						"description":"Made by Lysippos",
-						"stroke":"#1087bf",
-						"stroke-opacity": 1,
-						"stroke-width": 4,
-						"title": "Head of an Athlete(Apoxyomenos)"
-					}
-				}
-			]
-		};
-		*/
 
 		return service;
 	});
