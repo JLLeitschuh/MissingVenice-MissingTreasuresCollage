@@ -340,22 +340,23 @@ angular.module('ArtifactFeederApp.services', []).
 							};
 							this.resetMarker();
 							this.addPiece = function(_standardizedDataObject){
+								if(this.data.pieces.indexOf(_standardizedDataObject) == -1){
 								this.data.pieces.push(_standardizedDataObject);
 								this.generateMessage();
+								}
 							};
 							this.generateMessage = function(){
 								var string = '<b>' + this.data.name + '</b> </br>' +
 								"Pieces At Location (" + this.data.pieces.length + "): </br>" +
-								'<div style="width: 290px; height: 150px; overflow: auto;">';
+								'<div style="overflow: auto;">';
 								for(var p in this.data.pieces){
 									var piece = this.data.pieces[p];
 									string += piece.name + "</br>";
 								}
 								string += '</div>';
-								this.message = string;
+								this.text = string;
 								return string;
 							};
-							this.message = "";
 							this.generateMessage();
 						}
 
@@ -393,7 +394,7 @@ angular.module('ArtifactFeederApp.services', []).
 						this.opacity = 1;
 					}
 					this.resetPath();
-					this.message = '<b>' + standardizedDataObject.name + '</b>';
+					this.text = '<b>' + standardizedDataObject.name + '</b>';
 				};
 				service.paths["id" + standardizedDataObject.pvid] = new Path();
 				service.count ++;
