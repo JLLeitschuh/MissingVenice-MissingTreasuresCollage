@@ -169,23 +169,6 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		});
 
 
-		angular.extend($scope, {
-			elementSelected: false,
-			controls: {
-				custom: [
-					L.control.locate(),
-					L.control.fullscreen(),
-				]
-			},
-			markers: MapLocationService.markers,
-			paths: MapLocationService.paths,
-			infoBox: {
-				title:"",
-				type:"",
-				data:[]
-			}
-		}); //end extend
-
 		var highlightMarkerEvent = function(e, args){
 			$scope.elementSelected = true;
 			for(var m in $scope.markers){
@@ -255,6 +238,39 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			});
 			highlightPathEvent(e, args);
 		});
+
+
+		var btn = document.createElement("BUTTON");        // Create a <button> element
+		var t = document.createTextNode("Clear Selecton");       // Create a text node
+		btn.appendChild(t);                                // Append the text to <button>
+		btn.className = "btn btn-default btn-sm";
+		btn['arial-label'] = "Left Align";
+		btn.type = "button";
+
+		var button = new L.Control.Button(btn);
+		button.on('click', function () {
+			//alert('you clicked the button!');
+			resetAllElements();
+		});
+
+
+		angular.extend($scope, {
+			elementSelected: false,
+			controls: {
+				custom: [
+					L.control.locate(),
+					L.control.fullscreen(),
+					button
+				]
+			},
+			markers: MapLocationService.markers,
+			paths: MapLocationService.paths,
+			infoBox: {
+				title:"",
+				type:"",
+				data:[]
+			}
+		}); //end extend
 
 		$scope.showLeaflet = function() {
 			leafletData.getMap().then(function(map) {
