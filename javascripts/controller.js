@@ -183,9 +183,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 			L.control.locate().addTo(map);
 
-			//L.geoJson(line.json()).addTo(map);
 
-			// Add features to the map
 		});
 
 		angular.extend($scope, {
@@ -198,9 +196,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			}
 		}); //end extend
 
-		$scope.$on('leafletDirectiveMarker.popupopen', function(e, args) {
-			// Args will contain the marker name and other relevant information
-			console.log("Leaflet Popup Open");
+		var highlightMarkerEvent = function(e, args){
 			for(var m in $scope.markers){
 				if(!angular.equals(m, args.markerName)){
 					$scope.markers[m].dullMarker();
@@ -213,26 +209,14 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					$scope.paths[p].highlightPath();
 				}
 			}
-		});
+		};
 
-		$scope.$on('leafletDirectiveMarker.popupclose', function(e, args) {
-			// Args will contain the marker name and other relevant information
-			console.log("Leaflet Popup Close");
-			for(var m in $scope.markers){
-				$scope.markers[m].resetMarker();
-			}
-			for(var p in $scope.paths){
-				$scope.paths[p].resetPath();
-			}
-		});
-
-		$scope.$on('leafletDirectivePath.popupopen', function(e, args) {
-			// Args will contain the marker name and other relevant information
-			console.log("Leaflet Popup Open");
-			$scope.paths[args.pathName].weight = 7;
+		var highlightPathEvent = function(e, args){
 			for(var p in $scope.paths){
 				if(!angular.equals(p, args.pathName)){
 					$scope.paths[p].dullPath();
+				} else {
+					$scope.paths[p].highlightPath();
 				}
 			}
 			for(var m in $scope.markers){
@@ -240,18 +224,16 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 					$scope.markers[m].dullMarker();
 				}
 			}
-		});
-		$scope.$on('leafletDirectivePath.popupclose', function(e, args) {
-			// Args will contain the marker name and other relevant information
-			console.log("Leaflet Popup Close");
-			$scope.paths[args.pathName].weight = 3;
-			for(var p in $scope.paths){
-				$scope.paths[p].resetPath();
-			}
+		};
+
+		var resetAllElements = function(e, args){
 			for(var m in $scope.markers){
 				$scope.markers[m].resetMarker();
 			}
-		});
+			for(var p in $scope.paths){
+				$scope.paths[p].resetPath();
+			}
+		};
 
 		$scope.$on('leafletDirectiveMarker.click', function(e, args) {
 			// Args will contain the marker name and other relevant information
