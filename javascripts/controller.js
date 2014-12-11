@@ -190,7 +190,12 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 
 		angular.extend($scope, {
 			markers: MapLocationService.markers,
-			paths: MapLocationService.paths
+			paths: MapLocationService.paths,
+			infoBox: {
+				title:"",
+				type:"",
+				data:[]
+			}
 		}); //end extend
 
 		$scope.$on('leafletDirectiveMarker.popupopen', function(e, args) {
@@ -209,6 +214,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				}
 			}
 		});
+
 		$scope.$on('leafletDirectiveMarker.popupclose', function(e, args) {
 			// Args will contain the marker name and other relevant information
 			console.log("Leaflet Popup Close");
@@ -219,7 +225,62 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				$scope.paths[p].resetPath();
 			}
 		});
+<<<<<<< HEAD
 		
+=======
+
+		$scope.$on('leafletDirectivePath.popupopen', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Popup Open");
+			$scope.paths[args.pathName].weight = 7;
+			for(var p in $scope.paths){
+				if(!angular.equals(p, args.pathName)){
+					$scope.paths[p].dullPath();
+				}
+			}
+			for(var m in $scope.markers){
+				if(! $scope.paths[args.pathName].hasMarker(m)){
+					$scope.markers[m].dullMarker();
+				}
+			}
+		});
+		$scope.$on('leafletDirectivePath.popupclose', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Popup Close");
+			$scope.paths[args.pathName].weight = 3;
+			for(var p in $scope.paths){
+				$scope.paths[p].resetPath();
+			}
+			for(var m in $scope.markers){
+				$scope.markers[m].resetMarker();
+			}
+		});
+
+		$scope.$on('leafletDirectiveMarker.click', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Marker Click");
+			//console.log(args);
+			var data = args.leafletEvent.target.options.data;
+			angular.extend($scope.infoBox, {
+				title: data.name,
+				type: "Marker",
+				data: data.pieces
+			})
+		});
+
+		$scope.$on('leafletDirectivePath.click', function(e, args) {
+			// Args will contain the marker name and other relevant information
+			console.log("Leaflet Path Click");
+			//console.log(args);
+			var data = args.leafletEvent.target.options.data;
+			angular.extend($scope.infoBox, {
+				title: data.piece.name,
+				type: "Path",
+				data: data.pieces
+			})
+		});
+
+>>>>>>> b918fb7817f36a5269b37fce4b784fe701f05530
 		$scope.showLeaflet = function() {
 			leafletData.getMap().then(function(map) {
 				map.fitBounds([[40.712, -74.227], [40.774, -74.125] ]);
