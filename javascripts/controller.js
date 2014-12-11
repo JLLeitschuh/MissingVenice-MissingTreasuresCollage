@@ -155,7 +155,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		$scope.sliderData = {
 			minValue: 1000,
 			maxValue: 2014,
-			currentValue: 1500,
+			currentValue: [1000, 2014],
 			stepSize: 10
 		};
 

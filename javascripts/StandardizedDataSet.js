@@ -276,6 +276,16 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 			}
 			//END Location data
 
+			this.getLocationByName = function(_name){
+				for(var l in this.locations){
+					var location = this.locations[l];
+					if(angular.equals(location.place, _name)){
+						return location;
+					}
+				}
+				return {};
+			};
+
 
 			//Generate Provinance
 			var generateProvenanceText = function (){

@@ -64,4 +64,47 @@
 		<b>{{sliderData.maxValue}}AD</b>
 	</div>
 
+	<div class="container">
+		<table class="table table-striped">
+			<tr>
+				<th>
+					Name
+				</th>
+				<th>
+					Original
+				</th>
+				<th>
+					Second
+				</th>
+				<th>
+					Third
+				</th>
+				<th>
+					Current
+				</th>
+			</tr>
+			<tr ng-repeat="path in paths">
+				<td>
+					{{path.data.piece.name}}
+				</td>
+				<td>
+					{{path.data.piece.getLocationByName('Original').name}}
+					{{path.data.piece.getLocationByName('Original').date}}
+				</td>
+				<td>
+					{{path.data.piece.getLocationByName('Second').name}}
+					{{path.data.piece.getLocationByName('Second').date}}
+				</td>
+				<td>
+					{{path.data.piece.getLocationByName('Third').name}}
+					{{path.data.piece.getLocationByName('Third').date}}
+				</td>
+				<td>
+					{{path.data.piece.getLocationByName('Current').name}}
+					{{path.data.piece.getLocationByName('Current').date}}
+				</td>
+			</tr>
+		</table>
+	</div>
+
 </div>
