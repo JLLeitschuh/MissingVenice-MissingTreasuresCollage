@@ -174,6 +174,8 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			for(var m in $scope.markers){
 				if(!angular.equals(m, args.markerName)){
 					$scope.markers[m].dullMarker();
+				} else {
+					$scope.markers[m].resetMarker();
 				}
 			}
 			for(var p in $scope.paths){
@@ -201,8 +203,8 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			}
 		};
 
-		var resetAllElements = function(e, args){
-			if($scope.elementSelected){
+		var resetAllElements = function( override ){
+			if($scope.elementSelected || override){
 				$scope.elementSelected = false;
 				for(var m in $scope.markers){
 					$scope.markers[m].resetMarker();
@@ -277,6 +279,8 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				map.fitBounds([[40.712, -74.227], [40.774, -74.125] ]);
 			});
 		};
+
+		resetAllElements(true);
 
 
 });
