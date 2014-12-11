@@ -169,25 +169,14 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		});
 
 
-		leafletData.getMap().then(function(map) {
-
-			//var myLayer = L.mapbox.featureLayer().addTo(map);
-
-			// Start and end points, in x = longitude, y = latitude values
-			//var start = { x: -122, y: 48 };
-			//var end = { x: -77, y: 39 };
-			//var generator = new arc.GreatCircle(start, end, { name: 'Seattle to DC' });
-			//var line = generator.Arc(1, { offset: 200 });
-
-			L.control.fullscreen().addTo(map);
-
-			L.control.locate().addTo(map);
-
-
-		});
-
 		angular.extend($scope, {
 			elementSelected: false,
+			controls: {
+				custom: [
+					L.control.locate(),
+					L.control.fullscreen(),
+				]
+			},
 			markers: MapLocationService.markers,
 			paths: MapLocationService.paths,
 			infoBox: {

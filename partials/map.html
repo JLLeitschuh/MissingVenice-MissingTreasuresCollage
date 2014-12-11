@@ -26,7 +26,8 @@
 	-->
 	<div class="container row row-eq-height">
 		<div class="col-md-9">
-			<leaflet defaults="defaults" center="center" height="480px" width="100%" paths="paths" markers="markers" ng-model-options="{ debounce: 150 }"></leaflet>
+			<leaflet height="480px" width="100%" defaults="defaults" center="center" controls="controls"
+			   paths="paths" markers="markers" ng-model-options="{ debounce: 150 }"></leaflet>
 		</div>
 		<div class="col-md-3 well" style="max-height: 480px; overflow-y: auto;">
 			<div ng-if="infoBox.type == 'Marker'">
