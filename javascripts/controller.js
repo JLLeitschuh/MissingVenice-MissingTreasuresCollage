@@ -219,35 +219,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				$scope.paths[p].resetPath();
 			}
 		});
-
-		$scope.$on('leafletDirectivePath.popupopen', function(e, args) {
-			// Args will contain the marker name and other relevant information
-			console.log("Leaflet Popup Open");
-			$scope.paths[args.pathName].weight = 7;
-			for(var p in $scope.paths){
-				if(!angular.equals(p, args.pathName)){
-					$scope.paths[p].dullPath();
-				}
-			}
-			for(var m in $scope.markers){
-				if(! $scope.paths[args.pathName].hasMarker(m)){
-					$scope.markers[m].dullMarker();
-				}
-			}
-		});
-		$scope.$on('leafletDirectivePath.popupclose', function(e, args) {
-			// Args will contain the marker name and other relevant information
-			console.log("Leaflet Popup Close");
-			$scope.paths[args.pathName].weight = 3;
-			for(var p in $scope.paths){
-				$scope.paths[p].resetPath();
-			}
-			for(var m in $scope.markers){
-				$scope.markers[m].resetMarker();
-			}
-		});
-
-
+		
 		$scope.showLeaflet = function() {
 			leafletData.getMap().then(function(map) {
 				map.fitBounds([[40.712, -74.227], [40.774, -74.125] ]);
