@@ -273,7 +273,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 			angular.extend($scope.infoBox, {
 				title: data.piece.name,
 				type: "Path",
-				data: data.pieces
+				data: data.piece
 			})
 		});
 
