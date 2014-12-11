@@ -187,6 +187,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		});
 
 		angular.extend($scope, {
+			elementSelected: false,
 			markers: MapLocationService.markers,
 			paths: MapLocationService.paths,
 			infoBox: {
@@ -197,6 +198,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		}); //end extend
 
 		var highlightMarkerEvent = function(e, args){
+			$scope.elementSelected = true;
 			for(var m in $scope.markers){
 				if(!angular.equals(m, args.markerName)){
 					$scope.markers[m].dullMarker();
@@ -212,6 +214,7 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		};
 
 		var highlightPathEvent = function(e, args){
+			$scope.elementSelected = true;
 			for(var p in $scope.paths){
 				if(!angular.equals(p, args.pathName)){
 					$scope.paths[p].dullPath();
@@ -227,11 +230,14 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 		};
 
 		var resetAllElements = function(e, args){
-			for(var m in $scope.markers){
-				$scope.markers[m].resetMarker();
-			}
-			for(var p in $scope.paths){
-				$scope.paths[p].resetPath();
+			if($scope.elementSelected){
+				$scope.elementSelected = false;
+				for(var m in $scope.markers){
+					$scope.markers[m].resetMarker();
+				}
+				for(var p in $scope.paths){
+					$scope.paths[p].resetPath();
+				}
 			}
 		};
 
@@ -244,7 +250,8 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				title: data.name,
 				type: "Marker",
 				data: data.pieces
-			})
+			});
+			highlightMarkerEvent(e, args);
 		});
 
 		$scope.$on('leafletDirectivePath.click', function(e, args) {
@@ -256,7 +263,8 @@ angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
 				title: data.piece.name,
 				type: "Path",
 				data: data.piece
-			})
+			});
+			highlightPathEvent(e, args);
 		});
 
 		$scope.showLeaflet = function() {
