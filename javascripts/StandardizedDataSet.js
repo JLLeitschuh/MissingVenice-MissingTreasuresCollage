@@ -277,7 +277,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 			//END Location data
 
 
-			//Generate Provinance
+			//Generate Provenance
 			var generateProvenanceText = function (){
 				var returnString = "";
 				if(object.data["Date Created"]){
@@ -289,13 +289,19 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 				for(var l in __this.locations){
 					var location = __this.locations[l];
 					switch(location.place){
-						case "Current":
+						case "Original":
 							returnString += "It was originally located in " + location.name + ". ";
 							break;
 						case "Second":
+							if(location.date){
+								returnString += "In " + location.date + ", it moved to " + location.name + ". ";
+							} else {
+								returnString += "It moved to " + location.name + " at an unknown date. ";
+							}
+							break;
 						case "Third":
 							if(location.date){
-								returnString += "In " + location.date + " it moved to " + location.name + ". ";
+								returnString += "In " + location.date + ", it moved to " + location.name + ". ";
 							} else {
 								returnString += "It moved to " + location.name + " at an unknown date. ";
 							}
