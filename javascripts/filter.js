@@ -87,4 +87,21 @@ angular.module('ArtifactFeederApp.filters', [])
 			}
 			return items;
 		};
+	}).
+
+
+	filter('dateRange', function(){
+		return function(items, filterOn){
+			if(!angular.isArray(filterOn)) throw "Date range is not an array";
+			if(isNaN(filterOn[0]) || isNaN(filterOn[1])) throw "A value in the date filter is not a number";
+			if(filterOn.length != 2) throw "Date range improperly formatted";
+
+			var newReturnItems = [];
+			angular.forEach(items, function(item){
+				if(filterOn[0] < item.data.date &&  item.data.date < filterOn[1]){
+					newReturnItems.push(item);
+				}
+			});
+			return newReturnItems;
+		};
 	});
