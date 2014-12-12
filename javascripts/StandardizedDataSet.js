@@ -268,6 +268,15 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 					}
 
 
+					if( newLocation.date ){
+						if(newLocation.date.indexOf(" BC") > -1){
+							console.log(newLocation.date);
+							newLocation.date = newLocation.date.replace(" BC", "");
+							newLocation.date = -1 * parseInt(newLocation.date);
+						} else {
+							newLocation.date = parseInt(newLocation.date);
+						}
+					}
 					newLocation.latitude = parseFloat(newLocation.latitude);
 					newLocation.longitude = parseFloat(newLocation.longitude);
 
