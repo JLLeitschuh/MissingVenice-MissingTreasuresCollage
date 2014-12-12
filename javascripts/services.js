@@ -232,11 +232,12 @@ angular.module('ArtifactFeederApp.services', []).
 				});
 		}
 
-		getDataset(demolishedChurchesCollector);
-		getDataset(veniceChurchesCollector);
-		getDataset(conventsCollector);
-		getDataset(riiTeraCollector);
+
 		getDataset(artCollector);
+		getDataset(riiTeraCollector);
+		getDataset(conventsCollector);
+		getDataset(veniceChurchesCollector);
+		getDataset(demolishedChurchesCollector);
 
 		return service;
 	}]).
