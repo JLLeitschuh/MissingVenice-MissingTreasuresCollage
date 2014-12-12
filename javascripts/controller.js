@@ -148,15 +148,18 @@ angular.module('ArtifactFeederApp.controllers', []).
 	/************************************
 	 Map Controller
 	*************************************/
-	controller('mapController', function($scope, leafletData, $routeParams, ArtifactService, MapLocationService){
+	controller('mapController', function($scope, $filter, $timeout, leafletData, leafletEvents, $routeParams, ArtifactService, MapLocationService){
 		console.log("ArtifactFeederApp.controllers: mapController");
-		//Example code:
 
-		$scope.sliderData = {
-			minValue: 1000,
+		$scope.sliderData = {};
+		angular.extend($scope.sliderData, {
+			minValue: -500,
 			maxValue: 2014,
-			currentValue: [1000, 2014],
-			stepSize: 10
+			stepSize: 10,
+			value: [-500, 2014]
+		});
+		$scope.sliders = {
+			sliderValue: $scope.sliderData.value,
 		};
 
 
@@ -273,6 +276,14 @@ angular.module('ArtifactFeederApp.controllers', []).
 				data:[]
 			}
 		}); //end extend
+
+
+		//Don't really understand why but this speeds up the map
+		//Found this here: https://github.com/tombatossals/angular-leaflet-directive/issues/290
+		$scope.events = {
+			map : { disable : leafletEvents.getAvailableMapEvents() },
+			markers : { disable : leafletEvents.getAvailableMarkerEvents() }
+		};
 
 		$scope.showLeaflet = function() {
 			leafletData.getMap().then(function(map) {

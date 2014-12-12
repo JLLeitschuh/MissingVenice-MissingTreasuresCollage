@@ -300,7 +300,7 @@ angular.module('ArtifactFeederApp.services', []).
 			count: 1,
 			addLocationList: function(standardizedDataObject){
 				var locations = standardizedDataObject.locations;
-				var cordinates = [];
+				var locationMeta = [];
 				var markerNames = [];
 				for(var l in locations){
 					var location = locations[l];
@@ -309,7 +309,10 @@ angular.module('ArtifactFeederApp.services', []).
 						throw "Issue with Standardized data object: " + standardizedDataObject.name;
 						continue;
 					}
-					cordinates.push({lat:location.latitude, lng:location.longitude});
+					locationMeta.push({
+						cordinate: {lat:location.latitude, lng:location.longitude},
+						date: location.date
+						});
 
 					var latString = service.latLongFloatToPositiveString(location.latitude);
 					var lngString = service.latLongFloatToPositiveString(location.longitude);
@@ -326,8 +329,10 @@ angular.module('ArtifactFeederApp.services', []).
 							};
 							this.hasPath = function(aPathName){
 								for(var p in this.data.pieces){
-									if(angular.equals("id" + this.data.pieces[p].pvid, aPathName)){
-										return true;
+									for(var i = 0; i < 3; i++){
+										if(angular.equals("id" + this.data.pieces[p].pvid + "value" + i, aPathName)){
+											return true;
+										}
 									}
 								}
 								return false;
@@ -365,38 +370,45 @@ angular.module('ArtifactFeederApp.services', []).
 						service.markers[markerName].addPiece(standardizedDataObject);
 					}
 				}
-				var Path = function(){
-					this.color = getRandomColor();
-					this.latlngs = cordinates;
-					this.type = 'polyline';
-					this.data = {
-						piece: standardizedDataObject,
-						markerNames: markerNames,
-					};
-					this.hasMarker = function(aMarkerName){
-						for(var m in this.data.markerNames){
-							if(angular.equals(this.data.markerNames[m], aMarkerName)){
-								return true;
+				var color = getRandomColor();
+				/*
+				 * Normally each path would be attached but the slider has to be able to
+				 * selectively hide particular paths.
+				 */
+				for(var i = 0; i < locationMeta.length -1; i++){
+					var Path = function(){
+						this.color = color;
+						this.latlngs = [locationMeta[i].cordinate, locationMeta[i+1].cordinate];
+						this.type = 'polyline';
+						this.data = {
+							piece: standardizedDataObject,
+							markerNames: markerNames,
+							date: locationMeta[i].date
+						};
+						this.hasMarker = function(aMarkerName){
+							for(var m in this.data.markerNames){
+								if(angular.equals(this.data.markerNames[m], aMarkerName)){
+									return true;
+								}
 							}
+							return false;
+						};
+						this.highlightPath = function(){
+							this.weight = 7;
+							this.opacity = 1;
+						};
+						this.dullPath = function(){
+							this.weight = 2;
+							this.opacity = .1;
 						}
-						return false;
+						this.resetPath = function(){
+							this.weight = 3;
+							this.opacity = 1;
+						}
+						this.resetPath();
 					};
-					this.highlightPath = function(){
-						this.weight = 7;
-						this.opacity = 1;
-					};
-					this.dullPath = function(){
-						this.weight = 2;
-						this.opacity = .1;
-					}
-					this.resetPath = function(){
-						this.weight = 3;
-						this.opacity = 1;
-					}
-					this.resetPath();
-					this.text = '<b>' + standardizedDataObject.name + '</b>';
-				};
-				service.paths["id" + standardizedDataObject.pvid] = new Path();
+					service.paths["id" + standardizedDataObject.pvid + "value" + i] = new Path();
+				}
 				service.count ++;
 			}
 

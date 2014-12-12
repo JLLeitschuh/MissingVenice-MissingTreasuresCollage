@@ -27,7 +27,7 @@
 	<div class="container row row-eq-height">
 		<div class="col-md-9">
 			<leaflet height="480px" width="100%" defaults="defaults" center="center" controls="controls"
-			   paths="paths" markers="markers" ng-model-options="{ debounce: 150 }"></leaflet>
+			   paths="paths" event-broadcast="events" markers="markers"></leaflet>
 		</div>
 		<div class="col-md-3 well" style="max-height: 480px; overflow-y: auto;">
 			<div ng-if="infoBox.type == 'Marker'">
@@ -59,9 +59,9 @@
 
 	<div class="well">
 		<b>{{sliderData.minValue}}AD</b>&nbsp;&nbsp;&nbsp;
-		<slider ng-model="sliders.sliderValue" min="{{sliderData.minValue}}" step="{{sliderData.stepSize}}" max="{{sliderData.maxValue}}" value="{{sliderData.currentValue}}">
+		<slider ng-model="sliders.sliderValue" min="{{sliderData.minValue}}" step="{{sliderData.stepSize}}" max="{{sliderData.maxValue}}" value="{{sliderData.value}}">
 		</slider>&nbsp;&nbsp;&nbsp;
-		<b>{{sliderData.maxValue}}AD</b>
+		<b>{{sliderData.maxValue}}AD</b> &nbsp;&nbsp;&nbsp; {{sliders.sliderValue}}
 	</div>
 
 	<div class="container">
@@ -71,36 +71,63 @@
 					Name
 				</th>
 				<th>
+					Date
+				</th>
+				<th>
 					Original
+				</th>
+				<th>
+					Original Date
 				</th>
 				<th>
 					Second
 				</th>
 				<th>
+					Second Date
+				</th>
+				<th>
 					Third
+				</th>
+				<th>
+					Third Date
 				</th>
 				<th>
 					Current
 				</th>
+				<th>
+					Current Date
+				</th>
 			</tr>
-			<tr ng-repeat="path in paths">
+			<!--  -->
+			<tr ng-repeat="path in paths | dateRange:sliders.sliderValue">
 				<td>
 					{{path.data.piece.name}}
 				</td>
 				<td>
+					{{path.data.date}}
+				</td>
+				<td>
 					{{path.data.piece.getLocationByName('Original').name}}
+				</td>
+				<td>
 					{{path.data.piece.getLocationByName('Original').date}}
 				</td>
 				<td>
 					{{path.data.piece.getLocationByName('Second').name}}
+				</td>
+				<td>
 					{{path.data.piece.getLocationByName('Second').date}}
 				</td>
 				<td>
 					{{path.data.piece.getLocationByName('Third').name}}
+				</td>
+				<td>
 					{{path.data.piece.getLocationByName('Third').date}}
 				</td>
 				<td>
 					{{path.data.piece.getLocationByName('Current').name}}
+				</td>
+				<td>
 					{{path.data.piece.getLocationByName('Current').date}}
 				</td>
 			</tr>
