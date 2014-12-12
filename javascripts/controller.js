@@ -156,7 +156,13 @@ angular.module('ArtifactFeederApp.controllers', []).
 			minValue: -400,
 			maxValue: 2014,
 			stepSize: 100,
-			value: [-400, 2014]
+			value: [-400, 2014],
+			formatter: function(value){
+				if(value < 0){
+					return " " + (-1 *value) +"BC ";
+				}
+				return " " +  value + "AD ";
+			},
 		});
 		$scope.sliders = {
 			sliderValue: $scope.sliderData.value,
