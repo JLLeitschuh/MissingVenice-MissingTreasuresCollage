@@ -351,22 +351,8 @@ angular.module('ArtifactFeederApp.services', []).
 							this.addPiece = function(_standardizedDataObject){
 								if(this.data.pieces.indexOf(_standardizedDataObject) == -1){
 								this.data.pieces.push(_standardizedDataObject);
-								this.generateMessage();
 								}
 							};
-							this.generateMessage = function(){
-								var string = '<b>' + this.data.name + '</b> </br>' +
-								"Pieces At Location (" + this.data.pieces.length + "): </br>" +
-								'<div style="overflow: auto;">';
-								for(var p in this.data.pieces){
-									var piece = this.data.pieces[p];
-									string += piece.name + "</br>";
-								}
-								string += '</div>';
-								this.text = string;
-								return string;
-							};
-							this.generateMessage();
 						}
 
 						service.markers[markerName] = new Marker();
@@ -392,8 +378,6 @@ angular.module('ArtifactFeederApp.services', []).
 					};
 
 					this.hidePathsOutsideDates = function(firstDate, secondDate){
-						console.log("Trying Hiding PathSet")
-						console.log(pathList);
 						angular.forEach(pathList, function(path){
 							path.hidePathOutsideDates(firstDate, secondDate);
 						});
@@ -428,8 +412,6 @@ angular.module('ArtifactFeederApp.services', []).
 						}
 
 						this.hidePathOutsideDates = function(firstDate, secondDate){
-							//console.log("Trying hidePathOutsideDates")
-							//console.log(firstDate + " " + secondDate + " " + this.data.date);
 							if(!this.data.date || firstDate < this.data.date &&  this.data.date < secondDate){
 								this.resetPath();
 							} else {

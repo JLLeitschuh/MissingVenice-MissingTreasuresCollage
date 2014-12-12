@@ -51,7 +51,6 @@ angular.module('ui.bootstrap-slider', [])
 				if(attrs.reversed) options.reversed = attrs.reversed === 'true';
 				if(attrs.enabled) options.enabled = attrs.enabled === 'true';
 				if(attrs.naturalarrowkeys) options.natural_arrow_keys = attrs.naturalarrowkeys === 'true';
-				console.log($scope.formatter)
                 if($scope.formatter) options.formater = $scope.formatter;
 
 				if (options.range && !options.value) {
