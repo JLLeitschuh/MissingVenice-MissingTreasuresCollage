@@ -9,6 +9,7 @@ angular.
 		'ArtifactFeederApp.view',
 		'ui.bootstrap-slider',
 		'leaflet-directive',
+		'ui.bootstrap',
 		'ckServices',
 		'ngRoute'
 	]).

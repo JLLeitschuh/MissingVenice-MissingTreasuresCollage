@@ -12,7 +12,7 @@
  or factory (services.js).
 ****************************************/
 
-angular.module('ArtifactFeederApp.controllers', ['ui.bootstrap']).
+angular.module('ArtifactFeederApp.controllers', []).
 
 	/*
 	 * Controller for the loading bar.
