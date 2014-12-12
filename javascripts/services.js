@@ -286,16 +286,19 @@ angular.module('ArtifactFeederApp.services', []).
 			latLongFloatToPositiveString:function(value){
 				return (value > 0 ? value.toString() : "neg"+ (-1*value));
 			},
+			hidePathsOutsideDates: function(firstDate, secondDate){
+				//console.log("service remove")
+				angular.forEach(service.pathSets, function(pathSet){
+					pathSet.hidePathsOutsideDates(firstDate, secondDate);
+				});
+			},
 			markers: {},
+			pathSets: [],
 			paths: {
 				// test:{
 				// 	type: "polyline",
 				// 	latlngs: [ {lat: 40.4,lng: -3.6833333}, {lat: 41.9,lng: 12.4833333}, {lat: 51.5, lng: -0.116667} ]
 				// }
-			},
-			geoJson: {
-				type: "FeatureCollection",
-				features: []
 			},
 			addedMessage: "map.added.update",
 			count: 1,
@@ -371,21 +374,71 @@ angular.module('ArtifactFeederApp.services', []).
 						service.markers[markerName].addPiece(standardizedDataObject);
 					}
 				}
-				var color = getRandomColor();
+				var PathSet = function(){
+					//Private
+					var pathList = [];
+
+					/*
+					 * TODO: Optimization
+					 * Store the low and high dates for this path set. Compare
+					 * against the first and second dates durring the hide and
+					 * only run the for loop on a change
+					 */
+
+					//Public
+					this.color = getRandomColor();
+					this.addPath = function(path){
+						pathList.push(path);
+					};
+
+					this.hidePathsOutsideDates = function(firstDate, secondDate){
+						console.log("Trying Hiding PathSet")
+						console.log(pathList);
+						angular.forEach(pathList, function(path){
+							path.hidePathOutsideDates(firstDate, secondDate);
+						});
+					};
+				};
+
+				var pathSet = new PathSet();
+				service.pathSets.push(pathSet);
+
 				/*
 				 * Normally each path would be attached but the slider has to be able to
 				 * selectively hide particular paths.
 				 */
 				for(var i = 0; i < locationMeta.length -1; i++){
 					var Path = function(){
-						this.color = color;
+						//Data for leaflet
+						this.color = pathSet.color;
 						this.latlngs = [locationMeta[i].cordinate, locationMeta[i+1].cordinate];
 						this.type = 'polyline';
+
+
+						//Data for manipulation
+						this.pathSet = pathSet;
 						this.data = {
 							piece: standardizedDataObject,
 							markerNames: markerNames,
 							date: locationMeta[i].date
 						};
+						if(!this.data.date){
+							//console.log("No date for path");
+							this.dashArray=[5,5];
+						}
+
+						this.hidePathOutsideDates = function(firstDate, secondDate){
+							//console.log("Trying hidePathOutsideDates")
+							//console.log(firstDate + " " + secondDate + " " + this.data.date);
+							if(!this.data.date || firstDate < this.data.date &&  this.data.date < secondDate){
+								this.resetPath();
+							} else {
+								//console.log("Trying Hiding Path")
+								this.hidePath();
+							}
+						};
+
+						//Methods
 						this.hasMarker = function(aMarkerName){
 							for(var m in this.data.markerNames){
 								if(angular.equals(this.data.markerNames[m], aMarkerName)){
@@ -401,14 +454,20 @@ angular.module('ArtifactFeederApp.services', []).
 						this.dullPath = function(){
 							this.weight = 2;
 							this.opacity = .1;
-						}
+						};
+						this.hidePath = function(){
+							this.weight = 0;
+							this.opacity = 0;
+						};
 						this.resetPath = function(){
 							this.weight = 3;
 							this.opacity = 1;
 						}
 						this.resetPath();
 					};
-					service.paths["id" + standardizedDataObject.pvid + "value" + i] = new Path();
+					var path = new Path();
+					pathSet.addPath(path);
+					service.paths["id" + standardizedDataObject.pvid + "value" + i] = path;
 				}
 				service.count ++;
 			}

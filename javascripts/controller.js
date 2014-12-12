@@ -153,14 +153,29 @@ angular.module('ArtifactFeederApp.controllers', []).
 
 		$scope.sliderData = {};
 		angular.extend($scope.sliderData, {
-			minValue: -500,
+			minValue: -400,
 			maxValue: 2014,
-			stepSize: 10,
-			value: [-500, 2014]
+			stepSize: 100,
+			value: [-400, 2014]
 		});
 		$scope.sliders = {
 			sliderValue: $scope.sliderData.value,
 		};
+
+
+		var timeout;
+		$scope.$watch('sliders.sliderValue', function(){
+			var updateMapPaths = function(){
+				console.log("Slider Change Complete");
+				MapLocationService.hidePathsOutsideDates(
+					$scope.sliders.sliderValue[0],
+					$scope.sliders.sliderValue[1]);
+			};
+			if (timeout) {
+				$timeout.cancel(timeout);
+			}
+			timeout = $timeout(updateMapPaths, 200);
+		}, true);
 
 
 		angular.extend($scope, {
