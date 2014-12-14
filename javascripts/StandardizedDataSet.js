@@ -193,6 +193,13 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 						'Date Created': object.data["Date Created"],
 						'Medium': object.data["Medium"],
 						'Type': object.data["Type"],
+						'Description Source': object.data["Description Source"],
+						'Image Source': object.data["Picture Source"],
+						'Current Location Picture Source': object.data["Current Location Picture Source"],
+						'Original Location Picture Source': object.data["Orginial Location Picture Source"],
+						'Second Location Picture Source': object.data["Second Location Picture Source"],
+						'Third Location Picture Source': object.data["Third Location Picture Source"],
+						'Artist': object.data["Artist"]
 				}
 			});
 
@@ -296,7 +303,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 			};
 
 
-			//Generate Provinance
+			//Generate Provenance
 			var generateProvenanceText = function (){
 				var returnString = "";
 				if(object.data["Date Created"]){
@@ -308,13 +315,19 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 				for(var l in __this.locations){
 					var location = __this.locations[l];
 					switch(location.place){
-						case "Current":
+						case "Original":
 							returnString += "It was originally located in " + location.name + ". ";
 							break;
 						case "Second":
+							if(location.date){
+								returnString += "In " + location.date + ", it moved to " + location.name + ". ";
+							} else {
+								returnString += "It moved to " + location.name + " at an unknown date. ";
+							}
+							break;
 						case "Third":
 							if(location.date){
-								returnString += "In " + location.date + " it moved to " + location.name + ". ";
+								returnString += "In " + location.date + ", it moved to " + location.name + ". ";
 							} else {
 								returnString += "It moved to " + location.name + " at an unknown date. ";
 							}
