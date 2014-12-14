@@ -281,6 +281,9 @@ angular.module('ArtifactFeederApp.services', []).
 		return service;
 	}).
 
+	/*************************************************
+	 Defines all data for displaying the timeline map.
+	 *************************************************/
 	factory('MapLocationService', function($rootScope){
 		var service = {
 			latLongFloatToPositiveString:function(value){
@@ -292,8 +295,11 @@ angular.module('ArtifactFeederApp.services', []).
 					pathSet.hidePathsOutsideDates(firstDate, secondDate);
 				});
 			},
+			//Contains the list of markers to display on the timeline map
 			markers: {},
+			//Contains sets of paths that should be grouped but aren't because of functionaly reasons
 			pathSets: [],
+			//Contains the list of paths to display on the timeline map
 			paths: {
 				// test:{
 				// 	type: "polyline",
@@ -302,10 +308,57 @@ angular.module('ArtifactFeederApp.services', []).
 			},
 			addedMessage: "map.added.update",
 			count: 1,
+			/*
+			 * Adds a standardizedDataObject's locations to the
+			 * to the map service.
+			 * This function generates both the paths and the
+			 * markers for these loctions.
+			 */
 			addLocationList: function(standardizedDataObject){
 				var locations = standardizedDataObject.locations;
 				var locationMeta = [];
 				var markerNames = [];
+
+				/*
+				 * PathSet Object
+				 * Contains the data one standardized data object.
+				 *
+				 */
+				var PathSet = function(){
+					//Private
+					var pathList = [];
+
+					/*
+					* TODO: Optimization
+					* Store the low and high dates for this path set. Compare
+					* against the first and second dates durring the hide and
+					* only run the for loop on a change
+					*/
+
+					//Public
+					this.color = getRandomColor();
+
+					/*
+					 * Adds a path that is part of this path set
+					 */
+					this.addPath = function(path){
+						pathList.push(path);
+					};
+
+					/*
+					 * Hides all sub-paths for this path set if their associated
+					 * dates are outside this range.
+					 */
+					this.hidePathsOutsideDates = function(firstDate, secondDate){
+						angular.forEach(pathList, function(path){
+							path.hidePathOutsideDates(firstDate, secondDate);
+						});
+					};
+				}; // End PathSet Definition
+
+				var pathSet = new PathSet();
+				service.pathSets.push(pathSet);
+
 				for(var l in locations){
 					var location = locations[l];
 					if(isNaN(location.latitude) || isNaN(location.longitude)){
@@ -321,71 +374,81 @@ angular.module('ArtifactFeederApp.services', []).
 					var latString = service.latLongFloatToPositiveString(location.latitude);
 					var lngString = service.latLongFloatToPositiveString(location.longitude);
 					var markerName = latString + "," + lngString;
+
 					markerNames.push(markerName);
-					if(!service.markers[markerName]){
-						var Marker = function(){
-							this.lat = location.latitude;
-							this.lng = location.longitude;
-							this.draggable = false;
-							this.data = {
-								name: location.name,
-								pieces: [standardizedDataObject]
-							};
-							this.hasPath = function(aPathName){
-								for(var p in this.data.pieces){
-									for(var i = 0; i < 3; i++){
-										if(angular.equals("id" + this.data.pieces[p].pvid + "value" + i, aPathName)){
-											return true;
-										}
+
+					var Marker = function(){
+						//Private
+						var startPointCount = 0;
+						var midPointCount = 0;
+						var endPointCount = 0;
+
+						//Leaflet Options
+						this.lat = location.latitude;
+						this.lng = location.longitude;
+						this.draggable = false;
+
+
+						//Data
+						this.data = {
+							name: location.name,
+							pieces: [],
+							pathSets: []
+						};
+
+						this.hasPath = function(aPathName){
+							for(var p in this.data.pieces){
+								for(var i = 0; i < 3; i++){
+									if(angular.equals("id" + this.data.pieces[p].pvid + "value" + i, aPathName)){
+										return true;
 									}
 								}
-								return false;
-							};
-							this.dullMarker = function(){
-								this.opacity = .2;
-							};
-							this.resetMarker = function(){
-								this.opacity = 1;
-							};
-							this.resetMarker();
-							this.addPiece = function(_standardizedDataObject){
-								if(this.data.pieces.indexOf(_standardizedDataObject) == -1){
+							}
+							return false;
+						};
+						this.dullMarker = function(){
+							this.opacity = .2;
+						};
+						this.resetMarker = function(){
+							this.opacity = 1;
+						};
+						this.resetMarker();
+
+						this.addPiece = function(_standardizedDataObject){
+							if(this.data.pieces.indexOf(_standardizedDataObject) == -1){
 								this.data.pieces.push(_standardizedDataObject);
+								switch(location.place){
+									/*
+									 * TODO: Convert these values to different color markers.
+									 * This probably wont happen for this project.. Oh well...
+									 */
+									case "Original":
+										startPointCount ++;
+										break;
+									case "Second":
+									case "Third":
+										midPointCount ++;
+										break;
+									case "Current":
+										endPointCount ++;
+										break;
 								}
-							};
-						}
+								//this.generateColor();
+							}
+						};
 
+						this.addPathSet = function(pathSet){
+							this.data.pathSets.push(pathSet);
+						};
+					}; //End Marker Definition
+
+					if(!service.markers[markerName]){
 						service.markers[markerName] = new Marker();
-					} else {
-						service.markers[markerName].addPiece(standardizedDataObject);
 					}
-				}
-				var PathSet = function(){
-					//Private
-					var pathList = [];
 
-					/*
-					 * TODO: Optimization
-					 * Store the low and high dates for this path set. Compare
-					 * against the first and second dates durring the hide and
-					 * only run the for loop on a change
-					 */
-
-					//Public
-					this.color = getRandomColor();
-					this.addPath = function(path){
-						pathList.push(path);
-					};
-
-					this.hidePathsOutsideDates = function(firstDate, secondDate){
-						angular.forEach(pathList, function(path){
-							path.hidePathOutsideDates(firstDate, secondDate);
-						});
-					};
-				};
-
-				var pathSet = new PathSet();
-				service.pathSets.push(pathSet);
+					service.markers[markerName].addPiece(standardizedDataObject);
+					service.markers[markerName].addPathSet(pathSet);
+				} // End location iterator
 
 				/*
 				 * Normally each path would be attached but the slider has to be able to
@@ -400,22 +463,32 @@ angular.module('ArtifactFeederApp.services', []).
 
 
 						//Data for manipulation
-						this.pathSet = pathSet;
 						this.data = {
 							piece: standardizedDataObject,
 							markerNames: markerNames,
 							date: locationMeta[i].date
 						};
+
+						//If there is no date for this location
 						if(!this.data.date){
-							//console.log("No date for path");
-							this.dashArray=[5,5];
+							//Then make this a dashed line
+							this.dashArray=[5,10];
 						}
 
+						this.pathSet = pathSet;
+
+
+						/*
+						 * Hide this path if it's associated date is outside the
+						 * given date range. If there isn't a date associated
+						 * simply reset it back to default.
+						 */
 						this.hidePathOutsideDates = function(firstDate, secondDate){
-							if(!this.data.date || firstDate < this.data.date &&  this.data.date < secondDate){
+							if(!this.data.date ||
+							   firstDate < this.data.date &&
+							   this.data.date < secondDate){
 								this.resetPath();
 							} else {
-								//console.log("Trying Hiding Path")
 								this.hidePath();
 							}
 						};
@@ -429,22 +502,38 @@ angular.module('ArtifactFeederApp.services', []).
 							}
 							return false;
 						};
+
+						/*
+						 * Make this path stand out
+						 */
 						this.highlightPath = function(){
 							this.weight = 7;
 							this.opacity = 1;
 						};
+
+						/*
+						 * Make this path dull
+						 */
 						this.dullPath = function(){
 							this.weight = 2;
 							this.opacity = .1;
 						};
+
+						/*
+						 * Totally hides this path
+						 */
 						this.hidePath = function(){
 							this.weight = 0;
 							this.opacity = 0;
 						};
+
+						/*
+						 * Resets this path back to its default view.
+						 */
 						this.resetPath = function(){
 							this.weight = 3;
 							this.opacity = 1;
-						}
+						};
 						this.resetPath();
 					};
 					var path = new Path();
@@ -454,7 +543,7 @@ angular.module('ArtifactFeederApp.services', []).
 				service.count ++;
 			}
 
-		};
+		}; //End service definition
 
 		return service;
 	});
