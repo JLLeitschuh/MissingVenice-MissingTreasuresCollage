@@ -215,12 +215,18 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 			this.type = "Filled In";
 			mediaID = object['merged-media-ids'].images['Rii Tera signs MEDIA'];
 			this.name = object.data["name"];
-			this.shortDescription = object.data["labeled"];
 			this.latitude = object.data.latitude;
 			this.longitude = object.data.longitude;
 			this.sections = [
-				new HeaderTextData({header:"Historic Background", text: "There\'s nothing here yet."}),
+				new HeaderTextData({header:"Historic Background",
+				text:
+				   "This filled in canal is in the " + object.data["sestiere"] +
+				   " sestiere, and was filled during the year of " + object.data["year"] +
+				   ". When you visit this filled in canal today, it is labeled as " +
+				   object.data["street name"] + ".",
+				}),
 			];
+			this.shortDescription = this.sections[0].text;
 
 			this.tableData = new HeaderTableData({
 				header: "Rii Tera Info",
