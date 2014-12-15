@@ -148,7 +148,7 @@ angular.module('ArtifactFeederApp.controllers', []).
 	/************************************
 	 Map Controller
 	*************************************/
-	controller('mapController', function($scope, $filter, $timeout, leafletData, leafletEvents, $routeParams, ArtifactService, MapLocationService){
+	controller('mapController', function($scope, $filter, $timeout, $compile, leafletData, leafletEvents, $routeParams, ArtifactService, MapLocationService){
 		console.log("ArtifactFeederApp.controllers: mapController");
 
 		$scope.convertDateValueToString = function(value){
@@ -213,6 +213,11 @@ angular.module('ArtifactFeederApp.controllers', []).
 			for(var p in $scope.paths){
 				$scope.paths[p].resetPath();
 			}
+			angular.extend($scope.infoBox, {
+				title: "",
+				type: "",
+				data:[]
+			});
 		};
 
 		$scope.$on('leafletDirectiveMarker.click', function(e, args) {
@@ -249,7 +254,7 @@ angular.module('ArtifactFeederApp.controllers', []).
 		btn['arial-label'] = "Left Align";
 		btn.type = "button";
 
-		var button = new L.Control.Button(btn);
+		var button = new L.Control.Button(btn, {position:'bottomright'});
 		button.on('click', function () {
 			//alert('you clicked the button!');
 			resetAllElements();
@@ -281,6 +286,23 @@ angular.module('ArtifactFeederApp.controllers', []).
 			map : { disable : leafletEvents.getAvailableMapEvents() },
 			markers : { disable : leafletEvents.getAvailableMarkerEvents() }
 		};
+
+		leafletData.getMap().then(function(map) {
+			//L.DomUtil.create('map-info-box');
+			var createInfoBox = function(){
+				var info = L.control({position: "topright"});
+				info.onAdd = function (map) {
+					var htmlContent = "<map-info-box></map-info-box>";
+					$scope.compiled = $compile(htmlContent)($scope);
+					this._content = $scope.compiled[0];
+					L.DomEvent.disableClickPropagation(this._content);
+					return this._content;
+				};
+				return info;
+			}
+			createInfoBox().addTo(map);
+
+		});
 
 		$scope.showLeaflet = function() {
 			leafletData.getMap().then(function(map) {
