@@ -26,10 +26,12 @@ angular.module('ArtifactFeederApp.directives', [])
 
 
 	//Map
-	directive('mapboxMap', function(){
+	directive('mapInfoBox', function(){
 		return {
 			restrict: 'E',
 			replace: false,
-			link: function(scope, element, attrs){}
+			templateUrl: 'directives/mapInfoBox.html',
+			link: function(scope, element, attrs){
+			}
 		}
 	});

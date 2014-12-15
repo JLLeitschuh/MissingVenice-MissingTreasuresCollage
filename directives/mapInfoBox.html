@@ -1,0 +1,26 @@
+<div style="max-width:250px; width:250px; max-height: 400px; overflow-y: auto;">
+	<div class="panel panel-default" ng-if="infoBox.type == 'Marker'">
+		<div class="panel-heading">
+			{{infoBox.title}}
+			<span class="badge pull-right">{{infoBox.data.length}}</span>
+		</div>
+		<ul class="list-group">
+			<li class="list-group-item" ng-repeat="element in infoBox.data">
+				<a ng-click="element.goToInfoPage()">{{element.name}}</a>
+			</li>
+		</ul>
+	</div>
+	<div class="panel panel-default" ng-if="infoBox.type == 'Path'">
+		<div class="panel-heading">
+			{{infoBox.title}}
+		</div>
+		<ul class="list-group">
+			<li class="list-group-item" ng-repeat="location in infoBox.data.locations">
+				{{location.name}}
+				<span ng-show="location.date">
+					({{convertDateValueToString(location.date)}})
+				</span>
+			</li>
+		</ul>
+	</div>
+</div>
