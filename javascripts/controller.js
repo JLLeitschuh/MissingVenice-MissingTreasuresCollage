@@ -273,7 +273,7 @@ angular.module('ArtifactFeederApp.controllers', []).
 		var button2 = new L.Control.Button(btn2, {position:'bottomright'});
 		button2.on('click', function () {
 			/*
-			 * XXX This is incredibly hacky and horendous angular code
+			 * XXX This is incredibly hacky and horendous code
 			 * This functionalty would be nearly impossible without it however...
 			 */
 			var paths = document.getElementsByTagName('path');
