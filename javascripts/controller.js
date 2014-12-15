@@ -173,7 +173,7 @@ angular.module('ArtifactFeederApp.controllers', []).
 		$scope.$watch('sliders.sliderValue', function(){
 			var updateMapPaths = function(){
 				console.log("Slider Change Complete");
-				MapLocationService.hidePathsOutsideDates(
+				MapLocationService.setElementVisibiltyBasedOnDate(
 					$scope.sliders.sliderValue[0],
 					$scope.sliders.sliderValue[1]);
 			};
@@ -209,22 +209,19 @@ angular.module('ArtifactFeederApp.controllers', []).
 					$scope.paths[p].highlightPath();
 				}
 			}
+			console.log(args);
 		};
 
 		var highlightPathEvent = function(e, args){
-			$scope.elementSelected = true;
 			$scope.paths[args.pathName].wasClicked();
 		};
 
-		var resetAllElements = function( override ){
-			if($scope.elementSelected || override){
-				$scope.elementSelected = false;
-				for(var m in $scope.markers){
-					$scope.markers[m].resetMarker();
-				}
-				for(var p in $scope.paths){
-					$scope.paths[p].resetPath();
-				}
+		var resetAllElements = function(){
+			for(var m in $scope.markers){
+				$scope.markers[m].resetMarker();
+			}
+			for(var p in $scope.paths){
+				$scope.paths[p].resetPath();
 			}
 		};
 
@@ -301,7 +298,7 @@ angular.module('ArtifactFeederApp.controllers', []).
 			});
 		};
 
-		resetAllElements(true);
+		resetAllElements();
 
 
 });

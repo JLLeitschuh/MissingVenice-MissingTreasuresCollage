@@ -290,10 +290,14 @@ angular.module('ArtifactFeederApp.services', []).
 			latLongFloatToPositiveString:function(value){
 				return (value > 0 ? value.toString() : "neg"+ (-1*value));
 			},
-			hidePathsOutsideDates: function(firstDate, secondDate){
+			setElementVisibiltyBasedOnDate: function(firstDate, secondDate){
 				//console.log("service remove")
+				//
+				angular.forEach(service.markers, function(marker){
+					marker.hideMarker();
+				});
 				angular.forEach(service.pathSets, function(pathSet){
-					pathSet.hidePathsOutsideDates(firstDate, secondDate);
+					pathSet.setElementVisibiltyBasedOnDate(firstDate, secondDate);
 				});
 			},
 			//Contains the list of markers to display on the timeline map
@@ -355,9 +359,9 @@ angular.module('ArtifactFeederApp.services', []).
 					 * Hides all sub-paths for this path set if their associated
 					 * dates are outside this range.
 					 */
-					this.hidePathsOutsideDates = function(firstDate, secondDate){
+					this.setElementVisibiltyBasedOnDate = function(firstDate, secondDate){
 						angular.forEach(pathList, function(path){
-							path.hidePathOutsideDates(firstDate, secondDate);
+							path.setElementVisibiltyBasedOnDate(firstDate, secondDate);
 						});
 					};
 
@@ -407,10 +411,6 @@ angular.module('ArtifactFeederApp.services', []).
 						throw "Issue with Standardized data object: " + standardizedDataObject.name;
 						continue;
 					}
-					locationMeta.push({
-						cordinate: {lat:location.latitude, lng:location.longitude},
-						date: location.date
-						});
 
 					var latString = service.latLongFloatToPositiveString(location.latitude);
 					var lngString = service.latLongFloatToPositiveString(location.longitude);
@@ -446,6 +446,9 @@ angular.module('ArtifactFeederApp.services', []).
 								}
 							}
 							return false;
+						};
+						this.hideMarker = function(){
+							this.opacity = 0;
 						};
 						this.dullMarker = function(){
 							this.opacity = .2;
@@ -490,6 +493,12 @@ angular.module('ArtifactFeederApp.services', []).
 					pathSet.addMarker(marker);
 					marker.addPiece(standardizedDataObject);
 					marker.addPathSet(pathSet);
+
+					locationMeta.push({
+						cordinate: {lat:location.latitude, lng:location.longitude},
+						date: location.date,
+						marker: marker
+						});
 				} // End location iterator
 
 				/*
@@ -498,6 +507,7 @@ angular.module('ArtifactFeederApp.services', []).
 				 */
 				for(var i = 0; i < locationMeta.length -1; i++){
 					var Path = function(){
+						var markers = [locationMeta[i].marker, locationMeta[i+1].marker];
 						//Data for leaflet
 						this.color = pathSet.color;
 						this.latlngs = [locationMeta[i].cordinate, locationMeta[i+1].cordinate];
@@ -523,15 +533,22 @@ angular.module('ArtifactFeederApp.services', []).
 							this.pathSet.wasClicked();
 						};
 
+						this.addMarker = function(marker){
+							markers.push(marker);
+						};
+
 						/*
 						 * Hide this path if it's associated date is outside the
 						 * given date range. If there isn't a date associated
 						 * simply reset it back to default.
 						 */
-						this.hidePathOutsideDates = function(firstDate, secondDate){
+						this.setElementVisibiltyBasedOnDate = function(firstDate, secondDate){
 							if(!this.data.date ||
 							   firstDate < this.data.date &&
 							   this.data.date < secondDate){
+								angular.forEach(markers, function(marker){
+									marker.resetMarker();
+								});
 								this.resetPath();
 							} else {
 								this.hidePath();
