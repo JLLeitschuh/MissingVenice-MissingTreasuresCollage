@@ -11,7 +11,8 @@ angular.
 		'leaflet-directive',
 		'ui.bootstrap',
 		'ckServices',
-		'ngRoute'
+		'ngRoute',
+		'ngTouch'
 	]).
 	/** Defines page navigation */
 	config(['$routeProvider', function($routeProvider) {
