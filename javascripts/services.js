@@ -527,11 +527,29 @@ angular.module('ArtifactFeederApp.services', []).
 				 * selectively hide particular paths.
 				 */
 				for(var i = 0; i < locationMeta.length -1; i++){
+					var obj = function (ll) { return { y: ll.lat, x: ll.lng }; }
+
+					var generator = new arc.GreatCircle(
+						obj(locationMeta[i].cordinate),
+						obj(locationMeta[i+1].cordinate));
+					var line = generator.Arc(100, { offset: 10 });
+
 					var Path = function(){
 						var markers = [locationMeta[i].marker, locationMeta[i+1].marker];
 						//Data for leaflet
 						this.color = pathSet.color;
-						this.latlngs = [locationMeta[i].cordinate, locationMeta[i+1].cordinate];
+						this.latlngs = line.geometries[0].coords.map(
+							function(c) {
+								return c.reverse();
+							});
+						angular.forEach(this.latlngs, function(latlng){
+							//console.log(latlng);
+							if(isNaN(latlng[0]) || isNaN(latlng[1])){
+								console.log(standardizedDataObject);
+								throw "Invalid LatLng";
+							}
+						});
+						//console.log(this.latlngs);
 						this.type = 'polyline';
 
 
