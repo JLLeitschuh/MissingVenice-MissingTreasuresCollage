@@ -542,13 +542,15 @@ angular.module('ArtifactFeederApp.services', []).
 							function(c) {
 								return c.reverse();
 							});
-						angular.forEach(this.latlngs, function(latlng){
-							//console.log(latlng);
-							if(isNaN(latlng[0]) || isNaN(latlng[1])){
-								console.log(standardizedDataObject);
-								throw "Invalid LatLng";
-							}
-						});
+						// angular.forEach(this.latlngs, function(latlng){
+						// 	//console.log(latlng);
+						// 	if(isNaN(latlng[0]) || isNaN(latlng[1])){
+						// 		console.log(standardizedDataObject);
+						// 		throw "Invalid LatLng";
+						// 	}
+						// });
+
+						this.className = "path-start";
 						//console.log(this.latlngs);
 						this.type = 'polyline';
 

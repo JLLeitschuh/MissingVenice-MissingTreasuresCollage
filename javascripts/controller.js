@@ -261,13 +261,51 @@ angular.module('ArtifactFeederApp.controllers', []).
 		});
 
 
+		//Animate button
+
+		var btn2 = document.createElement("BUTTON");        // Create a <button> element
+		var t2 = document.createTextNode("Animate");       // Create a text node
+		btn2.appendChild(t2);                                // Append the text to <button>
+		btn2.className = "btn btn-default btn-sm";
+		btn2['arial-label'] = "Left Align";
+		btn2.type = "button";
+
+		var button2 = new L.Control.Button(btn2, {position:'bottomright'});
+		button2.on('click', function () {
+			/*
+			 * XXX This is incredibly hacky and horendous angular code
+			 * This functionalty would be nearly impossible without it however...
+			 */
+			var paths = document.getElementsByTagName('path');
+			angular.forEach(paths, function(path){
+				if(path.getAttributeNode("stroke-dasharray")){
+					return;
+				}
+
+				var totalLength = path.getTotalLength();
+				path.style.strokeDashoffset = totalLength;
+				path.style.strokeDasharray = 0;
+
+				setTimeout((function(path) {
+					return function() {
+						// setting the strokeDashoffset to 0 triggers
+						// the animation.
+						path.style.strokeDasharray = totalLength;
+						path.style.strokeDashoffset = 0;
+					};
+				})(path), 5000);
+			});
+		});
+
+
 		angular.extend($scope, {
 			elementSelected: false,
 			controls: {
 				custom: [
 					L.control.locate(),
 					L.control.fullscreen(),
-					button
+					button,
+					button2
 				]
 			},
 			markers: MapLocationService.markers,
@@ -301,7 +339,18 @@ angular.module('ArtifactFeederApp.controllers', []).
 				return info;
 			}
 			var createMapKey = function(){
+				var info = L.control({position: "bottomleft"});
+				info.onAdd = function (map) {
+					var htmlContent = "<map-key></map-key>";
+					$scope.compiled = $compile(htmlContent)($scope);
+					this._content = $scope.compiled[0];
+					L.DomEvent.disableClickPropagation(this._content);
+					return this._content;
+				};
+				return info;
+			}
 			createInfoBox().addTo(map);
+			createMapKey().addTo(map);
 
 		});
 
