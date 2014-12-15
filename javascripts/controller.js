@@ -213,18 +213,7 @@ angular.module('ArtifactFeederApp.controllers', []).
 
 		var highlightPathEvent = function(e, args){
 			$scope.elementSelected = true;
-			for(var p in $scope.paths){
-				if(!angular.equals(p, args.pathName)){
-					$scope.paths[p].dullPath();
-				} else {
-					$scope.paths[p].highlightPath();
-				}
-			}
-			for(var m in $scope.markers){
-				if(! $scope.paths[args.pathName].hasMarker(m)){
-					$scope.markers[m].dullMarker();
-				}
-			}
+			$scope.paths[args.pathName].wasClicked();
 		};
 
 		var resetAllElements = function( override ){

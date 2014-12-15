@@ -229,6 +229,7 @@ angular.module('ArtifactFeederApp.services', []).
 					} finally {
 						service.totalDatasetLoaded ++;
 					}
+					console.log(service.artifacts);
 				});
 		}
 
@@ -327,6 +328,7 @@ angular.module('ArtifactFeederApp.services', []).
 				var PathSet = function(){
 					//Private
 					var pathList = [];
+					var markerList = [];
 
 					/*
 					* TODO: Optimization
@@ -345,6 +347,10 @@ angular.module('ArtifactFeederApp.services', []).
 						pathList.push(path);
 					};
 
+					this.addMarker = function(marker){
+						markerList.push(marker);
+					};
+
 					/*
 					 * Hides all sub-paths for this path set if their associated
 					 * dates are outside this range.
@@ -352,6 +358,41 @@ angular.module('ArtifactFeederApp.services', []).
 					this.hidePathsOutsideDates = function(firstDate, secondDate){
 						angular.forEach(pathList, function(path){
 							path.hidePathOutsideDates(firstDate, secondDate);
+						});
+					};
+
+					this.wasClicked = function(){
+						angular.forEach(service.pathSets, function(pathSet){
+							if(!angular.equals(pathSet, this)){
+								pathSet.dullAllPaths();
+								pathSet.dullAllMarkers();
+							}
+						});
+						this.highlightAllPaths();
+						this.resetAllMarkers();
+					};
+
+					this.dullAllMarkers = function(){
+						angular.forEach(markerList, function(marker){
+							marker.dullMarker();
+						});
+					};
+
+					this.resetAllMarkers = function(){
+						angular.forEach(markerList, function(marker){
+							marker.resetMarker();
+						});
+					}
+
+					this.dullAllPaths = function(){
+						angular.forEach(pathList, function(path){
+							path.dullPath();
+						});
+					};
+
+					this.highlightAllPaths = function(){
+						angular.forEach(pathList, function(path){
+							path.highlightPath();
 						});
 					};
 				}; // End PathSet Definition
@@ -445,9 +486,10 @@ angular.module('ArtifactFeederApp.services', []).
 					if(!service.markers[markerName]){
 						service.markers[markerName] = new Marker();
 					}
-
-					service.markers[markerName].addPiece(standardizedDataObject);
-					service.markers[markerName].addPathSet(pathSet);
+					var marker = service.markers[markerName];
+					pathSet.addMarker(marker);
+					marker.addPiece(standardizedDataObject);
+					marker.addPathSet(pathSet);
 				} // End location iterator
 
 				/*
@@ -477,6 +519,9 @@ angular.module('ArtifactFeederApp.services', []).
 
 						this.pathSet = pathSet;
 
+						this.wasClicked = function(){
+							this.pathSet.wasClicked();
+						};
 
 						/*
 						 * Hide this path if it's associated date is outside the
