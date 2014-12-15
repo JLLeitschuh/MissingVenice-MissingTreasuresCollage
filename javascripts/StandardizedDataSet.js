@@ -22,6 +22,10 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 	this.originalObject = object;
 	this.id = id;
 	this.distance;
+	this.overrideImageLoad = false;
+
+	//By default this object is not valid for the collage
+	this.validForCollage = false;
 
 	/**
 	 * This is run once we have the user's GPS location.
@@ -74,6 +78,54 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 
 	this.imageData = [];
 	var mediaID;
+
+	/**
+	* The Image URL Data object allows us to store
+	* the various sized versions of given images.
+	* Since there may be more than one image per
+	* per data element we must collect each into
+	* its own specific object.
+	* @param blob {imageData, imageText, width, height}
+	*        A dictionary containing the image data from the CK console.
+	*/
+	function ImageURLData(image_blob){
+		//Store a version of 'this' that can be used by internally defined objects
+		var _this = this;
+		this.mediaID = image_blob.mediaID;
+		this.thumb = image_blob.imageData.thumb;
+		this.small = image_blob.imageData.small;
+		this.medium = image_blob.imageData.medium;
+		this.original = image_blob.imageData.original;
+		this.imageText = image_blob.imageText;
+
+		/**
+		* Recursive function to get the Image Meta data
+		* if we don't already have it.
+		* If we already have it the data is automatically
+		* stored in the height and width variables
+		*/
+		function getImageMeta(var_width, var_height) {
+			//If the height is defined
+			if (typeof var_height !== 'undefined') {
+				//Then we know the size and can store it.
+				_this.width = var_width;
+				_this.height = var_height;
+			} else {
+				/*
+				* Otherwise we need to wait on the image to load
+				* to retrive this meta info.
+				*/
+				var img = new Image();
+				//Get the size of the smallest image for short load times
+				img.src = image_blob.imageData.thumb;
+				img.onload = function() {
+					getImageMeta(this.width, this.height);
+				}
+			}
+		} // END: function
+		getImageMeta(image_blob.width, image_blob.height);
+	} // END: ImageURLData
+
 
 	/*
 	* HARD CODING ALERT! IF THE FORMAT FOR THESE DATA SETS CHANGE IT WILL BREAK HERE!
@@ -185,7 +237,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 			this.type = "Moved";
 			this.name = object.data["Item Name"];
 			this.pvid = object.data.PVID;
-			var mediaName;
+			this.overrideImageLoad = true;
 
 			this.tableData = new HeaderTableData({
 				header: "Art Info",
@@ -203,10 +255,22 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 				}
 			});
 
-			for(var i = 1; i < 7; i++){
-				mediaName = "Art " + i + " MEDIA";
+
+			/* We have to search through
+			 * "Art 1 MEDIA", "Art 2 MEDIA"... "Art 7 MEDIA"
+			 * in order to find the right dataset
+			 */
+			for (var i = 1; i < 7; i++) {
+				var mediaName = "Art " + i + " MEDIA";
 				mediaID = object['merged-media-ids'].images[mediaName];
 				if(object.media.images[mediaID]){
+					this.validForCollage = true;
+					this.imageData.push(new ImageURLData({
+						mediaID: mediaID,
+						imageData: object.media.images[mediaID],
+						width: object.data.width,
+						height: object.data.height
+					}));
 					break;
 				}
 			}
@@ -252,6 +316,21 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 						case locationTagNames[0]:
 							newLocation.place = "Original";
 							newLocation.date = object.data["Date Created"];
+
+							var partialNames = ["", " 1"];
+							for(var n in partialNames){
+								var partialName = partialNames[n];
+								var mediaID =
+								object['merged-media-ids'].images["Art Original Locations" + partialName + " MEDIA"];
+								if(object.media.images[mediaID]){
+									this.imageData.push(new ImageURLData({
+										mediaID: mediaID,
+										imageText: newLocation.name,
+										imageData: object.media.images[mediaID]}));
+									break;
+								}
+							}
+
 							//Put this here first
 							this.latitude = newLocation.latitude;
 							this.longitude = newLocation.longitude;
@@ -259,15 +338,50 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 						case locationTagNames[1]:
 							newLocation.place = "Second";
 							newLocation.date = object.data["Date Moved to Second Location"];
+
+							var mediaID =
+							object['merged-media-ids'].images["Art Second Locations MEDIA"];
+							if(object.media.images[mediaID]){
+								this.imageData.push(new ImageURLData({
+									mediaID: mediaID,
+									imageText: newLocation.name,
+									imageData: object.media.images[mediaID]}));
+							} else {
+								//console.log(object)
+								//throw "Media does not exist";
+							}
+
+
 							break;
 						case locationTagNames[2]:
 							newLocation.place = "Third";
 							//Again this spelling mistake is intentional
 							newLocation.date = object.data['"Date Moved to Thrid Location "'];
+
+							var mediaID =
+							object['merged-media-ids'].images["Art Third Location MEDIA"];
+							if(object.media.images[mediaID]){
+								this.imageData.push(new ImageURLData({
+									mediaID: mediaID,
+									imageText: newLocation.name,
+									imageData: object.media.images[mediaID]}));
+							} else {
+								//console.log(object)
+								//throw "Media does not exist";
+							}
 							break;
 						case locationTagNames[3]:
 							newLocation.place = "Current";
 							newLocation.date = object.data["Date to Current"];
+
+							var mediaID =
+							object['merged-media-ids'].images["Art Current Locations MEDIA"];
+							this.imageData.push(new ImageURLData({
+								mediaID: mediaID,
+								imageText: newLocation.name,
+								imageData: object.media.images[mediaID]}));
+
+
 							//Howerver if we have the current location then use that instead
 							this.latitude = newLocation.latitude;
 							this.longitude = newLocation.longitude;
@@ -363,76 +477,33 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 
 
 	// IMAGE MANIPULATION
+	if(!this.overrideImageLoad){ //If the switch statement hasn't handeled adding art peices do it here
+		if(mediaID){
+			//If we have a media id then we have the dimention info (assumption)
+			//This is nessasary because the collage code requires an image to have a known dimention
+			this.validForCollage = true;
+			this.imageData.push(
+				new ImageURLData({
+					mediaID: mediaID,
+					imageData: object.media.images[mediaID],
+					width: object.data.width,
+					height: object.data.height})
+				);
+		}
 
-	/**
-	* The Image URL Data object allows us to store
-	* the various sized versions of given images.
-	* Since there may be more than one image per
-	* per data element we must collect each into
-	* its own specific object.
-	* @param blob {imageData, width, height}
-	*        A dictionary containing the image data from the CK console.
-	*/
-	function ImageURLData(image_blob){
-		//Store a version of 'this' that can be used by internally defined objects
-		var _this = this;
-		this.thumb = image_blob.imageData.thumb;
-		this.small = image_blob.imageData.small;
-		this.medium = image_blob.imageData.medium;
-		this.original = image_blob.imageData.original;
-
-		/**
-		* Recursive function to get the Image Meta data
-		* if we don't already have it.
-		* If we already have it the data is automatically
-		* stored in the height and width variables
-		*/
-		function getImageMeta(var_width, var_height) {
-			//If the height is defined
-			if (typeof var_height !== 'undefined') {
-				//Then we know the size and can store it.
-				_this.width = var_width;
-				_this.height = var_height;
-			} else {
-				/*
-				* Otherwise we need to wait on the image to load
-				* to retrive this meta info.
-				*/
-				var img = new Image();
-				//Get the size of the smallest image for short load times
-				img.src = image_blob.imageData.thumb;
-				img.onload = function() {
-					getImageMeta(this.width, this.height);
-				}
+		/*
+		 * Grab all of the other images associated with this dataset
+		 * This is a catchall for media before this ck console bug was fixed:
+		 * https://github.com/cityknowledge/console/issues/15
+		 */
+		for(var i in object.media.images){
+			//If this media id hasn't already been loaded
+			if(i != mediaID){
+				this.imageData.push(new ImageURLData({
+					mediaID: i,
+					imageData: object.media.images[i]
+				}));
 			}
-		} // END: function
-		getImageMeta(image_blob.width, image_blob.height);
-	} // END: ImageURLData
-
-	//By default this object is not valid for the collage
-	this.validForCollage = false;
-	if(mediaID){
-		//If we have a media id then we have the dimention info (assumption)
-		//This is nessasary because the collage code requires an image to have a known dimention
-		this.validForCollage = true;
-		this.imageData.push(
-			new ImageURLData({
-				imageData: object.media.images[mediaID],
-				width: object.data.width,
-				height: object.data.height})
-			);
-	}
-
-	/*
-	 * Grab all of the other images associated with this dataset
-	 * This is a catchall for media before this ck console bug was fixed:
-	 * https://github.com/cityknowledge/console/issues/15
-	 */
-	for(var i in object.media.images){
-		if(i != mediaID){
-			this.imageData.push(new ImageURLData({
-				imageData: object.media.images[i]
-			}));
 		}
 	}
 
@@ -441,6 +512,8 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 	this.latitude = parseFloat(this.latitude);
 	this.longitude = parseFloat(this.longitude);
 
-	var textLength = (this.imageData[0].width < 300 ? 10 : 100);
-	this.veryShortDescription = this.shortDescription.trunc(textLength, true);
+	if(this.imageData[0]){
+		var textLength = (this.imageData[0].width < 300 ? 10 : 100);
+		this.veryShortDescription = this.shortDescription.trunc(textLength, true);
+	}
 } // END: StandardizedDataSet
