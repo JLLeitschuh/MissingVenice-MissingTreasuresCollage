@@ -1,18 +1,18 @@
 <div class="container center-block"><!-- Set the width of the page -->
 	<style>
-	.leaflet-control-locate {
-		border:1px solid rgba(0,0,0,0.4);
+		.leaflet-control-locate {
+			border:1px solid rgba(0,0,0,0.4);
 		}
-	.leaflet-control-locate a {
-		background-color:#fff;
-		background-position:-3px, -2px;
+		.leaflet-control-locate a {
+			background-color:#fff;
+			background-position:-3px, -2px;
 		}
-	.leaflet-control-locate.active a {
-		background-position:-33px -2px;
+		.leaflet-control-locate.active a {
+			background-position:-33px -2px;
 		}
 
-	.leaflet-popup-content img {
-		max-width:100%;
+		.leaflet-popup-content img {
+			max-width:100%;
 		}
 	</style>
 
@@ -43,75 +43,4 @@
 		</slider>&nbsp;&nbsp;&nbsp;
 		<b>{{sliderData.formatter(sliderData.maxValue)}}</b>
 	</div>
-
-	<div class="container">
-		<table class="table table-striped">
-			<tr>
-				<th>
-					Name
-				</th>
-				<th>
-					Date
-				</th>
-				<th>
-					Original
-				</th>
-				<th>
-					Original Date
-				</th>
-				<th>
-					Second
-				</th>
-				<th>
-					Second Date
-				</th>
-				<th>
-					Third
-				</th>
-				<th>
-					Third Date
-				</th>
-				<th>
-					Current
-				</th>
-				<th>
-					Current Date
-				</th>
-			</tr>
-			<!--  -->
-			<tr ng-repeat="path in paths | dateRange:sliders.sliderValue">
-				<td>
-					{{path.data.piece.name}}
-				</td>
-				<td>
-					{{path.data.date}}
-				</td>
-				<td>
-					{{path.data.piece.getLocationByName('Original').name}}
-				</td>
-				<td>
-					{{path.data.piece.getLocationByName('Original').date}}
-				</td>
-				<td>
-					{{path.data.piece.getLocationByName('Second').name}}
-				</td>
-				<td>
-					{{path.data.piece.getLocationByName('Second').date}}
-				</td>
-				<td>
-					{{path.data.piece.getLocationByName('Third').name}}
-				</td>
-				<td>
-					{{path.data.piece.getLocationByName('Third').date}}
-				</td>
-				<td>
-					{{path.data.piece.getLocationByName('Current').name}}
-				</td>
-				<td>
-					{{path.data.piece.getLocationByName('Current').date}}
-				</td>
-			</tr>
-		</table>
-	</div>
-
 </div>
