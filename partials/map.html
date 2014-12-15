@@ -29,29 +29,30 @@
 			<leaflet height="480px" width="100%" defaults="defaults" center="center" controls="controls"
 			   paths="paths" event-broadcast="events" markers="markers"></leaflet>
 		</div>
-		<div class="col-md-3 well" style="max-height: 480px; overflow-y: auto;">
-			<div ng-if="infoBox.type == 'Marker'">
-				<b>{{infoBox.title}}</b></br>
-				<p>Pieces at location ({{infoBox.data.length}}):</br>
-					<ul class="list-group">
-						<li class="list-group-item" ng-repeat="element in infoBox.data">
-							<a ng-click="element.goToInfoPage()">{{element.name}}</a>
-						</li>
-					</ul>
-				</p>
+		<div class="col-md-3" style="max-height: 480px; overflow-y: auto;">
+			<div class="panel panel-default" ng-if="infoBox.type == 'Marker'">
+				<div class="panel-heading">
+					{{infoBox.title}}
+					<span class="badge">{{infoBox.data.length}}</span>
+				</div>
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="element in infoBox.data">
+						<a ng-click="element.goToInfoPage()">{{element.name}}</a>
+					</li>
+				</ul>
 			</div>
-			<div ng-if="infoBox.type == 'Path'">
-				<b>{{infoBox.title}}</b></br>
-				<p>Locations ({{infoBox.data.locations.length}}):</br>
-					<ul class="list-group">
-						<li class="list-group-item" ng-repeat="location in infoBox.data.locations">
-							{{location.name}}
-							<span ng-show="location.date">
-								({{convertDateValueToString(location.date)}})
-							</span>
-						</li>
-					</ul>
-				</p>
+			<div class="panel panel-default" ng-if="infoBox.type == 'Path'">
+				<div class="panel-heading">
+					{{infoBox.title}}
+				</div>
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="location in infoBox.data.locations">
+						{{location.name}}
+						<span ng-show="location.date">
+							({{convertDateValueToString(location.date)}})
+						</span>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>
