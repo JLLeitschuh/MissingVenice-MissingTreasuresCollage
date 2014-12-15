@@ -256,7 +256,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 						'Current Location Picture Source': object.data["Current Location Picture Source"],
 						'Original Location Picture Source': object.data["Orginial Location Picture Source"],
 						'Second Location Picture Source': object.data["Second Location Picture Source"],
-						'Third Location Picture Source': object.data["Third Location Picture Source"],
+						'Third Location Picture Source': object.data["Thrid Location Picture Source"],
 						'Artist': object.data["Artist"]
 				}
 			});
@@ -292,15 +292,22 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 				if(object.data[tagName + " Longitude"]){
 					//The object where the location data will be stored
 					var newLocation = {};
+					var flag = 0;
 
 					//We parse apart our field names pragmatically
 					switch (tagName){
 						case locationTagNames[2]:
 							newLocation.latitude = object.data['Thrid Location Latitude'];
 							newLocation.longitude = object.data[tagName + ' Longitude'];
+							flag = 1;
 							//Intentioanlly no break
 						case locationTagNames[1]:
-							newLocation.name = object.data['Name of ' + tagName];
+							if (flag == 1){
+								newLocation.name = object.data['Name of Thrid Location'];
+							} else {
+								newLocation.name = object.data['Name of ' + tagName];
+							}
+							flag = 0;
 							break;
 						case locationTagNames[0]:
 							//YES THIS SPELLING MISTAKE IS INTENDED! Grant Screwed up...
@@ -341,6 +348,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 							this.latitude = newLocation.latitude;
 							this.longitude = newLocation.longitude;
 							break;
+
 						case locationTagNames[1]:
 							newLocation.place = "Second";
 							newLocation.date = object.data["Date Moved to Second Location"];
@@ -356,13 +364,12 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 								//console.log(object)
 								//throw "Media does not exist";
 							}
-
-
 							break;
+
 						case locationTagNames[2]:
 							newLocation.place = "Third";
 							//Again this spelling mistake is intentional
-							newLocation.date = object.data['"Date Moved to Thrid Location "'];
+							newLocation.date = object.data["Date Moved to Thrid Location "];
 
 							var mediaID =
 							object['merged-media-ids'].images["Art Third Location MEDIA"];
@@ -376,6 +383,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 								//throw "Media does not exist";
 							}
 							break;
+
 						case locationTagNames[3]:
 							newLocation.place = "Current";
 							newLocation.date = object.data["Date to Current"];
