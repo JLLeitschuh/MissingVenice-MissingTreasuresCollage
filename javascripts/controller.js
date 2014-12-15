@@ -151,6 +151,13 @@ angular.module('ArtifactFeederApp.controllers', []).
 	controller('mapController', function($scope, $filter, $timeout, leafletData, leafletEvents, $routeParams, ArtifactService, MapLocationService){
 		console.log("ArtifactFeederApp.controllers: mapController");
 
+		$scope.convertDateValueToString = function(value){
+			if(value < 0){
+				return (-1 *value) +"BC";
+			}
+			return value + "AD";
+		};
+
 		$scope.sliderData = {};
 		angular.extend($scope.sliderData, {
 			minValue: -400,
@@ -158,10 +165,7 @@ angular.module('ArtifactFeederApp.controllers', []).
 			stepSize: 100,
 			value: [-400, 2014],
 			formatter: function(value){
-				if(value < 0){
-					return " " + (-1 *value) +"BC ";
-				}
-				return " " +  value + "AD ";
+				return " " + $scope.convertDateValueToString(value) + " ";
 			},
 		});
 		$scope.sliders = {

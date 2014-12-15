@@ -45,7 +45,10 @@
 				<p>Locations ({{infoBox.data.locations.length}}):</br>
 					<ul class="list-group">
 						<li class="list-group-item" ng-repeat="location in infoBox.data.locations">
-							{{location.name}} {{location.date}}
+							{{location.name}}
+							<span ng-show="location.date">
+								({{convertDateValueToString(location.date)}})
+							</span>
 						</li>
 					</ul>
 				</p>
