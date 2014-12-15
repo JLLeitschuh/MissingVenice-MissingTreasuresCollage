@@ -300,6 +300,7 @@ angular.module('ArtifactFeederApp.controllers', []).
 				};
 				return info;
 			}
+			var createMapKey = function(){
 			createInfoBox().addTo(map);
 
 		});
