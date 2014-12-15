@@ -69,6 +69,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 	function HeaderTextData(blob){
 		this.header = blob.header;
 		this.text = blob.text;
+		this.source = blob.source;
 	}
 
 	function HeaderTableData(blob){
@@ -245,7 +246,6 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 						'Date Created': object.data["Date Created"],
 						'Medium': object.data["Medium"],
 						'Type': object.data["Type"],
-						'Description Source': object.data["Description Source"],
 						'Image Source': object.data["Picture Source"],
 						'Current Location Picture Source': object.data["Current Location Picture Source"],
 						'Original Location Picture Source': object.data["Orginial Location Picture Source"],
@@ -459,7 +459,11 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 
 			}
 			this.sections = [
-				new HeaderTextData({header:"Description", text: object.data["Item Description"]}),
+				new HeaderTextData({
+					header:"Description",
+					text: object.data["Item Description"],
+					source: object.data["Description Source"]
+				}),
 				new HeaderTextData({header:"Provenance", text: generateProvenanceText()})
 			];
 
