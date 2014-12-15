@@ -388,6 +388,12 @@ angular.module('ArtifactFeederApp.services', []).
 						});
 					}
 
+					this.resetAllPaths = function(){
+						angular.forEach(pathList, function(path){
+							path.resetPath();
+						});
+					}
+
 					this.dullAllPaths = function(){
 						angular.forEach(pathList, function(path){
 							path.dullPath();
@@ -435,6 +441,21 @@ angular.module('ArtifactFeederApp.services', []).
 							name: location.name,
 							pieces: [],
 							pathSets: []
+						};
+
+						this.wasClicked = function(){
+							angular.forEach(service.markers, function(marker){
+								if(!angular.equals(marker, this)){
+									marker.dullMarker();
+								}
+							});
+							angular.forEach(service.pathSets, function(pathSet){
+								pathSet.dullAllPaths();
+							});
+							angular.forEach(this.data.pathSets, function(pathSet){
+								pathSet.resetAllPaths()
+							});
+							this.resetMarker();
 						};
 
 						this.hasPath = function(aPathName){
