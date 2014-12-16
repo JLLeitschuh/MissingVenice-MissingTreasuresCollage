@@ -483,7 +483,7 @@ function StandardizedDataSet(simpleGroupName, object, id, parentDataName, $locat
 
 
 
-			this.shortDescription = "";
+			this.shortDescription = this.sections[0].text;
 			//console.log(object);
 			break;
 		default:
