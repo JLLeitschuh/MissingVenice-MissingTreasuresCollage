@@ -73,7 +73,7 @@ angular.module('ArtifactFeederApp.services', []).
 						artifact.calculateDistance(position);
 					}
 					console.log("calculateArtifactDistances: complete");
-					console.log(service.artifacts);
+					//console.log(service.artifacts);
 				}, onError);
 
 			}
@@ -551,7 +551,6 @@ angular.module('ArtifactFeederApp.services', []).
 						// });
 
 						this.className = "path-start";
-						//console.log(this.latlngs);
 						this.type = 'polyline';
 
 
