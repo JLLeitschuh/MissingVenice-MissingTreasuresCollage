@@ -30,15 +30,4 @@
 		<leaflet height="480px" width="100%" defaults="defaults" center="center" controls="controls"
 		   paths="paths" event-broadcast="events" markers="markers"></leaflet>
 	</div>
-
-	<p>
-		Please select a year using the sliders below. All the pieces that have moved between these dates will be shown.
-	</p>
-
-	<div class="well">
-		<b>{{sliderData.formatter(sliderData.minValue)}}</b>&nbsp;&nbsp;&nbsp;
-		<slider ng-model="sliders.sliderValue" min="{{sliderData.minValue}}" step="{{sliderData.stepSize}}" max="{{sliderData.maxValue}}" value="{{sliderData.value}}" formatter="sliderData.formatter">
-		</slider>&nbsp;&nbsp;&nbsp;
-		<b>{{sliderData.formatter(sliderData.maxValue)}}</b>
-	</div>
 </div>

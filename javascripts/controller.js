@@ -339,18 +339,33 @@ angular.module('ArtifactFeederApp.controllers', []).
 				return info;
 			}
 			var createMapKey = function(){
-				var info = L.control({position: "bottomleft"});
-				info.onAdd = function (map) {
+				var key = L.control({position: "bottomleft"});
+				key.onAdd = function (map) {
 					var htmlContent = "<map-key></map-key>";
 					$scope.compiled = $compile(htmlContent)($scope);
 					this._content = $scope.compiled[0];
 					L.DomEvent.disableClickPropagation(this._content);
 					return this._content;
 				};
-				return info;
-			}
+				return key;
+			};
+
+			var createMapSlider = function(){
+				var slider = L.control({position: "bottomleft"});
+				slider.onAdd = function (map) {
+					var htmlContent = "<map-slider></map-slider>";
+					$scope.compiled = $compile(htmlContent)($scope);
+					this._content = $scope.compiled[0];
+					L.DomEvent.disableClickPropagation(this._content);
+					return this._content;
+				};
+				return slider;
+			};
+
 			createInfoBox().addTo(map);
+			createMapSlider().addTo(map);
 			createMapKey().addTo(map);
+
 
 		});
 

@@ -78,5 +78,24 @@ angular.module('ArtifactFeederApp.directives', [])
 					  '</div>',
 			link: function(scope, element, attrs){
 			}
-		}
+		};
+	}).
+
+	directive('mapSlider', function(){
+		return {
+			restrict: 'E',
+			replace: true,
+			template:
+				'<div class="well">' +
+					'<b>{{sliderData.formatter(sliderData.minValue)}}</b>&nbsp;&nbsp;&nbsp;' +
+					'<slider ng-model="sliders.sliderValue" min="{{sliderData.minValue}}" step="{{sliderData.stepSize}}" max="{{sliderData.maxValue}}" value="{{sliderData.value}}" formatter="sliderData.formatter">' +
+					'</slider>&nbsp;&nbsp;&nbsp;' +
+					'<b>{{sliderData.formatter(sliderData.maxValue)}}</b>' +
+					'<span popover-trigger="mouseenter" popover-placement="top" popover="Shows pieces moved between these dates.">' +
+						'<span class="glyphicon glyphicon-question-sign"></span>'+
+					'</span>'+
+				'</div>',
+			link: function(scope, element, attrs){
+			}
+		};
 	});
