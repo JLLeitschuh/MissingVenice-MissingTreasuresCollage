@@ -52,7 +52,7 @@
 					</style>
 					<table>
 						<tr> <th class="center" colspan='2'>{{artifact.tableData.header}}</th> </tr>
-						<tr ng-repeat="(header, data) in artifact.tableData.tableData">
+						<tr ng-repeat="(header, data) in artifact.tableData.tableData" ng-if="data">
 							<td>{{header}}</td><td>{{data}}</td>
 						</tr>
 					</table>
