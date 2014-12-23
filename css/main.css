@@ -10,7 +10,7 @@ a{
 }
 .header{
 	padding:0;
-	background-color: #272D35;
+	background-color: rgb(65,68,75);
 }
 .header h1{
 	font-size: 14px;
@@ -21,7 +21,7 @@ a{
 	padding:10px;
 }
 .header h1 a{
-	color:#41505A;
+	color: white;
 }
 .header h1 a:hover{
 	color:#09F;
@@ -40,10 +40,22 @@ a{
 	max-width:50px;
 }
 
+.vpc_logo{
+	display: inline-block;
+	position: absolute;
+	margin-top: 0px;
+	left: 170px;
+	width: 40px;
+}
+
+.vpc_logo img{
+	max-width: 50px;
+}
+
 
 .header nav{
 	background-color:rgb(65, 68, 75);
-	padding:40px;
+	padding:20px;
 	margin-bottom:0px;
 	webkit-box-shadow: 0 5px 10px #aaa;
 	-moz-box-shadow: 0 5px 10px #aaa;
